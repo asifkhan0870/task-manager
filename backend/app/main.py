@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi import Depends
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.dependencies.auth import get_current_user
 
@@ -11,14 +12,8 @@ from app.api.users import router as users_router
 from app.api.dashboard import router as dashboard_router
 from app.api.activity import router as activity_router
 
-from fastapi.middleware.cors import CORSMiddleware
-
 # Scheduler
-from app.scheduler.reminder_scheduler import (
-    start_scheduler
-)
-
-
+from app.scheduler.reminder_scheduler import start_scheduler
 
 
 app = FastAPI(
@@ -26,16 +21,20 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# ==========================
+# CORS CONFIGURATION
+# ==========================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        ["*"]
+        "http://localhost:5173",
+        "https://task-manager-orcin-five.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # ==========================
 # STARTUP EVENTS
