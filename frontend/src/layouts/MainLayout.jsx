@@ -10,6 +10,9 @@ function MainLayout({
     <div
       className="
       flex
+      flex-col
+      md:flex-row
+      min-h-screen
       "
     >
 
@@ -18,6 +21,7 @@ function MainLayout({
       <div
         className="
         flex-1
+        min-w-0
         "
       >
 
@@ -25,7 +29,8 @@ function MainLayout({
 
         <div
           className="
-          p-6
+          p-4
+          md:p-6
           "
         >
 

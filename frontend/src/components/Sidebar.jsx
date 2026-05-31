@@ -14,12 +14,13 @@ import {
   
       <div
         className="
-        w-72
-        min-h-screen
-        bg-slate-950
-        text-white
-        flex
-        flex-col
+        hidden
+md:flex
+w-72
+min-h-screen
+bg-slate-950
+text-white
+flex-col
         "
       >
   

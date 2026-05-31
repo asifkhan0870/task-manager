@@ -191,8 +191,9 @@ import {
         <div
           className="
           grid
-          grid-cols-5
-          gap-4
+grid-cols-2
+lg:grid-cols-5
+gap-4
           "
         >
   
@@ -265,11 +266,11 @@ import {
             bg-white
             rounded-lg
             shadow
-            overflow-hidden
+            overflow-x-auto
             "
           >
-  
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="min-w-[700px] w-full">
   
               <thead>
   
@@ -358,6 +359,7 @@ import {
               </tbody>
   
             </table>
+            </div>
   
           </div>
   

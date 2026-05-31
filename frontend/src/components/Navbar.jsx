@@ -21,13 +21,16 @@ function Navbar() {
       flex
       justify-between
       items-center
-      px-8
+      px-4
+      md:px-8
+
       "
     >
 
       <h1
         className="
-        text-3xl
+        text-xl
+        md:text-3xl
         font-bold
         "
       >
