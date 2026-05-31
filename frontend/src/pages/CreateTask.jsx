@@ -1,120 +1,118 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 import api from "../api/axios";
-
 import MainLayout from "../layouts/MainLayout";
 
 function CreateTask() {
 
-  const [title, setTitle] =
-    useState("");
-
-  const [
-    description,
-    setDescription
-  ] = useState("");
-
-  const [priority, setPriority] =
-    useState("Medium");
-
-  const [
-    assignedTo,
-    setAssignedTo
-  ] = useState("");
-
-  const [dueDate, setDueDate] =
-    useState("");
-
-  const [users, setUsers] =
-    useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("Medium");
+  const [assignedTo, setAssignedTo] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [users, setUsers] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-
     fetchUsers();
-
   }, []);
 
-  const fetchUsers =
-    async () => {
+  const fetchUsers = async () => {
 
-      try {
+    try {
 
-        const token =
-          localStorage.getItem(
-            "token"
-          );
+      const token =
+        localStorage.getItem("token");
 
-        const payload =
-          JSON.parse(
-            atob(
-              token.split(".")[1]
-            )
-          );
-
-        const loggedInEmail =
-          payload.email;
-
-        const response =
-          await api.get(
-            "/users/"
-          );
-
-        const filteredUsers =
-          response.data.filter(
-            (user) =>
-              user.email !==
-              loggedInEmail
-          );
-
-        setUsers(
-          filteredUsers
+      const payload =
+        JSON.parse(
+          atob(token.split(".")[1])
         );
 
-      } catch (err) {
+      const loggedInEmail =
+        payload.email;
 
-        console.log(err);
-      }
-    };
+      const response =
+        await api.get("/users/");
 
-  const handleSubmit =
-    async (e) => {
-
-      e.preventDefault();
-
-      try {
-
-        await api.post(
-          "/tasks/",
-          {
-            title,
-            description,
-            priority,
-            assigned_to:
-              assignedTo,
-            due_date:
-              dueDate
-          }
+      const filteredUsers =
+        response.data.filter(
+          (user) =>
+            user.email !==
+            loggedInEmail
         );
 
-        alert(
-          "Task Created Successfully"
-        );
+      setUsers(filteredUsers);
 
-        setTitle("");
-        setDescription("");
-        setPriority("Medium");
-        setAssignedTo("");
-        setDueDate("");
+    } catch (err) {
 
-      } catch (err) {
+      console.log(err);
 
-        console.log(err);
+      toast.error(
+        "Failed to load users"
+      );
+    }
+  };
 
-        alert(
-          "Error Creating Task"
-        );
-      }
-    };
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    const loadingToast =
+      toast.loading(
+        "Creating task..."
+      );
+
+    try {
+
+      await api.post(
+        "/tasks/",
+        {
+          title,
+          description,
+          priority,
+          assigned_to:
+            assignedTo,
+          due_date:
+            dueDate
+        }
+      );
+
+      toast.success(
+        "Task created successfully",
+        {
+          id: loadingToast
+        }
+      );
+
+      setTitle("");
+      setDescription("");
+      setPriority("Medium");
+      setAssignedTo("");
+      setDueDate("");
+
+    } catch (err) {
+
+      console.log(err);
+
+      toast.error(
+        "Failed to create task",
+        {
+          id: loadingToast
+        }
+      );
+
+    } finally {
+
+      setIsSubmitting(false);
+
+    }
+  };
 
   return (
 
@@ -125,7 +123,7 @@ function CreateTask() {
         text-4xl
         font-bold
         mb-8
-        "
+      "
       >
         Create Task
       </h1>
@@ -138,17 +136,16 @@ function CreateTask() {
         rounded-xl
         shadow
         max-w-2xl
-        "
+      "
       >
 
         <input
           type="text"
           placeholder="Title"
           value={title}
+          disabled={isSubmitting}
           onChange={(e) =>
-            setTitle(
-              e.target.value
-            )
+            setTitle(e.target.value)
           }
           className="
           w-full
@@ -156,13 +153,14 @@ function CreateTask() {
           p-3
           mb-4
           rounded
-          "
+        "
           required
         />
 
         <textarea
           placeholder="Description"
           value={description}
+          disabled={isSubmitting}
           onChange={(e) =>
             setDescription(
               e.target.value
@@ -174,13 +172,14 @@ function CreateTask() {
           p-3
           mb-4
           rounded
-          "
+        "
           rows="4"
           required
         />
 
         <select
           value={priority}
+          disabled={isSubmitting}
           onChange={(e) =>
             setPriority(
               e.target.value
@@ -192,9 +191,8 @@ function CreateTask() {
           p-3
           mb-4
           rounded
-          "
+        "
         >
-
           <option value="Low">
             Low
           </option>
@@ -206,11 +204,11 @@ function CreateTask() {
           <option value="High">
             High
           </option>
-
         </select>
 
         <select
           value={assignedTo}
+          disabled={isSubmitting}
           onChange={(e) =>
             setAssignedTo(
               e.target.value
@@ -222,12 +220,11 @@ function CreateTask() {
           p-3
           mb-4
           rounded
-          "
+        "
           required
         >
-
           <option value="">
-            Assign to 
+            Assign to
           </option>
 
           {users.map((user) => (
@@ -242,12 +239,12 @@ function CreateTask() {
             </option>
 
           ))}
-
         </select>
 
         <input
           type="datetime-local"
           value={dueDate}
+          disabled={isSubmitting}
           onChange={(e) =>
             setDueDate(
               e.target.value
@@ -259,26 +256,65 @@ function CreateTask() {
           p-3
           mb-4
           rounded
-          "
+        "
           required
         />
 
         <button
           type="submit"
-          className="
-          bg-blue-600
-          text-white
-          px-6
-          py-3
-          rounded
-          hover:bg-blue-700
-          transition
-          "
+          disabled={isSubmitting}
+          className={`
+            text-white
+            px-6
+            py-3
+            rounded
+            transition
+            ${
+              isSubmitting
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }
+          `}
         >
-          Create Task
+          {
+            isSubmitting
+              ? "Creating Task..."
+              : "Create Task"
+          }
         </button>
 
       </form>
+
+      {
+        isSubmitting && (
+          <div
+            className="
+            fixed
+            inset-0
+            bg-black/40
+            flex
+            items-center
+            justify-center
+            z-50
+          "
+          >
+            <div
+              className="
+              bg-white
+              px-8
+              py-6
+              rounded-xl
+              shadow-xl
+              text-lg
+              font-semibold
+            "
+            >
+              Creating Task...
+              Please wait.
+            </div>
+          </div>
+        )
+      }
 
     </MainLayout>
 

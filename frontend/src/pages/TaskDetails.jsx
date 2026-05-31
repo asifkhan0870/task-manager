@@ -8,6 +8,8 @@ import {
     useNavigate
   } from "react-router-dom";
   
+  import toast from "react-hot-toast";
+  
   import api from "../api/axios";
   
   import MainLayout from "../layouts/MainLayout";
@@ -22,6 +24,9 @@ import {
   
     const [task, setTask] =
       useState(null);
+  
+    const [loadingAction, setLoadingAction] =
+      useState("");
   
     useEffect(() => {
   
@@ -46,11 +51,17 @@ import {
         } catch (err) {
   
           console.log(err);
+  
+          toast.error(
+            "Failed to load task"
+          );
         }
       };
   
     const deleteTask =
       async () => {
+  
+        if (loadingAction) return;
   
         const confirmDelete =
           window.confirm(
@@ -60,14 +71,26 @@ import {
         if (!confirmDelete)
           return;
   
+        setLoadingAction(
+          "delete"
+        );
+  
+        const loadingToast =
+          toast.loading(
+            "Deleting task..."
+          );
+  
         try {
   
           await api.delete(
             `/tasks/id/${id}`
           );
   
-          alert(
-            "Task Deleted"
+          toast.success(
+            "Task deleted successfully",
+            {
+              id: loadingToast
+            }
           );
   
           navigate(
@@ -77,11 +100,36 @@ import {
         } catch (err) {
   
           console.log(err);
+  
+          toast.error(
+            "Failed to delete task",
+            {
+              id: loadingToast
+            }
+          );
+  
+        } finally {
+  
+          setLoadingAction(
+            ""
+          );
+  
         }
       };
   
     const updateStatus =
       async (status) => {
+  
+        if (loadingAction) return;
+  
+        setLoadingAction(
+          status
+        );
+  
+        const loadingToast =
+          toast.loading(
+            `Updating status...`
+          );
   
         try {
   
@@ -92,11 +140,32 @@ import {
             }
           );
   
-          fetchTask();
+          await fetchTask();
+  
+          toast.success(
+            `Status updated to ${status}`,
+            {
+              id: loadingToast
+            }
+          );
   
         } catch (err) {
   
           console.log(err);
+  
+          toast.error(
+            "Failed to update status",
+            {
+              id: loadingToast
+            }
+          );
+  
+        } finally {
+  
+          setLoadingAction(
+            ""
+          );
+  
         }
       };
   
@@ -181,55 +250,122 @@ import {
           >
   
             <button
+              disabled={
+                !!loadingAction
+              }
               onClick={() =>
                 updateStatus(
                   "In Progress"
                 )
               }
-              className="
-              bg-yellow-500
-              text-white
-              px-4
-              py-2
-              rounded
-              "
+              className={`
+                text-white
+                px-4
+                py-2
+                rounded
+                ${
+                  loadingAction
+                    ? "bg-gray-500 cursor-not-allowed"
+                    : "bg-yellow-500"
+                }
+              `}
             >
-              In Progress
+              {
+                loadingAction ===
+                "In Progress"
+                  ? "Updating..."
+                  : "In Progress"
+              }
             </button>
   
             <button
+              disabled={
+                !!loadingAction
+              }
               onClick={() =>
                 updateStatus(
                   "Done"
                 )
               }
-              className="
-              bg-green-600
-              text-white
-              px-4
-              py-2
-              rounded
-              "
+              className={`
+                text-white
+                px-4
+                py-2
+                rounded
+                ${
+                  loadingAction
+                    ? "bg-gray-500 cursor-not-allowed"
+                    : "bg-green-600"
+                }
+              `}
             >
-              Mark Done
+              {
+                loadingAction ===
+                "Done"
+                  ? "Updating..."
+                  : "Mark Done"
+              }
             </button>
   
             <button
+              disabled={
+                !!loadingAction
+              }
               onClick={deleteTask}
-              className="
-              bg-red-600
-              text-white
-              px-4
-              py-2
-              rounded
-              "
+              className={`
+                text-white
+                px-4
+                py-2
+                rounded
+                ${
+                  loadingAction
+                    ? "bg-gray-500 cursor-not-allowed"
+                    : "bg-red-600"
+                }
+              `}
             >
-              Delete
+              {
+                loadingAction ===
+                "delete"
+                  ? "Deleting..."
+                  : "Delete"
+              }
             </button>
   
           </div>
   
         </div>
+  
+        {
+          loadingAction && (
+            <div
+              className="
+              fixed
+              inset-0
+              bg-black/40
+              flex
+              items-center
+              justify-center
+              z-50
+              "
+            >
+              <div
+                className="
+                bg-white
+                px-8
+                py-6
+                rounded-xl
+                shadow-xl
+                text-lg
+                font-semibold
+                "
+              >
+                Processing...
+                Please wait.
+              </div>
+            </div>
+          )
+        }
   
       </MainLayout>
   
