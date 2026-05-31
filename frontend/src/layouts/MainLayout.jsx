@@ -1,22 +1,26 @@
+import { useState } from "react";
+
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
-function MainLayout({
-  children
-}) {
+function MainLayout({ children }) {
+
+  const [sidebarOpen, setSidebarOpen] =
+    useState(false);
 
   return (
 
     <div
       className="
       flex
-      flex-col
-      md:flex-row
       min-h-screen
       "
     >
 
-      <Sidebar />
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
       <div
         className="
@@ -25,7 +29,9 @@ function MainLayout({
         "
       >
 
-        <Navbar />
+        <Navbar
+          setSidebarOpen={setSidebarOpen}
+        />
 
         <div
           className="
@@ -33,9 +39,7 @@ function MainLayout({
           md:p-6
           "
         >
-
           {children}
-
         </div>
 
       </div>

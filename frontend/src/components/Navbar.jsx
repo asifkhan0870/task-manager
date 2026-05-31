@@ -1,62 +1,88 @@
-import { LogOut } from "lucide-react";
-
-function Navbar() {
-
-  const logout = () => {
-
-    localStorage.removeItem(
-      "token"
-    );
-
-    window.location.href = "/";
-  };
-
-  return (
-
-    <div
-      className="
-      bg-white
-      h-20
-      shadow-sm
-      flex
-      justify-between
-      items-center
-      px-4
-      md:px-8
-
-      "
-    >
-
-      <h1
+import {
+    LogOut,
+    Menu
+  } from "lucide-react";
+  
+  function Navbar({
+    setSidebarOpen
+  }) {
+  
+    const logout = () => {
+  
+      localStorage.removeItem(
+        "token"
+      );
+  
+      window.location.href = "/";
+    };
+  
+    return (
+  
+      <div
         className="
-        text-xl
-        md:text-3xl
-        font-bold
-        "
-      >
-        Task Manager
-      </h1>
-
-      <button
-        onClick={logout}
-        className="
+        bg-white
+        h-20
+        shadow-sm
         flex
+        justify-between
         items-center
-        gap-2
-        bg-red-500
-        hover:bg-red-600
-        text-white
-        px-5
-        py-2
-        rounded-lg
+        px-4
+        md:px-8
         "
       >
-        <LogOut size={18}/>
-        Logout
-      </button>
-
-    </div>
-  );
-}
-
-export default Navbar;
+  
+        <div
+          className="
+          flex
+          items-center
+          gap-3
+          "
+        >
+  
+          <button
+            onClick={() =>
+              setSidebarOpen(true)
+            }
+            className="
+            md:hidden
+            "
+          >
+            <Menu size={28}/>
+          </button>
+  
+          <h1
+            className="
+            text-xl
+            md:text-3xl
+            font-bold
+            "
+          >
+            Task Manager
+          </h1>
+  
+        </div>
+  
+        <button
+          onClick={logout}
+          className="
+          flex
+          items-center
+          gap-2
+          bg-red-500
+          hover:bg-red-600
+          text-white
+          px-4
+          md:px-5
+          py-2
+          rounded-lg
+          "
+        >
+          <LogOut size={18}/>
+          Logout
+        </button>
+  
+      </div>
+    );
+  }
+  
+  export default Navbar;
