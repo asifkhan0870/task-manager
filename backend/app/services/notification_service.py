@@ -1,15 +1,28 @@
 from bson import ObjectId
+from datetime import datetime
 
 from app.core.database import users_collection
-
 from app.core.database import tasks_collection
 
 from app.services.email_service import send_email
 
 
-async def notify_task_created(
-    task
-):
+def format_date(date_value):
+
+    try:
+
+        if isinstance(date_value, str):
+            return date_value
+
+        return date_value.strftime(
+            "%d %B %Y, %I:%M %p"
+        )
+
+    except:
+        return str(date_value)
+
+
+async def notify_task_created(task):
 
     try:
 
@@ -31,21 +44,22 @@ async def notify_task_created(
 
         if not assigner or not assignee:
 
-            print(
-                "User not found"
-            )
+            print("User not found")
 
             return
 
         subject = (
-            f"New Task Assigned: "
-            f"{task['title']}"
+            f"📌 New Task Assigned - {task['title']}"
         )
 
         body = f"""
-Task Assigned
+Hello {assignee['name']},
 
-Title:
+A new task has been assigned to you.
+
+====================================
+
+Task Title:
 {task['title']}
 
 Description:
@@ -54,24 +68,27 @@ Description:
 Priority:
 {task['priority']}
 
-Status:
+Current Status:
 {task['status']}
 
 Due Date:
-{task['due_date']}
+{format_date(task['due_date'])}
 
 Assigned By:
+{assigner['name']}
+
+Assigned By Email:
 {assigner['email']}
 
-Assigned To:
-{assignee['email']}
-"""
+====================================
 
-        send_email(
-            assigner["email"],
-            subject,
-            body
-        )
+Please login to the Task Manager system
+and update the task status regularly.
+
+Regards,
+
+Task Manager Notification System
+"""
 
         send_email(
             assignee["email"],
@@ -80,7 +97,7 @@ Assigned To:
         )
 
         print(
-            "Task notification sent"
+            f"Task assignment email sent to {assignee['email']}"
         )
 
     except Exception as e:
@@ -125,42 +142,61 @@ async def notify_status_change(
             }
         )
 
+        if not assigner:
+
+            return
+
+        status_icon = "🔄"
+
+        if status == "Done":
+            status_icon = "✅"
+
+        elif status == "Incomplete":
+            status_icon = "❌"
+
         subject = (
-            f"Task Status Updated: "
-            f"{task['title']}"
+            f"{status_icon} Task Status Updated - {task['title']}"
         )
 
         body = f"""
-Task Status Changed
+Hello {assigner['name']},
 
-Title:
+A task assigned by you has been updated.
+
+====================================
+
+Task Title:
 {task['title']}
+
+Assigned To:
+{assignee['name']}
+
+Assigned To Email:
+{assignee['email']}
 
 New Status:
 {status}
 
 Updated At:
-{task['updated_at']}
+{format_date(datetime.utcnow())}
+
+====================================
+
+The assignee has updated the task status.
+
+Regards,
+
+Task Manager Notification System
 """
 
-        if assigner:
-
-            send_email(
-                assigner["email"],
-                subject,
-                body
-            )
-
-        if assignee:
-
-            send_email(
-                assignee["email"],
-                subject,
-                body
-            )
+        send_email(
+            assigner["email"],
+            subject,
+            body
+        )
 
         print(
-            "Status notification sent"
+            f"Status update email sent to {assigner['email']}"
         )
 
     except Exception as e:
