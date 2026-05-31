@@ -29,7 +29,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://task-manager-beta-three-71.vercel.app/",
+        "https://task-manager-beta-three-71.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
