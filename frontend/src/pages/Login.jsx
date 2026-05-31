@@ -126,8 +126,7 @@ function Login() {
             mt-3
             "
           >
-            Manage tasks, assignments
-            and team productivity.
+            The Official Task Manager Platform
           </p>
 
         </div>
