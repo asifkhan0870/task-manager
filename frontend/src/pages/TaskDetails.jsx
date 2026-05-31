@@ -15,11 +15,14 @@ function TaskDetails() {
   const navigate = useNavigate();
 
   const [task, setTask] = useState(null);
+  const [users, setUsers] =
+  useState([]);
 
   const [loadingAction, setLoadingAction] = useState("");
 
   useEffect(() => {
     fetchTask();
+    fetchUsers();
   }, []);
 
   const fetchTask = async () => {
@@ -33,6 +36,45 @@ function TaskDetails() {
       toast.error("Failed to load task");
     }
   };
+
+  const getUserName =
+  (userId) => {
+
+    const user =
+      users.find(
+        (u) =>
+          u._id === userId
+      );
+
+    return user
+      ? user.name
+      : userId;
+  };
+
+
+  const fetchUsers =
+  async () => {
+
+    try {
+
+      const response =
+        await api.get(
+          "/users/"
+        );
+
+      setUsers(
+        response.data || []
+      );
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+  };
+
+
+
 
   const deleteTask = async () => {
     if (loadingAction) return;
@@ -131,11 +173,13 @@ function TaskDetails() {
         </p>
 
         <p>
-          <b>Assigned By:</b> {task.assigned_by}
+          <b>Assigned By:</b>{" "}
+{getUserName(task.assigned_by)}
         </p>
 
         <p>
-          <b>Assigned To:</b> {task.assigned_to}
+          <b>Assigned To:</b>{" "}
+{getUserName(task.assigned_to)}
         </p>
 
         <p>

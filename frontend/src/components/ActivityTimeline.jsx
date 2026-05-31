@@ -8,16 +8,43 @@ function ActivityTimeline({ taskId }) {
   const [activities, setActivities] =
     useState([]);
 
+  const [users, setUsers] =
+    useState([]);
+
   const [loading, setLoading] =
     useState(true);
 
   useEffect(() => {
 
     if (taskId) {
+
       fetchActivities();
+      fetchUsers();
+
     }
 
   }, [taskId]);
+
+  const fetchUsers =
+    async () => {
+
+      try {
+
+        const response =
+          await api.get(
+            "/users/"
+          );
+
+        setUsers(
+          response.data || []
+        );
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+    };
 
   const fetchActivities =
     async () => {
@@ -48,6 +75,20 @@ function ActivityTimeline({ taskId }) {
         setLoading(false);
 
       }
+    };
+
+  const getUserName =
+    (userId) => {
+
+      const user =
+        users.find(
+          (u) =>
+            u._id === userId
+        );
+
+      return user
+        ? user.name
+        : userId;
     };
 
   if (loading) {
@@ -136,7 +177,11 @@ function ActivityTimeline({ taskId }) {
               >
                 By:
                 {" "}
-                {activity.performed_by}
+                {
+                  getUserName(
+                    activity.performed_by
+                  )
+                }
               </p>
 
               <p
@@ -148,7 +193,17 @@ function ActivityTimeline({ taskId }) {
                 {
                   new Date(
                     activity.timestamp
-                  ).toLocaleString()
+                  ).toLocaleString(
+                    "en-US",
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    }
+                  )
                 }
               </p>
 
