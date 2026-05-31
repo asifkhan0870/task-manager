@@ -117,7 +117,7 @@ function Login() {
             text-slate-900
             "
           >
-            Task Manager
+            Task Manager (THG)
           </h1>
 
           <p
