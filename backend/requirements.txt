@@ -18,4 +18,5 @@ apscheduler==3.11.0
 
 python-multipart==0.0.20
 
-aiosmtplib==4.0.1
+resend
+requests
