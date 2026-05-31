@@ -120,20 +120,7 @@ import {
             Create Task
           </Link>
   
-          <Link
-            to="/activity"
-            className="
-            flex
-            items-center
-            gap-3
-            p-3
-            rounded-lg
-            hover:bg-slate-800
-            "
-          >
-            <Activity size={20}/>
-            Activity
-          </Link>
+          
   
         </nav>
   
