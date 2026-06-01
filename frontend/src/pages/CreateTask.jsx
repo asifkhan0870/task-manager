@@ -114,51 +114,222 @@ function CreateTask() {
     }
   };
 
+  const selectedUser =
+    users.find(
+      (u) =>
+        u._id === assignedTo
+    );
+
   return (
 
     <MainLayout>
 
-      <h1
+      <div className="mb-8">
+
+        <h1
+          className="
+          text-4xl
+          font-bold
+          text-slate-900
+          "
+        >
+          ✨ Create New Task
+        </h1>
+
+        <p
+          className="
+          text-slate-500
+          mt-2
+          "
+        >
+          Create and assign work to
+          your team members.
+        </p>
+
+      </div>
+
+      <div
         className="
-        text-4xl
-        font-bold
+        grid
+        grid-cols-1
+        md:grid-cols-3
+        gap-4
         mb-8
-      "
+        "
       >
-        Create Task
-      </h1>
+
+        <div
+          className="
+          bg-white
+          rounded-2xl
+          shadow-md
+          p-5
+          border
+          border-slate-200
+          "
+        >
+
+          <p
+            className="
+            text-slate-500
+            text-sm
+            "
+          >
+            Priority
+          </p>
+
+          <h3
+            className="
+            text-xl
+            font-bold
+            mt-2
+            "
+          >
+            {
+              priority === "High"
+                ? "🔴 High"
+                : priority === "Medium"
+                ? "🟡 Medium"
+                : "🟢 Low"
+            }
+          </h3>
+
+        </div>
+
+        <div
+          className="
+          bg-white
+          rounded-2xl
+          shadow-md
+          p-5
+          border
+          border-slate-200
+          "
+        >
+
+          <p
+            className="
+            text-slate-500
+            text-sm
+            "
+          >
+            Assignee
+          </p>
+
+          <h3
+            className="
+            text-xl
+            font-bold
+            mt-2
+            "
+          >
+            {
+              selectedUser
+                ? selectedUser.name
+                : "Not Selected"
+            }
+          </h3>
+
+        </div>
+
+        <div
+          className="
+          bg-white
+          rounded-2xl
+          shadow-md
+          p-5
+          border
+          border-slate-200
+          "
+        >
+
+          <p
+            className="
+            text-slate-500
+            text-sm
+            "
+          >
+            Due Date
+          </p>
+
+          <h3
+            className="
+            text-lg
+            font-bold
+            mt-2
+            "
+          >
+            {
+              dueDate
+                ? "📅 Scheduled"
+                : "Not Set"
+            }
+          </h3>
+
+        </div>
+
+      </div>
 
       <form
         onSubmit={handleSubmit}
         className="
         bg-white
         p-8
-        rounded-xl
-        shadow
-        max-w-2xl
-      "
+        rounded-3xl
+        shadow-xl
+        border
+        border-slate-200
+        "
       >
+
+        <label
+          className="
+          block
+          text-sm
+          font-medium
+          text-slate-700
+          mb-2
+          "
+        >
+          Task Title
+        </label>
 
         <input
           type="text"
-          placeholder="Title"
           value={title}
           disabled={isSubmitting}
           onChange={(e) =>
             setTitle(e.target.value)
           }
+          placeholder="Enter task title"
           className="
           w-full
+          px-4
+          py-3
           border
-          p-3
-          mb-4
-          rounded
-        "
+          border-slate-300
+          rounded-xl
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+          mb-5
+          "
           required
         />
 
+        <label
+          className="
+          block
+          text-sm
+          font-medium
+          text-slate-700
+          mb-2
+          "
+        >
+          Description
+        </label>
+
         <textarea
-          placeholder="Description"
           value={description}
           disabled={isSubmitting}
           onChange={(e) =>
@@ -166,122 +337,225 @@ function CreateTask() {
               e.target.value
             )
           }
+          placeholder="Describe the task..."
+          rows="5"
           className="
           w-full
+          px-4
+          py-3
           border
-          p-3
-          mb-4
-          rounded
-        "
-          rows="4"
+          border-slate-300
+          rounded-xl
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+          mb-5
+          "
           required
         />
 
-        <select
-          value={priority}
-          disabled={isSubmitting}
-          onChange={(e) =>
-            setPriority(
-              e.target.value
-            )
-          }
+        <div
           className="
-          w-full
-          border
-          p-3
-          mb-4
-          rounded
-        "
+          grid
+          grid-cols-1
+          md:grid-cols-2
+          gap-5
+          "
         >
-          <option value="Low">
-            Low
-          </option>
 
-          <option value="Medium">
-            Medium
-          </option>
+          <div>
 
-          <option value="High">
-            High
-          </option>
-        </select>
-
-        <select
-          value={assignedTo}
-          disabled={isSubmitting}
-          onChange={(e) =>
-            setAssignedTo(
-              e.target.value
-            )
-          }
-          className="
-          w-full
-          border
-          p-3
-          mb-4
-          rounded
-        "
-          required
-        >
-          <option value="">
-            Assign to
-          </option>
-
-          {users.map((user) => (
-
-            <option
-              key={user._id}
-              value={user._id}
+            <label
+              className="
+              block
+              text-sm
+              font-medium
+              text-slate-700
+              mb-2
+              "
             >
-              {user.name
-                ? `${user.name} - ${user.email}`
-                : user.email}
-            </option>
+              Priority
+            </label>
 
-          ))}
-        </select>
+            <select
+              value={priority}
+              disabled={isSubmitting}
+              onChange={(e) =>
+                setPriority(
+                  e.target.value
+                )
+              }
+              className="
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-300
+              rounded-xl
+              "
+            >
+              <option value="Low">
+                🟢 Low
+              </option>
 
-        <input
-          type="datetime-local"
-          value={dueDate}
-          disabled={isSubmitting}
-          onChange={(e) =>
-            setDueDate(
-              e.target.value
-            )
-          }
+              <option value="Medium">
+                🟡 Medium
+              </option>
+
+              <option value="High">
+                🔴 High
+              </option>
+            </select>
+
+          </div>
+
+          <div>
+
+            <label
+              className="
+              block
+              text-sm
+              font-medium
+              text-slate-700
+              mb-2
+              "
+            >
+              Assign To
+            </label>
+
+            <select
+              value={assignedTo}
+              disabled={isSubmitting}
+              onChange={(e) =>
+                setAssignedTo(
+                  e.target.value
+                )
+              }
+              className="
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-300
+              rounded-xl
+              "
+              required
+            >
+
+              <option value="">
+                Select Team Member
+              </option>
+
+              {users.map((user) => (
+
+                <option
+                  key={user._id}
+                  value={user._id}
+                >
+                  {user.name}
+                </option>
+
+              ))}
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div className="mt-5">
+
+          <label
+            className="
+            block
+            text-sm
+            font-medium
+            text-slate-700
+            mb-2
+            "
+          >
+            Due Date & Time
+          </label>
+
+          <input
+            type="datetime-local"
+            value={dueDate}
+            disabled={isSubmitting}
+            onChange={(e) =>
+              setDueDate(
+                e.target.value
+              )
+            }
+            className="
+            w-full
+            px-4
+            py-3
+            border
+            border-slate-300
+            rounded-xl
+            "
+            required
+          />
+
+        </div>
+
+        <div
           className="
-          w-full
-          border
-          p-3
-          mb-4
-          rounded
-        "
-          required
-        />
+          flex
+          flex-col
+          md:flex-row
+          gap-3
+          mt-8
+          "
+        >
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`
-            text-white
+          <button
+            type="button"
+            onClick={() => {
+              setTitle("");
+              setDescription("");
+              setPriority("Medium");
+              setAssignedTo("");
+              setDueDate("");
+            }}
+            className="
             px-6
             py-3
-            rounded
+            rounded-xl
+            border
+            border-slate-300
+            hover:bg-slate-100
+            "
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="
+            bg-blue-600
+            hover:bg-blue-700
+            disabled:bg-blue-400
+            disabled:cursor-not-allowed
+            text-white
+            px-8
+            py-3
+            rounded-xl
+            font-semibold
+            shadow-lg
+            hover:shadow-xl
             transition
-            ${
+            "
+          >
+            {
               isSubmitting
-                ? "bg-gray-500 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "⏳ Creating Task..."
+                : "🚀 Create Task"
             }
-          `}
-        >
-          {
-            isSubmitting
-              ? "Creating Task..."
-              : "Create Task"
-          }
-        </button>
+          </button>
+
+        </div>
 
       </form>
 
@@ -296,18 +570,18 @@ function CreateTask() {
             items-center
             justify-center
             z-50
-          "
+            "
           >
             <div
               className="
               bg-white
               px-8
               py-6
-              rounded-xl
+              rounded-2xl
               shadow-xl
               text-lg
               font-semibold
-            "
+              "
             >
               Creating Task...
               Please wait.
