@@ -569,7 +569,7 @@ function TaskDetails() {
           {/* Header */}
 
           <div
-            className="
+  className="
     sticky
     top-0
     z-20
@@ -577,77 +577,46 @@ function TaskDetails() {
     border-b
     p-4
     shadow-sm
-    justify-between
-    items-center
   "
-          >
-            <div>
-              <h2 className="text-lg md:text-xl font-bold">💬 Discussion</h2>
-              
-              {recordingUsers.length > 0 ? (
+>
 
-  <p
-    className="
-      text-xs
-      text-red-500
-      animate-pulse
-      font-medium
-    "
-  >
-    🎙️ Recording audio...
-  </p>
+  <div className="flex justify-between items-center">
 
-) : typingUsers.length > 0 ? (
+    <div>
 
-  <p
-    className="
-      text-xs
-      text-green-500
-      animate-pulse
-      font-medium
-    "
-  >
-    ✍️ Typing...
-  </p>
+      <h2 className="font-bold text-2xl">
+        Discussion
+      </h2>
 
-) : (
+      {recordingUsers.length > 0 ? (
 
-  <p className="text-xs text-gray-400">
-    checking with resend
-  </p>
+        <p className="text-red-500 text-xs animate-pulse">
+          🎙️ Recording audio...
+        </p>
 
-)}
-              {/* <p className="text-sm text-slate-500">Task Clarifications</p> */}
-            </div>
+      ) : typingUsers.length > 0 ? (
 
-            <div className="flex items-center gap-3">
-              <button
-                onClick={clearDiscussion}
-                className="
-    bg-red-50
-    text-red-600
-    px-3
-    py-1
-    rounded-lg
-    text-xs
-    font-medium
-    hover:bg-red-100
-  "
-              >
-                🗑 Clear
-              </button>
+        <p className="text-green-500 text-xs animate-pulse">
+          ✍️ Typing...
+        </p>
 
-              <button
-                onClick={() => setShowChatSidebar(false)}
-                className="
-        text-xl
-        hover:text-red-500
-      "
-              >
-                ✖
-              </button>
-            </div>
-          </div>
+      ) : (
+
+        <p className="text-gray-400 text-xs">
+          Task Clarifications
+        </p>
+
+      )}
+
+    </div>
+
+    <button>
+      Clear
+    </button>
+
+  </div>
+
+</div>
 
           {/* Messages */}
 
