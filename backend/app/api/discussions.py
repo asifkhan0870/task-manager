@@ -4,11 +4,14 @@ from datetime import datetime
 
 from app.dependencies.auth import get_current_user
 
+
 from app.core.database import (
     discussion_collection,
-        typing_collection
+        typing_collection,
+        recording_collection
 
 )
+
 
 router = APIRouter(
     prefix="/discussion",
@@ -146,4 +149,47 @@ async def get_typing_status(
     async for item in cursor:
         users.append(item["user_id"])
 
-    return users        
+    return users      
+
+
+@router.post("/{task_id}/recording")
+async def update_recording_status(
+    task_id: str,
+    payload: dict,
+    user=Depends(get_current_user)
+):
+
+    await recording_collection.update_one(
+        {
+            "task_id": task_id,
+            "user_id": str(user)
+        },
+        {
+            "$set": {
+                "is_recording": payload["is_recording"]
+            }
+        },
+        upsert=True
+    )
+
+    return {"success": True}
+
+
+@router.get("/{task_id}/recording")
+async def get_recording_users(
+    task_id: str
+):
+
+    cursor = recording_collection.find(
+        {
+            "task_id": task_id,
+            "is_recording": True
+        }
+    )
+
+    users = []
+
+    async for item in cursor:
+        users.append(item["user_id"])
+
+    return users          

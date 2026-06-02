@@ -33,6 +33,7 @@ function TaskDetails() {
 
  
   const [typingUsers, setTypingUsers] = useState([]);
+  const [recordingUsers, setRecordingUsers] = useState([]);
 
   useEffect(() => {
     fetchTask();
@@ -47,17 +48,25 @@ function TaskDetails() {
     });
   }, [messages]);
 
+   
   useEffect(() => {
+
     fetchDiscussion();
     fetchTypingUsers();
+    fetchRecordingUsers();
   
     const interval = setInterval(() => {
+  
       fetchDiscussion();
       fetchTypingUsers();
+      fetchRecordingUsers();
+  
     }, 1000);
   
     return () => clearInterval(interval);
+  
   }, [id]);
+
 
   const fetchDiscussion = async () => {
     try {
@@ -83,6 +92,20 @@ function TaskDetails() {
       setTypingUsers(
         res.data
       );
+  
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+  const fetchRecordingUsers = async () => {
+    try {
+      const res = await api.get(
+        `/discussion/${id}/recording`
+      );
+  
+      setRecordingUsers(res.data);
   
     } catch (err) {
       console.log(err);
@@ -144,6 +167,13 @@ function TaskDetails() {
 
       const recorder = new MediaRecorder(stream);
 
+      await api.post(
+        `/discussion/${id}/recording`,
+        {
+          is_recording: true,
+        }
+      );
+
       const chunks = [];
 
       recorder.ondataavailable = (e) => {
@@ -170,7 +200,16 @@ function TaskDetails() {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
+
+    await api.post(
+        `/discussion/${id}/recording`,
+        {
+          is_recording: false,
+        }
+      );
+
+
     if (!mediaRecorder) return;
 
     mediaRecorder.stop();
@@ -552,7 +591,39 @@ function TaskDetails() {
     Someone is typing...
   </p>
 )}
-              <p className="text-xs text-slate-400">{task.title}</p>
+              {recordingUsers.length > 0 ? (
+
+  <p
+    className="
+      text-xs
+      text-red-500
+      animate-pulse
+      font-medium
+    "
+  >
+    🎙️ Recording audio...
+  </p>
+
+) : typingUsers.length > 0 ? (
+
+  <p
+    className="
+      text-xs
+      text-green-500
+      animate-pulse
+      font-medium
+    "
+  >
+    ✍️ Typing...
+  </p>
+
+) : (
+
+  <p className="text-xs text-gray-400">
+    checking with resend
+  </p>
+
+)}
               {/* <p className="text-sm text-slate-500">Task Clarifications</p> */}
             </div>
 

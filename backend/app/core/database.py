@@ -20,3 +20,4 @@ notifications_collection = db["notifications"]
 
 discussion_collection = db["task_discussions"]
 typing_collection = db["typing_status"]
+recording_collection = db["recording_status"]
