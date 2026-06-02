@@ -518,20 +518,15 @@ function TaskDetails() {
       {showChatSidebar && (
         <div
           className="
-       fixed
-       top-0
-       right-0
-       h-screen
-     
-       w-full
-       md:w-[450px]
-     
-       bg-white
-       shadow-2xl
-       z-50
        flex
-       flex-col
-       border-l
+    flex-col
+    h-screen
+    md:h-auto
+    bg-white
+    md:w-[460px]
+    w-full
+    overflow-hidden
+
      "
         >
           {/* Header */}
@@ -546,6 +541,7 @@ function TaskDetails() {
     shadow-sm
     px-4
     py-3
+    shrink-0
   "
           >
             <div className="flex items-start justify-between">
@@ -583,7 +579,7 @@ function TaskDetails() {
                 </button>
 
                 <button
-                  onClick={() => setShowDiscussion(false)}
+                  onClick={() => {}}
                   className="
           text-black
           font-bold
@@ -736,6 +732,7 @@ function TaskDetails() {
     sticky
     bottom-0
     z-10
+    shrink-0
   "
           >
             <div
