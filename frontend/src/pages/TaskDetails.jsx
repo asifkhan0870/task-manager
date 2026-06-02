@@ -35,6 +35,7 @@ function TaskDetails() {
     
     const [typingUsers, setTypingUsers] = useState([]);
     const [recordingUsers, setRecordingUsers] = useState([]);
+    const [autoScroll, setAutoScroll] = useState(true);
     
     useEffect(() => {
       fetchTask();
@@ -44,21 +45,12 @@ function TaskDetails() {
     }, [id]);
     
     useEffect(() => {
-      const container = messagesContainerRef.current;
-    
-      if (!container) return;
-    
-      const distanceFromBottom =
-        container.scrollHeight -
-        container.scrollTop -
-        container.clientHeight;
-    
-      if (distanceFromBottom < 150) {
+        if (!autoScroll) return;
+      
         messagesEndRef.current?.scrollIntoView({
           behavior: "smooth",
         });
-      }
-    }, [messages]);
+      }, [messages, autoScroll]);
     
     useEffect(() => {
       fetchDiscussion();
@@ -73,6 +65,17 @@ function TaskDetails() {
     
       return () => clearInterval(interval);
     }, [id]);
+
+    const handleScroll = () => {
+        const container = messagesContainerRef.current;
+      
+        const distanceFromBottom =
+          container.scrollHeight -
+          container.scrollTop -
+          container.clientHeight;
+      
+        setAutoScroll(distanceFromBottom < 150);
+      };
 
     const fetchDiscussion = async () => {
         try {
@@ -633,6 +636,10 @@ function TaskDetails() {
           {/* Messages */}
 
             <div
+
+ref={messagesContainerRef}
+onScroll={handleScroll}
+
               className="
     flex-1
     overflow-y-auto
