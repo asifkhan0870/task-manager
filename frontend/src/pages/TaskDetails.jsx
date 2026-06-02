@@ -46,6 +46,23 @@ function TaskDetails() {
     });
   }, [messages]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchDiscussion();
+    }, 1000);
+  
+    return () => clearInterval(interval);
+  }, [id]);
+  const fetchDiscussion = async () => {
+    const res = await api.get(
+      `/discussion/${id}`
+    );
+  
+    setDiscussion(
+      res.data
+    );
+  };
+
   const loadCurrentUser = async () => {
     try {
       const response = await api.get("/me");
