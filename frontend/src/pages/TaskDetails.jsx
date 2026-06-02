@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRef } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -10,6 +11,7 @@ import MainLayout from "../layouts/MainLayout";
 import ActivityTimeline from "../components/ActivityTimeline";
 
 function TaskDetails() {
+    const messagesEndRef = useRef(null);
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -31,12 +33,20 @@ function TaskDetails() {
 
   const [audioChunks, setAudioChunks] = useState([]);
 
+  
+
   useEffect(() => {
     fetchTask();
     fetchUsers();
     loadMessages();
     loadCurrentUser();
   }, [id]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
+  }, [messages]);
 
   const loadCurrentUser = async () => {
     try {
@@ -457,21 +467,24 @@ await loadMessages();
       {/* CHAT SIDEBAR */}
 
       {showChatSidebar && (
-        <div
-          className="
-      fixed
-      top-0
-      right-0
-      h-screen
-      w-[450px]
-      bg-white
-      shadow-2xl
-      z-50
-      flex
-      flex-col
-      border-l
-    "
-        >
+       <div
+       className="
+       fixed
+       top-0
+       right-0
+       h-screen
+     
+       w-full
+       md:w-[450px]
+     
+       bg-white
+       shadow-2xl
+       z-50
+       flex
+       flex-col
+       border-l
+     "
+     >
           {/* Header */}
 
           <div
@@ -484,9 +497,11 @@ await loadMessages();
   "
           >
             <div>
-              <h2 className="text-xl font-bold">💬 Discussion</h2>
-
-              <p className="text-sm text-slate-500">Task Clarifications</p>
+              <h2 className="text-lg md:text-xl font-bold">💬 Discussion</h2>
+              <p className="text-xs text-slate-400">
+  {task.title}
+</p>
+              {/* <p className="text-sm text-slate-500">Task Clarifications</p> */}
             </div>
 
             <div className="flex items-center gap-3">
@@ -535,6 +550,7 @@ await loadMessages();
     p-4
     space-y-4
     bg-slate-50
+    pb-28
   "
             >
               {messages.length === 0 ? (
@@ -557,7 +573,7 @@ await loadMessages();
                     >
                       <div
                         className={`
-            max-w-[75%]
+            max-w-[85%] md:max-w-[75%]
             px-4
             py-3
             rounded-2xl
@@ -599,7 +615,20 @@ await loadMessages();
       "
     />
   ) : (
-    <div>{msg.message}</div>
+    <div
+  className="
+  text-[10px]
+  opacity-70
+  mt-1
+"
+>
+  {new Date(msg.created_at).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  })}
+</div>
+
+
   )}
 </>
                       </div>
@@ -607,6 +636,9 @@ await loadMessages();
                   );
                 })
               )}
+
+
+<div ref={messagesEndRef}></div>
             </div>
           </div>
 
@@ -631,6 +663,10 @@ await loadMessages();
     border-t
     p-3
     bg-white
+
+    sticky
+    bottom-0
+    z-10
   "
           >
             <div
@@ -707,6 +743,7 @@ await loadMessages();
             </div>
           </div>
         </div>
+        
       )}
     </MainLayout>
   );
