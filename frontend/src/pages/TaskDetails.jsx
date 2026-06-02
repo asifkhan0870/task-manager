@@ -521,7 +521,7 @@ function TaskDetails() {
        fixed
        top-0
        right-0
-       h-screen
+       h-[100dvh]
      
        w-full
        md:w-[450px]
@@ -541,7 +541,7 @@ function TaskDetails() {
             className="
     sticky
     top-0
-    z-30
+    z-50
     bg-white
     border-b
     shadow-sm
@@ -585,8 +585,8 @@ function TaskDetails() {
                 </button>
 
                 <button
-                  onClick={() => {}}
-                  className="
+                  onClick={() => setShowChatSidebar(false)}     
+                               className="
           text-black
           font-bold
           text-xl
@@ -600,14 +600,6 @@ function TaskDetails() {
 
           {/* Messages */}
 
-          <div
-            className="
-        flex-1
-        overflow-y-auto
-        p-4
-        space-y-3
-      "
-          >
             <div
               className="
     flex-1
@@ -710,7 +702,7 @@ function TaskDetails() {
               )}
 
               <div ref={messagesEndRef}></div>
-            </div>
+           
           </div>
 
           {isRecording && (
@@ -734,10 +726,7 @@ function TaskDetails() {
     border-t
     p-3
     bg-white
-
-    sticky
-    bottom-0
-    z-10
+    shrink-0
   "
           >
             <div
