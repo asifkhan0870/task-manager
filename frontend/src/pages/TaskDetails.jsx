@@ -31,7 +31,6 @@ function TaskDetails() {
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
- 
   const [typingUsers, setTypingUsers] = useState([]);
   const [recordingUsers, setRecordingUsers] = useState([]);
 
@@ -48,35 +47,25 @@ function TaskDetails() {
     });
   }, [messages]);
 
-   
   useEffect(() => {
-
     fetchDiscussion();
     fetchTypingUsers();
     fetchRecordingUsers();
-  
+
     const interval = setInterval(() => {
-  
       fetchDiscussion();
       fetchTypingUsers();
       fetchRecordingUsers();
-  
     }, 1000);
-  
-    return () => clearInterval(interval);
-  
-  }, [id]);
 
+    return () => clearInterval(interval);
+  }, [id]);
 
   const fetchDiscussion = async () => {
     try {
-      const res = await api.get(
-        `/discussion/${id}`
-      );
-  
-      setMessages(
-        res.data
-      );
+      const res = await api.get(`/discussion/${id}`);
+
+      setMessages(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -84,29 +73,19 @@ function TaskDetails() {
 
   const fetchTypingUsers = async () => {
     try {
-  
-      const res = await api.get(
-        `/discussion/${id}/typing`
-      );
-  
-      setTypingUsers(
-        res.data
-      );
-  
+      const res = await api.get(`/discussion/${id}/typing`);
+
+      setTypingUsers(res.data);
     } catch (err) {
       console.log(err);
     }
   };
 
-
   const fetchRecordingUsers = async () => {
     try {
-      const res = await api.get(
-        `/discussion/${id}/recording`
-      );
-  
+      const res = await api.get(`/discussion/${id}/recording`);
+
       setRecordingUsers(res.data);
-  
     } catch (err) {
       console.log(err);
     }
@@ -144,12 +123,9 @@ function TaskDetails() {
 
       setQuestion("");
 
-      await api.post(
-        `/discussion/${id}/typing`,
-        {
-          is_typing: false
-        }
-      );
+      await api.post(`/discussion/${id}/typing`, {
+        is_typing: false,
+      });
 
       await loadMessages();
     } catch (error) {
@@ -167,12 +143,9 @@ function TaskDetails() {
 
       const recorder = new MediaRecorder(stream);
 
-      await api.post(
-        `/discussion/${id}/recording`,
-        {
-          is_recording: true,
-        }
-      );
+      await api.post(`/discussion/${id}/recording`, {
+        is_recording: true,
+      });
 
       const chunks = [];
 
@@ -201,14 +174,9 @@ function TaskDetails() {
   };
 
   const stopRecording = async () => {
-
-    await api.post(
-        `/discussion/${id}/recording`,
-        {
-          is_recording: false,
-        }
-      );
-
+    await api.post(`/discussion/${id}/recording`, {
+      is_recording: false,
+    });
 
     if (!mediaRecorder) return;
 
@@ -569,54 +537,64 @@ function TaskDetails() {
           {/* Header */}
 
           <div
-  className="
+            className="
     sticky
     top-0
-    z-20
+    z-30
     bg-white
     border-b
-    p-4
     shadow-sm
+    px-4
+    py-3
   "
->
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h2 className="font-bold text-2xl flex items-center gap-2">
+                  💬 Discussion
+                </h2>
 
-  <div className="flex justify-between items-center">
+                {isRecording ? (
+                  <p className="text-red-500 text-xs animate-pulse mt-1">
+                    🎙️ Recording audio...
+                  </p>
+                ) : (
+                  typingUsers.length > 0 && (
+                    <p className="text-green-500 text-xs animate-pulse mt-1">
+                      ✍️ Typing...
+                    </p>
+                  )
+                )}
+              </div>
 
-    <div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={clearDiscussion}
+                  className="
+          text-red-500
+          text-xs
+          px-2
+          py-1
+          rounded
+          bg-red-50
+        "
+                >
+                  🗑 Clear
+                </button>
 
-      <h2 className="font-bold text-2xl">
-        Discussion
-      </h2>
-
-      {recordingUsers.length > 0 ? (
-
-        <p className="text-red-500 text-xs animate-pulse">
-          🎙️ Recording audio...
-        </p>
-
-      ) : typingUsers.length > 0 ? (
-
-        <p className="text-green-500 text-xs animate-pulse">
-          ✍️ Typing...
-        </p>
-
-      ) : (
-
-        <p className="text-gray-400 text-xs">
-          Task Clarifications
-        </p>
-
-      )}
-
-    </div>
-
-    <button>
-      Clear
-    </button>
-
-  </div>
-
-</div>
+                <button
+                  onClick={() => setShowDiscussion(false)}
+                  className="
+          text-black
+          font-bold
+          text-xl
+        "
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Messages */}
 
@@ -690,39 +668,39 @@ function TaskDetails() {
                         </div>
 
                         <>
-  {msg.message_type === "audio" ? (
-    <audio
-      controls
-      src={msg.audio_url}
-      className="
+                          {msg.message_type === "audio" ? (
+                            <audio
+                              controls
+                              src={msg.audio_url}
+                              className="
         w-56
         rounded-lg
       "
-    />
-  ) : (
-    <div
-      className="
+                            />
+                          ) : (
+                            <div
+                              className="
         break-words
         text-sm
       "
-    >
-      {msg.message}
-    </div>
-  )}
+                            >
+                              {msg.message}
+                            </div>
+                          )}
 
-  <div
-    className="
+                          <div
+                            className="
       text-[10px]
       opacity-70
       mt-1
     "
-  >
-    {new Date(msg.created_at).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}
-  </div>
-</>
+                          >
+                            {new Date(msg.created_at).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </div>
+                        </>
                       </div>
                     </div>
                   );
@@ -797,19 +775,12 @@ function TaskDetails() {
               <textarea
                 value={question}
                 onChange={async (e) => {
+                  setQuestion(e.target.value);
 
-  setQuestion(
-    e.target.value
-  );
-
-  await api.post(
-    `/discussion/${id}/typing`,
-    {
-      is_typing: true
-    }
-  );
-
-}}
+                  await api.post(`/discussion/${id}/typing`, {
+                    is_typing: true,
+                  });
+                }}
                 onKeyDown={handleEnter}
                 rows={1}
                 placeholder="Type a message..."
