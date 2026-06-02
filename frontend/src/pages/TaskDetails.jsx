@@ -345,6 +345,20 @@ function TaskDetails() {
     }
   };
 
+
+  const formatTime = (dateString) => {
+    try {
+      return new Date(dateString).toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata",
+      });
+    } catch {
+      return "";
+    }
+  };
+
   if (!task) return <MainLayout>Loading...</MainLayout>;
 
   return (
@@ -723,12 +737,7 @@ function TaskDetails() {
       mt-1
     "
                         >
-                          {new Date(msg.created_at).toLocaleString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                            timeZone: "Asia/Kolkata",
-                          })}
+                          {formatTime(msg.created_at)}
                         </div>
                       </>
                     </div>
