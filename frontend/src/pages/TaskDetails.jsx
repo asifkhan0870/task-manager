@@ -47,20 +47,27 @@ function TaskDetails() {
   }, [messages]);
 
   useEffect(() => {
+    fetchDiscussion();
+  
     const interval = setInterval(() => {
       fetchDiscussion();
     }, 1000);
   
     return () => clearInterval(interval);
   }, [id]);
+
   const fetchDiscussion = async () => {
-    const res = await api.get(
-      `/discussion/${id}`
-    );
+    try {
+      const res = await api.get(
+        `/discussion/${id}`
+      );
   
-    setDiscussion(
-      res.data
-    );
+      setMessages(
+        res.data
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const loadCurrentUser = async () => {
