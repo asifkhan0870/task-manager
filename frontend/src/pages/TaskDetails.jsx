@@ -588,7 +588,7 @@ function TaskDetails() {
       mt-1
     "
   >
-    Someone is typing...
+    
   </p>
 )}
               {recordingUsers.length > 0 ? (
