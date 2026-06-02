@@ -35,8 +35,7 @@ async def send_message(
         "message_type": message_type,
         "message": payload.get("message"),
         "audio_url": payload.get("audio_url"),
-        "created_at": datetime.now(
-    ZoneInfo("Asia/Kolkata")
+        "created_at": "TEST"
 )
     }
 
