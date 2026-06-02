@@ -17,3 +17,5 @@ tasks_collection = db["tasks"]
 activity_collection = db["activity_logs"]
 
 notifications_collection = db["notifications"]
+
+discussion_collection = db["task_discussions"]

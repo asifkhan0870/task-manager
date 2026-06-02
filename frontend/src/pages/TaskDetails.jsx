@@ -15,15 +15,137 @@ function TaskDetails() {
   const navigate = useNavigate();
 
   const [task, setTask] = useState(null);
-  const [users, setUsers] =
-  useState([]);
+  const [users, setUsers] = useState([]);
 
   const [loadingAction, setLoadingAction] = useState("");
+  const [showChatSidebar, setShowChatSidebar] = useState(false);
+
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const [isRecording, setIsRecording] = useState(false);
+
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+
+  const [audioChunks, setAudioChunks] = useState([]);
 
   useEffect(() => {
     fetchTask();
     fetchUsers();
-  }, []);
+    loadMessages();
+    loadCurrentUser();
+  }, [id]);
+
+  const loadCurrentUser = async () => {
+    try {
+      const response = await api.get("/me");
+
+      setCurrentUser(response.data.user_id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loadMessages = async () => {
+    try {
+      const response = await api.get(`/discussion/${id}`);
+
+      setMessages(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!question.trim()) {
+      return;
+    }
+
+    try {
+      await api.post(`/discussion/${id}/message`, {
+        message: question,
+      });
+
+      setQuestion("");
+
+      await loadMessages();
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Failed to send message");
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+
+      const recorder = new MediaRecorder(stream);
+
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        chunks.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, {
+          type: "audio/webm",
+        });
+
+        await uploadAudio(audioBlob);
+      };
+
+      recorder.start();
+
+      setMediaRecorder(recorder);
+
+      setIsRecording(true);
+    } catch (err) {
+      console.error(err);
+
+      alert("Microphone access denied");
+    }
+  };
+
+  const stopRecording = () => {
+    if (!mediaRecorder) return;
+
+    mediaRecorder.stop();
+
+    setIsRecording(false);
+  };
+
+  const uploadAudio = async (audioBlob) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("file", audioBlob, "voice.webm");
+
+      const response = await api.post(
+  "/upload/audio",
+  formData
+);
+
+await api.post(
+  `/discussion/${id}/message`,
+  {
+    audio_url: response.data.audio_url,
+    message: ""
+  }
+);
+
+await loadMessages();
+
+      console.log(response.data.audio_url);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchTask = async () => {
     try {
@@ -37,44 +159,21 @@ function TaskDetails() {
     }
   };
 
-  const getUserName =
-  (userId) => {
+  const getUserName = (userId) => {
+    const user = users.find((u) => u._id === userId);
 
-    const user =
-      users.find(
-        (u) =>
-          u._id === userId
-      );
-
-    return user
-      ? user.name
-      : userId;
+    return user ? user.name : userId;
   };
 
-
-  const fetchUsers =
-  async () => {
-
+  const fetchUsers = async () => {
     try {
+      const response = await api.get("/users/");
 
-      const response =
-        await api.get(
-          "/users/"
-        );
-
-      setUsers(
-        response.data || []
-      );
-
+      setUsers(response.data || []);
     } catch (err) {
-
       console.log(err);
-
     }
   };
-
-
-
 
   const deleteTask = async () => {
     if (loadingAction) return;
@@ -134,6 +233,36 @@ function TaskDetails() {
     }
   };
 
+  const clearDiscussion = async () => {
+    const confirmed = window.confirm("Clear entire discussion?");
+
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/discussion/${id}`);
+
+      setMessages([]);
+
+      toast.success("Discussion cleared");
+    } catch (error) {
+      toast.error("Failed");
+    }
+  };
+
+  const handleEnter = (e) => {
+    if (e.key !== "Enter" || e.shiftKey) {
+      return;
+    }
+
+    e.preventDefault();
+
+    if (isRecording) {
+      stopRecording();
+    } else {
+      sendMessage();
+    }
+  };
+
   if (!task) return <MainLayout>Loading...</MainLayout>;
 
   return (
@@ -156,6 +285,24 @@ function TaskDetails() {
           {task.title}
         </h1>
 
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => setShowChatSidebar(true)}
+            className="
+      bg-blue-600
+      hover:bg-blue-700
+      text-white
+      px-4
+      py-2
+      rounded-xl
+      shadow-md
+      transition
+    "
+          >
+            💬 Discussion
+          </button>
+        </div>
+
         <p
           className="
             mb-4
@@ -163,6 +310,28 @@ function TaskDetails() {
         >
           {task.description}
         </p>
+
+        {task.audio_url && (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-2">🎤 Voice Note</h3>
+
+            <audio controls src={task.audio_url} className="w-full" />
+
+            <a
+              href={task.audio_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+        inline-block
+        mt-2
+        text-blue-600
+        hover:underline
+      "
+            >
+              Open Audio in New Tab
+            </a>
+          </div>
+        )}
 
         <p>
           <b>Priority:</b> {task.priority}
@@ -173,28 +342,23 @@ function TaskDetails() {
         </p>
 
         <p>
-          <b>Assigned By:</b>{" "}
-{getUserName(task.assigned_by)}
+          <b>Assigned By:</b> {getUserName(task.assigned_by)}
         </p>
 
         <p>
-          <b>Assigned To:</b>{" "}
-{getUserName(task.assigned_to)}
+          <b>Assigned To:</b> {getUserName(task.assigned_to)}
         </p>
 
         <p>
           <b>Due Date:</b>{" "}
-{new Date(task.due_date).toLocaleString(
-  "en-US",
-  {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  }
-)}
+          {new Date(task.due_date).toLocaleString("en-US", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}
         </p>
 
         <div
@@ -286,6 +450,261 @@ function TaskDetails() {
                 "
           >
             Processing... Please wait.
+          </div>
+        </div>
+      )}
+
+      {/* CHAT SIDEBAR */}
+
+      {showChatSidebar && (
+        <div
+          className="
+      fixed
+      top-0
+      right-0
+      h-screen
+      w-[450px]
+      bg-white
+      shadow-2xl
+      z-50
+      flex
+      flex-col
+      border-l
+    "
+        >
+          {/* Header */}
+
+          <div
+            className="
+    p-5
+    border-b
+    flex
+    justify-between
+    items-center
+  "
+          >
+            <div>
+              <h2 className="text-xl font-bold">💬 Discussion</h2>
+
+              <p className="text-sm text-slate-500">Task Clarifications</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={clearDiscussion}
+                className="
+    bg-red-50
+    text-red-600
+    px-3
+    py-1
+    rounded-lg
+    text-xs
+    font-medium
+    hover:bg-red-100
+  "
+              >
+                🗑 Clear
+              </button>
+
+              <button
+                onClick={() => setShowChatSidebar(false)}
+                className="
+        text-xl
+        hover:text-red-500
+      "
+              >
+                ✖
+              </button>
+            </div>
+          </div>
+
+          {/* Messages */}
+
+          <div
+            className="
+        flex-1
+        overflow-y-auto
+        p-4
+        space-y-3
+      "
+          >
+            <div
+              className="
+    flex-1
+    overflow-y-auto
+    p-4
+    space-y-4
+    bg-slate-50
+  "
+            >
+              {messages.length === 0 ? (
+                <div className="text-center text-slate-400 mt-10">
+                  No discussion yet.
+                  <br />
+                  Start the conversation.
+                </div>
+              ) : (
+                messages.map((msg) => {
+                  const isMine = msg.sender_id === currentUser;
+
+                  return (
+                    <div
+                      key={msg._id}
+                      className={`
+          flex
+          ${isMine ? "justify-end" : "justify-start"}
+        `}
+                    >
+                      <div
+                        className={`
+            max-w-[75%]
+            px-4
+            py-3
+            rounded-2xl
+            shadow-sm
+
+            ${
+              isMine
+                ? `
+                  bg-blue-500
+                  text-white
+                  rounded-br-md
+                `
+                : `
+                  bg-slate-100
+                  text-slate-800
+                  rounded-bl-md
+                `
+            }
+          `}
+                      >
+                        <div
+                          className="
+              text-xs
+              opacity-70
+              mb-1
+            "
+                        >
+                          {isMine ? "You" : getUserName(msg.sender_id)}
+                        </div>
+
+                        <>
+  {msg.message_type === "audio" ? (
+    <audio
+      controls
+      src={msg.audio_url}
+      className="
+        w-56
+        rounded-lg
+      "
+    />
+  ) : (
+    <div>{msg.message}</div>
+  )}
+</>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          {isRecording && (
+            <div
+              className="
+      text-red-500
+      text-sm
+      font-semibold
+      animate-pulse
+      mb-2
+    "
+            >
+              🔴 Recording...
+            </div>
+          )}
+
+          {/* Message Input */}
+
+          <div
+            className="
+    border-t
+    p-3
+    bg-white
+  "
+          >
+            <div
+              className="
+      flex
+      items-center
+      gap-3
+    "
+            >
+              {/* MIC */}
+
+              <button
+                onClick={() => {
+                  if (!isRecording) {
+                    startRecording();
+                  } else {
+                    stopRecording();
+                  }
+                }}
+                className="
+    w-12
+    h-12
+    rounded-full
+    bg-red-500
+    text-white
+    flex
+    items-center
+    justify-center
+    shadow
+  "
+              >
+                {isRecording ? "⏹" : "🎤"}
+              </button>
+
+              {/* INPUT */}
+
+              <textarea
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                onKeyDown={handleEnter}
+                rows={1}
+                placeholder="Type a message..."
+                className="
+        flex-1
+        border
+        rounded-full
+        px-5
+        py-3
+        resize-none
+        focus:outline-none
+      "
+              />
+
+              {/* SEND */}
+
+              <button
+                onClick={sendMessage}
+                className="
+        w-12
+        h-12
+        rounded-full
+        bg-blue-600
+        hover:bg-blue-700
+        text-white
+        flex
+        items-center
+        justify-center
+        text-xl
+        shadow
+      "
+              >
+                ➤
+              </button>
+            </div>
           </div>
         </div>
       )}

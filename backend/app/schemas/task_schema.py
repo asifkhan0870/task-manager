@@ -15,6 +15,8 @@ class TaskCreate(BaseModel):
 
     due_date: datetime
 
+    audio_url: Optional[str] = None
+
 
 class TaskUpdate(BaseModel):
 
@@ -25,6 +27,8 @@ class TaskUpdate(BaseModel):
     priority: Optional[str] = None
 
     due_date: Optional[datetime] = None
+
+    audio_url: Optional[str] = None
 
 
 class TaskStatusUpdate(BaseModel):

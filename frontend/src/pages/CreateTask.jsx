@@ -13,6 +13,17 @@ function CreateTask() {
   const [dueDate, setDueDate] = useState("");
   const [users, setUsers] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRecording, setIsRecording] =
+  useState(false);
+
+const [audioBlob, setAudioBlob] =
+  useState(null);
+
+const [audioUrl, setAudioUrl] =
+  useState("");
+
+const [mediaRecorder, setMediaRecorder] =
+  useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -55,21 +66,164 @@ function CreateTask() {
     }
   };
 
+  const startRecording =
+  async () => {
+
+    try {
+
+      const stream =
+        await navigator
+          .mediaDevices
+          .getUserMedia({
+            audio: true
+          });
+
+      const recorder =
+        new MediaRecorder(
+          stream
+        );
+
+      const chunks = [];
+
+      recorder.ondataavailable =
+        (event) => {
+
+          chunks.push(
+            event.data
+          );
+        };
+
+      recorder.onstop =
+        () => {
+
+          const blob =
+            new Blob(
+              chunks,
+              {
+                type:
+                  "audio/webm"
+              }
+            );
+
+          setAudioBlob(blob);
+
+          setAudioUrl(
+            URL.createObjectURL(
+              blob
+            )
+          );
+        };
+
+      recorder.start();
+
+      setMediaRecorder(
+        recorder
+      );
+
+      setIsRecording(true);
+
+    } catch {
+
+      toast.error(
+        "Microphone access denied"
+      );
+    }
+  };
+
+
+const stopRecording =
+  () => {
+
+    mediaRecorder?.stop();
+
+    setIsRecording(false);
+  };
+
+
+const deleteRecording =
+  () => {
+
+    setAudioBlob(null);
+
+    setAudioUrl("");
+  };
+
+  const uploadAudio =
+  async () => {
+
+    if (!audioBlob)
+      return null;
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      "file",
+      audioBlob,
+      "voice-note.webm"
+    );
+
+    const response =
+      await api.post(
+        "/upload/audio",
+        formData,
+        {
+          headers: {
+            "Content-Type":
+              "multipart/form-data"
+          }
+        }
+      );
+
+    return response.data.audio_url;
+  };
+
   const handleSubmit = async (e) => {
 
     e.preventDefault();
-
+  
     if (isSubmitting) return;
-
+  
     setIsSubmitting(true);
-
+  
     const loadingToast =
       toast.loading(
         "Creating task..."
       );
-
+  
     try {
-
+  
+      let uploadedAudioUrl =
+        null;
+  
+      if (audioBlob) {
+  
+        const formData =
+          new FormData();
+  
+        formData.append(
+          "file",
+          audioBlob,
+          "voice-note.webm"
+        );
+  
+        const uploadResponse =
+          await api.post(
+            "/upload/audio",
+            formData,
+            {
+              headers: {
+                "Content-Type":
+                  "multipart/form-data"
+              }
+            }
+          );
+  
+        uploadedAudioUrl =
+          uploadResponse.data
+            .audio_url;
+      }
+  
       await api.post(
         "/tasks/",
         {
@@ -79,38 +233,43 @@ function CreateTask() {
           assigned_to:
             assignedTo,
           due_date:
-            dueDate
+            dueDate,
+          audio_url:
+            uploadedAudioUrl
         }
       );
-
+  
       toast.success(
         "Task created successfully",
         {
           id: loadingToast
         }
       );
-
+  
       setTitle("");
       setDescription("");
       setPriority("Medium");
       setAssignedTo("");
       setDueDate("");
-
+  
+      setAudioBlob(null);
+      setAudioUrl("");
+  
     } catch (err) {
-
+  
       console.log(err);
-
+  
       toast.error(
         "Failed to create task",
         {
           id: loadingToast
         }
       );
-
+  
     } finally {
-
+  
       setIsSubmitting(false);
-
+  
     }
   };
 
@@ -353,6 +512,164 @@ function CreateTask() {
           "
           required
         />
+
+<div
+  className="
+  bg-slate-50
+  border
+  border-slate-200
+  rounded-2xl
+  p-5
+  mb-5
+  "
+>
+
+  <div
+    className="
+    flex
+    items-center
+    justify-between
+    mb-4
+    "
+  >
+
+    <div>
+
+      <h3
+        className="
+        text-lg
+        font-semibold
+        "
+      >
+        🎤 Voice Note
+      </h3>
+
+      <p
+        className="
+        text-sm
+        text-slate-500
+        "
+      >
+        Record instructions for the assignee
+      </p>
+
+    </div>
+
+  </div>
+
+  <div
+    className="
+    flex
+    flex-wrap
+    gap-3
+    "
+  >
+
+    {!isRecording && (
+
+      <button
+        type="button"
+        onClick={startRecording}
+        className="
+        bg-red-500
+        hover:bg-red-600
+        text-white
+        px-4
+        py-2
+        rounded-xl
+        "
+      >
+        🎙 Start Recording
+      </button>
+
+    )}
+
+    {isRecording && (
+
+      <button
+        type="button"
+        onClick={stopRecording}
+        className="
+        bg-gray-900
+        text-white
+        px-4
+        py-2
+        rounded-xl
+        animate-pulse
+        "
+      >
+        ⏹ Stop Recording
+      </button>
+
+    )}
+
+    {audioUrl && (
+
+      <button
+        type="button"
+        onClick={deleteRecording}
+        className="
+        bg-red-100
+        text-red-600
+        px-4
+        py-2
+        rounded-xl
+        "
+      >
+        🗑 Delete
+      </button>
+
+    )}
+
+  </div>
+
+  {isRecording && (
+
+<p
+  className="
+  mt-4
+  text-red-500
+  font-semibold
+  animate-pulse
+  "
+>
+  🔴 Recording...
+</p>
+
+)}
+
+  {audioUrl && (
+
+    <div className="mt-4">
+
+      <p
+        className="
+        text-sm
+        text-green-600
+        font-medium
+        mb-2
+        "
+      >
+        ✅ Recording Ready
+      </p>
+
+      <audio
+        controls
+        src={audioUrl}
+        className="
+        w-full
+        "
+      />
+
+    </div>
+
+  )}
+
+
+
+</div>
+
+
 
         <div
           className="

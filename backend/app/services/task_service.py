@@ -16,6 +16,7 @@ async def create_task(data, current_user):
     task = {
         "title": data.title,
         "description": data.description,
+        "audio_url": data.audio_url,
         "priority": data.priority,
         "status": "Incomplete",
         "assigned_by": current_user,

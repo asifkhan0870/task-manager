@@ -11,6 +11,13 @@ from app.api.tasks import router as task_router
 from app.api.users import router as users_router
 from app.api.dashboard import router as dashboard_router
 from app.api.activity import router as activity_router
+from app.api.upload import router as upload_router
+from app.api.notifications import (
+    router as notification_router
+)
+from app.api.discussions import (
+    router as discussion_router
+)
 
 # Scheduler
 from app.scheduler.reminder_scheduler import start_scheduler
@@ -65,7 +72,13 @@ app.include_router(users_router)
 app.include_router(dashboard_router)
 
 app.include_router(activity_router)
-
+app.include_router(upload_router)
+app.include_router(
+    notification_router
+)
+app.include_router(
+    discussion_router
+)
 
 # ==========================
 # AUTH TEST ROUTE
