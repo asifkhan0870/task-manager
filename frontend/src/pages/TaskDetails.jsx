@@ -556,17 +556,26 @@ function TaskDetails() {
                   💬 Discussion
                 </h2>
 
-                {isRecording ? (
-                  <p className="text-red-500 text-xs animate-pulse mt-1">
-                    🎙️ Recording audio...
-                  </p>
-                ) : (
-                  typingUsers.length > 0 && (
-                    <p className="text-green-500 text-xs animate-pulse mt-1">
-                      ✍️ Typing...
-                    </p>
-                  )
-                )}
+                {isRecording && (
+  <p className="text-red-500 text-xs animate-pulse mt-1">
+    🎙️ Recording...
+  </p>
+)}
+
+{!isRecording &&
+  recordingUsers.some((u) => u !== currentUser) && (
+    <p className="text-red-500 text-xs animate-pulse mt-1">
+      🎙️ Someone is recording...
+    </p>
+)}
+
+{!isRecording &&
+  !recordingUsers.some((u) => u !== currentUser) &&
+  typingUsers.some((u) => u !== currentUser) && (
+    <p className="text-green-500 text-xs animate-pulse mt-1">
+      ✍️ Typing...
+    </p>
+)}
               </div>
 
               <div className="flex items-center gap-2">
