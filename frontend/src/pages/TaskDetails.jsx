@@ -11,7 +11,7 @@ import MainLayout from "../layouts/MainLayout";
 import ActivityTimeline from "../components/ActivityTimeline";
 
 function TaskDetails() {
-    const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null);
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -33,8 +33,6 @@ function TaskDetails() {
 
   const [audioChunks, setAudioChunks] = useState([]);
 
-  
-
   useEffect(() => {
     fetchTask();
     fetchUsers();
@@ -44,7 +42,7 @@ function TaskDetails() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth"
+      behavior: "smooth",
     });
   }, [messages]);
 
@@ -136,20 +134,14 @@ function TaskDetails() {
 
       formData.append("file", audioBlob, "voice.webm");
 
-      const response = await api.post(
-  "/upload/audio",
-  formData
-);
+      const response = await api.post("/upload/audio", formData);
 
-await api.post(
-  `/discussion/${id}/message`,
-  {
-    audio_url: response.data.audio_url,
-    message: ""
-  }
-);
+      await api.post(`/discussion/${id}/message`, {
+        audio_url: response.data.audio_url,
+        message: "",
+      });
 
-await loadMessages();
+      await loadMessages();
 
       console.log(response.data.audio_url);
     } catch (err) {
@@ -467,8 +459,8 @@ await loadMessages();
       {/* CHAT SIDEBAR */}
 
       {showChatSidebar && (
-       <div
-       className="
+        <div
+          className="
        fixed
        top-0
        right-0
@@ -484,7 +476,7 @@ await loadMessages();
        flex-col
        border-l
      "
-     >
+        >
           {/* Header */}
 
           <div
@@ -498,9 +490,7 @@ await loadMessages();
           >
             <div>
               <h2 className="text-lg md:text-xl font-bold">💬 Discussion</h2>
-              <p className="text-xs text-slate-400">
-  {task.title}
-</p>
+              <p className="text-xs text-slate-400">{task.title}</p>
               {/* <p className="text-sm text-slate-500">Task Clarifications</p> */}
             </div>
 
@@ -616,20 +606,27 @@ await loadMessages();
     />
   ) : (
     <div
-  className="
-  text-[10px]
-  opacity-70
-  mt-1
-"
->
-  {new Date(msg.created_at).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit"
-  })}
-</div>
-
-
+      className="
+        break-words
+        text-sm
+      "
+    >
+      {msg.message}
+    </div>
   )}
+
+  <div
+    className="
+      text-[10px]
+      opacity-70
+      mt-1
+    "
+  >
+    {new Date(msg.created_at).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}
+  </div>
 </>
                       </div>
                     </div>
@@ -637,8 +634,7 @@ await loadMessages();
                 })
               )}
 
-
-<div ref={messagesEndRef}></div>
+              <div ref={messagesEndRef}></div>
             </div>
           </div>
 
@@ -743,7 +739,6 @@ await loadMessages();
             </div>
           </div>
         </div>
-        
       )}
     </MainLayout>
   );
