@@ -11,65 +11,88 @@ import MainLayout from "../layouts/MainLayout";
 import ActivityTimeline from "../components/ActivityTimeline";
 
 function TaskDetails() {
-  const messagesEndRef = useRef(null);
-  const { id } = useParams();
-
-  const navigate = useNavigate();
-
-  const [task, setTask] = useState(null);
-  const [users, setUsers] = useState([]);
-
-  const [loadingAction, setLoadingAction] = useState("");
-  const [showChatSidebar, setShowChatSidebar] = useState(false);
-
-  const [question, setQuestion] = useState("");
-  const [messages, setMessages] = useState([]);
-
-  const [currentUser, setCurrentUser] = useState(null);
-
-  const [isRecording, setIsRecording] = useState(false);
-
-  const [mediaRecorder, setMediaRecorder] = useState(null);
-
-  const [typingUsers, setTypingUsers] = useState([]);
-  const [recordingUsers, setRecordingUsers] = useState([]);
-
-  useEffect(() => {
-    fetchTask();
-    fetchUsers();
-    loadMessages();
-    loadCurrentUser();
-  }, [id]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
-  }, [messages]);
-
-  useEffect(() => {
-    fetchDiscussion();
-    fetchTypingUsers();
-    fetchRecordingUsers();
-
-    const interval = setInterval(() => {
+    const messagesContainerRef = useRef(null);
+    const messagesEndRef = useRef(null);
+    
+    const { id } = useParams();
+    
+    const navigate = useNavigate();
+    
+    const [task, setTask] = useState(null);
+    const [users, setUsers] = useState([]);
+    
+    const [loadingAction, setLoadingAction] = useState("");
+    const [showChatSidebar, setShowChatSidebar] = useState(false);
+    
+    const [question, setQuestion] = useState("");
+    const [messages, setMessages] = useState([]);
+    
+    const [currentUser, setCurrentUser] = useState(null);
+    
+    const [isRecording, setIsRecording] = useState(false);
+    
+    const [mediaRecorder, setMediaRecorder] = useState(null);
+    
+    const [typingUsers, setTypingUsers] = useState([]);
+    const [recordingUsers, setRecordingUsers] = useState([]);
+    
+    useEffect(() => {
+      fetchTask();
+      fetchUsers();
+      loadMessages();
+      loadCurrentUser();
+    }, [id]);
+    
+    useEffect(() => {
+      const container = messagesContainerRef.current;
+    
+      if (!container) return;
+    
+      const distanceFromBottom =
+        container.scrollHeight -
+        container.scrollTop -
+        container.clientHeight;
+    
+      if (distanceFromBottom < 150) {
+        messagesEndRef.current?.scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+    }, [messages]);
+    
+    useEffect(() => {
       fetchDiscussion();
       fetchTypingUsers();
       fetchRecordingUsers();
-    }, 1000);
+    
+      const interval = setInterval(() => {
+        fetchDiscussion();
+        fetchTypingUsers();
+        fetchRecordingUsers();
+      }, 1000);
+    
+      return () => clearInterval(interval);
+    }, [id]);
 
-    return () => clearInterval(interval);
-  }, [id]);
-
-  const fetchDiscussion = async () => {
-    try {
-      const res = await api.get(`/discussion/${id}`);
-
-      setMessages(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    const fetchDiscussion = async () => {
+        try {
+          const res = await api.get(`/discussion/${id}`);
+      
+          setMessages((prev) => {
+            if (
+              prev.length === res.data.length &&
+              prev[prev.length - 1]?._id ===
+                res.data[res.data.length - 1]?._id
+            ) {
+              return prev;
+            }
+      
+            return res.data;
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      };
 
   const fetchTypingUsers = async () => {
     try {
