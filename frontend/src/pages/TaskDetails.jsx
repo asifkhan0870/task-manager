@@ -11,91 +11,88 @@ import MainLayout from "../layouts/MainLayout";
 import ActivityTimeline from "../components/ActivityTimeline";
 
 function TaskDetails() {
-    const messagesContainerRef = useRef(null);
-    const messagesEndRef = useRef(null);
-    
-    const { id } = useParams();
-    
-    const navigate = useNavigate();
-    
-    const [task, setTask] = useState(null);
-    const [users, setUsers] = useState([]);
-    
-    const [loadingAction, setLoadingAction] = useState("");
-    const [showChatSidebar, setShowChatSidebar] = useState(false);
-    
-    const [question, setQuestion] = useState("");
-    const [messages, setMessages] = useState([]);
-    
-    const [currentUser, setCurrentUser] = useState(null);
-    
-    const [isRecording, setIsRecording] = useState(false);
-    
-    const [mediaRecorder, setMediaRecorder] = useState(null);
-    
-    const [typingUsers, setTypingUsers] = useState([]);
-    const [recordingUsers, setRecordingUsers] = useState([]);
-    const [autoScroll, setAutoScroll] = useState(true);
-    
-    useEffect(() => {
-      fetchTask();
-      fetchUsers();
-      loadMessages();
-      loadCurrentUser();
-    }, [id]);
-    
-    useEffect(() => {
-        if (!autoScroll) return;
-      
-        messagesEndRef.current?.scrollIntoView({
-          behavior: "smooth",
-        });
-      }, [messages, autoScroll]);
-    
-    useEffect(() => {
+  const messagesContainerRef = useRef(null);
+  const messagesEndRef = useRef(null);
+
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const [task, setTask] = useState(null);
+  const [users, setUsers] = useState([]);
+
+  const [loadingAction, setLoadingAction] = useState("");
+  const [showChatSidebar, setShowChatSidebar] = useState(false);
+
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const [isRecording, setIsRecording] = useState(false);
+
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+
+  const [typingUsers, setTypingUsers] = useState([]);
+  const [recordingUsers, setRecordingUsers] = useState([]);
+  const [autoScroll, setAutoScroll] = useState(true);
+
+  useEffect(() => {
+    fetchTask();
+    fetchUsers();
+    loadMessages();
+    loadCurrentUser();
+  }, [id]);
+
+  useEffect(() => {
+    if (!autoScroll) return;
+
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, autoScroll]);
+
+  useEffect(() => {
+    fetchDiscussion();
+    fetchTypingUsers();
+    fetchRecordingUsers();
+
+    const interval = setInterval(() => {
       fetchDiscussion();
       fetchTypingUsers();
       fetchRecordingUsers();
-    
-      const interval = setInterval(() => {
-        fetchDiscussion();
-        fetchTypingUsers();
-        fetchRecordingUsers();
-      }, 1000);
-    
-      return () => clearInterval(interval);
-    }, [id]);
+    }, 1000);
 
-    const handleScroll = () => {
-        const container = messagesContainerRef.current;
-      
-        const distanceFromBottom =
-          container.scrollHeight -
-          container.scrollTop -
-          container.clientHeight;
-      
-        setAutoScroll(distanceFromBottom < 150);
-      };
+    return () => clearInterval(interval);
+  }, [id]);
 
-    const fetchDiscussion = async () => {
-        try {
-          const res = await api.get(`/discussion/${id}`);
-      
-          setMessages((prev) => {
-            if (
-              prev.length === res.data.length &&
-              prev[prev.length - 1]?._id ===
-                res.data[res.data.length - 1]?._id
-            ) {
-              return prev;
-            }
-      
-            return res.data;
-          });
-        } catch (err) {
-          console.error(err);
+  const handleScroll = () => {
+    const container = messagesContainerRef.current;
+
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+
+    setAutoScroll(distanceFromBottom < 150);
+  };
+
+  const fetchDiscussion = async () => {
+    try {
+      const res = await api.get(`/discussion/${id}`);
+
+      setMessages((prev) => {
+        if (
+          prev.length === res.data.length &&
+          prev[prev.length - 1]?._id === res.data[res.data.length - 1]?._id
+        ) {
+          return prev;
         }
-      };
+
+        return res.data;
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchTypingUsers = async () => {
     try {
@@ -583,25 +580,25 @@ function TaskDetails() {
                 </h2>
 
                 {isRecording && (
-  <p className="text-red-500 text-xs animate-pulse mt-1">
-    🎙️ Recording...
-  </p>
-)}
+                  <p className="text-red-500 text-xs animate-pulse mt-1">
+                    🎙️ Recording...
+                  </p>
+                )}
 
-{!isRecording &&
-  recordingUsers.some((u) => u !== currentUser) && (
-    <p className="text-red-500 text-xs animate-pulse mt-1">
-      🎙️ Someone is recording...
-    </p>
-)}
+                {!isRecording &&
+                  recordingUsers.some((u) => u !== currentUser) && (
+                    <p className="text-red-500 text-xs animate-pulse mt-1">
+                      🎙️ Someone is recording...
+                    </p>
+                  )}
 
-{!isRecording &&
-  !recordingUsers.some((u) => u !== currentUser) &&
-  typingUsers.some((u) => u !== currentUser) && (
-    <p className="text-green-500 text-xs animate-pulse mt-1">
-      ✍️ Typing...
-    </p>
-)}
+                {!isRecording &&
+                  !recordingUsers.some((u) => u !== currentUser) &&
+                  typingUsers.some((u) => u !== currentUser) && (
+                    <p className="text-green-500 text-xs animate-pulse mt-1">
+                      ✍️ Typing...
+                    </p>
+                  )}
               </div>
 
               <div className="flex items-center gap-2">
@@ -620,8 +617,8 @@ function TaskDetails() {
                 </button>
 
                 <button
-                  onClick={() => setShowChatSidebar(false)}     
-                               className="
+                  onClick={() => setShowChatSidebar(false)}
+                  className="
           text-black
           font-bold
           text-xl
@@ -635,12 +632,10 @@ function TaskDetails() {
 
           {/* Messages */}
 
-            <div
-
-ref={messagesContainerRef}
-onScroll={handleScroll}
-
-              className="
+          <div
+            ref={messagesContainerRef}
+            onScroll={handleScroll}
+            className="
     flex-1
     overflow-y-auto
     p-4
@@ -648,27 +643,27 @@ onScroll={handleScroll}
     bg-slate-50
     pb-28
   "
-            >
-              {messages.length === 0 ? (
-                <div className="text-center text-slate-400 mt-10">
-                  No discussion yet.
-                  <br />
-                  Start the conversation.
-                </div>
-              ) : (
-                messages.map((msg) => {
-                  const isMine = msg.sender_id === currentUser;
+          >
+            {messages.length === 0 ? (
+              <div className="text-center text-slate-400 mt-10">
+                No discussion yet.
+                <br />
+                Start the conversation.
+              </div>
+            ) : (
+              messages.map((msg) => {
+                const isMine = msg.sender_id === currentUser;
 
-                  return (
-                    <div
-                      key={msg._id}
-                      className={`
+                return (
+                  <div
+                    key={msg._id}
+                    className={`
           flex
           ${isMine ? "justify-end" : "justify-start"}
         `}
-                    >
-                      <div
-                        className={`
+                  >
+                    <div
+                      className={`
             max-w-[85%] md:max-w-[75%]
             px-4
             py-3
@@ -689,59 +684,60 @@ onScroll={handleScroll}
                 `
             }
           `}
-                      >
-                        <div
-                          className="
+                    >
+                      <div
+                        className="
               text-xs
               opacity-70
               mb-1
             "
-                        >
-                          {isMine ? "You" : getUserName(msg.sender_id)}
-                        </div>
+                      >
+                        {isMine ? "You" : getUserName(msg.sender_id)}
+                      </div>
 
-                        <>
-                          {msg.message_type === "audio" ? (
-                            <audio
-                              controls
-                              src={msg.audio_url}
-                              className="
+                      <>
+                        {msg.message_type === "audio" ? (
+                          <audio
+                            controls
+                            src={msg.audio_url}
+                            className="
         w-56
         rounded-lg
       "
-                            />
-                          ) : (
-                            <div
-                              className="
+                          />
+                        ) : (
+                          <div
+                            className="
         break-words
         text-sm
       "
-                            >
-                              {msg.message}
-                            </div>
-                          )}
+                          >
+                            {msg.message}
+                          </div>
+                        )}
 
-                          <div
-                            className="
+                        <div
+                          className="
       text-[10px]
       opacity-70
       mt-1
     "
-                          >
-                            {new Date(msg.created_at).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </div>
-                        </>
-                      </div>
+                        >
+                          {new Date(msg.created_at).toLocaleString("en-IN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                            timeZone: "Asia/Kolkata",
+                          })}
+                        </div>
+                      </>
                     </div>
-                  );
-                })
-              )}
+                  </div>
+                );
+              })
+            )}
 
-              <div ref={messagesEndRef}></div>
-           
+            <div ref={messagesEndRef}></div>
           </div>
 
           {isRecording && (
