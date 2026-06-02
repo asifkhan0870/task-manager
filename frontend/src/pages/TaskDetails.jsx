@@ -579,18 +579,7 @@ function TaskDetails() {
           >
             <div>
               <h2 className="text-lg md:text-xl font-bold">💬 Discussion</h2>
-              {typingUsers.length > 0 && (
-  <p
-    className="
-      text-green-500
-      text-xs
-      animate-pulse
-      mt-1
-    "
-  >
-    
-  </p>
-)}
+              
               {recordingUsers.length > 0 ? (
 
   <p
