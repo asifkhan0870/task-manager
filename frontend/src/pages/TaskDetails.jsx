@@ -570,9 +570,13 @@ function TaskDetails() {
 
           <div
             className="
-    p-5
+    sticky
+    top-0
+    z-20
+    bg-white
     border-b
-    flex
+    p-4
+    shadow-sm
     justify-between
     items-center
   "
