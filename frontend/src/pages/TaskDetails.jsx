@@ -31,7 +31,8 @@ function TaskDetails() {
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
-  const [audioChunks, setAudioChunks] = useState([]);
+ 
+  const [typingUsers, setTypingUsers] = useState([]);
 
   useEffect(() => {
     fetchTask();
@@ -48,9 +49,11 @@ function TaskDetails() {
 
   useEffect(() => {
     fetchDiscussion();
+    fetchTypingUsers();
   
     const interval = setInterval(() => {
       fetchDiscussion();
+      fetchTypingUsers();
     }, 1000);
   
     return () => clearInterval(interval);
@@ -67,6 +70,22 @@ function TaskDetails() {
       );
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const fetchTypingUsers = async () => {
+    try {
+  
+      const res = await api.get(
+        `/discussion/${id}/typing`
+      );
+  
+      setTypingUsers(
+        res.data
+      );
+  
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -101,6 +120,13 @@ function TaskDetails() {
       });
 
       setQuestion("");
+
+      await api.post(
+        `/discussion/${id}/typing`,
+        {
+          is_typing: false
+        }
+      );
 
       await loadMessages();
     } catch (error) {
@@ -514,6 +540,18 @@ function TaskDetails() {
           >
             <div>
               <h2 className="text-lg md:text-xl font-bold">💬 Discussion</h2>
+              {typingUsers.length > 0 && (
+  <p
+    className="
+      text-green-500
+      text-xs
+      animate-pulse
+      mt-1
+    "
+  >
+    Someone is typing...
+  </p>
+)}
               <p className="text-xs text-slate-400">{task.title}</p>
               {/* <p className="text-sm text-slate-500">Task Clarifications</p> */}
             </div>
@@ -725,7 +763,20 @@ function TaskDetails() {
 
               <textarea
                 value={question}
-                onChange={(e) => setQuestion(e.target.value)}
+                onChange={async (e) => {
+
+  setQuestion(
+    e.target.value
+  );
+
+  await api.post(
+    `/discussion/${id}/typing`,
+    {
+      is_typing: true
+    }
+  );
+
+}}
                 onKeyDown={handleEnter}
                 rows={1}
                 placeholder="Type a message..."

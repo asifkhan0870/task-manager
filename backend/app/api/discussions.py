@@ -5,7 +5,9 @@ from datetime import datetime
 from app.dependencies.auth import get_current_user
 
 from app.core.database import (
-    discussion_collection
+    discussion_collection,
+        typing_collection
+
 )
 
 router = APIRouter(
@@ -101,3 +103,47 @@ async def edit_message(
     return {
         "message": "updated"
     }          
+
+
+@router.post("/{task_id}/typing")
+async def update_typing(
+    task_id: str,
+    payload: dict,
+    user=Depends(get_current_user)
+):
+
+    await typing_collection.update_one(
+        {
+            "task_id": task_id,
+            "user_id": str(user)
+        },
+        {
+            "$set": {
+                "is_typing": payload["is_typing"]
+            }
+        },
+        upsert=True
+    )
+
+    return {
+        "message": "updated"
+    }
+
+@router.get("/{task_id}/typing")
+async def get_typing_status(
+    task_id: str
+):
+
+    cursor = typing_collection.find(
+        {
+            "task_id": task_id,
+            "is_typing": True
+        }
+    )
+
+    users = []
+
+    async for item in cursor:
+        users.append(item["user_id"])
+
+    return users        
