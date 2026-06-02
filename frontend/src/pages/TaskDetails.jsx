@@ -347,16 +347,15 @@ function TaskDetails() {
 
 
   const formatTime = (dateString) => {
-    try {
-      return new Date(dateString).toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Asia/Kolkata",
-      });
-    } catch {
-      return "";
-    }
+    const date = new Date(dateString);
+  
+    return new Date(
+      date.getTime() + 5.5 * 60 * 60 * 1000
+    ).toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
 
   if (!task) return <MainLayout>Loading...</MainLayout>;
