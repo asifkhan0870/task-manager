@@ -428,7 +428,11 @@ gap-4
                   text-left
                   `,children:[(0,U.jsx)(`th`,{className:`p-3`,children:`Title`}),(0,U.jsx)(`th`,{className:`p-3`,children:`Priority`}),(0,U.jsx)(`th`,{className:`p-3`,children:`Status`}),(0,U.jsx)(`th`,{className:`p-3`,children:`Due Date`})]})}),(0,U.jsx)(`tbody`,{children:n.length>0?n.map(e=>(0,U.jsxs)(`tr`,{className:`
                       border-t
-                      `,children:[(0,U.jsx)(`td`,{className:`p-3`,children:e.title}),(0,U.jsx)(`td`,{className:`p-3`,children:e.priority}),(0,U.jsx)(`td`,{className:`p-3`,children:e.status}),(0,U.jsx)(`td`,{className:`p-3`,children:e.due_date?new Date(e.due_date).toLocaleDateString():`-`})]},e._id)):(0,U.jsx)(`tr`,{children:(0,U.jsx)(`td`,{colSpan:`4`,className:`
+                      `,children:[(0,U.jsx)(`td`,{className:`p-3`,children:(0,U.jsx)(kn,{to:`/tasks/${e._id}`,className:`
+    text-blue-600
+    hover:underline
+    font-medium
+    `,children:e.title})}),(0,U.jsx)(`td`,{className:`p-3`,children:e.priority}),(0,U.jsx)(`td`,{className:`p-3`,children:e.status}),(0,U.jsx)(`td`,{className:`p-3`,children:e.due_date?new Date(e.due_date).toLocaleDateString():`-`})]},e._id)):(0,U.jsx)(`tr`,{children:(0,U.jsx)(`td`,{colSpan:`4`,className:`
                       text-center
                       p-6
                       `,children:`No Tasks Found`})})})]})})})]})]})}function js(){let[e,t]=(0,S.useState)([]);(0,S.useEffect)(()=>{n()},[]);let n=async()=>{try{t((await H.get(`/tasks/`)).data)}catch(e){console.log(e)}};return(0,U.jsxs)(Os,{children:[(0,U.jsx)(`h1`,{className:`
