@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from app.dependencies.auth import get_current_user
 
@@ -22,6 +23,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# ==========================
+# CORS
+# ==========================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -33,13 +38,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ==========================
+# STARTUP
+# ==========================
+
 @app.on_event("startup")
 async def startup_event():
     print("Starting Reminder Scheduler...")
     start_scheduler()
     print("Reminder Scheduler Started")
 
+# ==========================
 # API ROUTES
+# ==========================
+
 app.include_router(auth_router)
 app.include_router(task_filter_router)
 app.include_router(task_router)
@@ -54,9 +66,25 @@ app.include_router(discussion_router)
 async def me(user=Depends(get_current_user)):
     return {"user_id": user}
 
-# MUST BE LAST
+# ==========================
+# STATIC FILES
+# ==========================
+
 app.mount(
-    "/",
-    StaticFiles(directory="app/static/dist", html=True),
-    name="frontend",
+    "/assets",
+    StaticFiles(directory="app/static/dist/assets"),
+    name="assets",
 )
+
+# favicon
+@app.get("/favicon.svg")
+async def favicon():
+    return FileResponse("app/static/dist/favicon.svg")
+
+# ==========================
+# REACT SPA FALLBACK
+# ==========================
+
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    return FileResponse("app/static/dist/index.html")
