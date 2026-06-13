@@ -309,7 +309,7 @@ function TaskDetails() {
           background: #FEF2F2; color: #B91C1C; border: 1.5px solid #FECACA;
           border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
-          margin-left: auto;
+          
         }
         .td-btn-delete:hover:not(:disabled) { background: #FEE2E2; }
         .td-btn-disabled { opacity: 0.5; cursor: not-allowed !important; }
