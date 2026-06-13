@@ -9,37 +9,36 @@ function MainLayout({ children }) {
 
   return (
 
-    <div
-      className="min-h-screen bg-slate-100"
-      style={{ display: "flex" }}
-    >
+    <div className="min-h-screen bg-slate-100">
 
+      {/* Sidebar is already fixed inside the component */}
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
 
+      {/* Fixed Navbar */}
       <div
-        className="flex-1 min-w-0 md:ml-72"
-        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 20,
+        }}
+        className="md:pl-72"
       >
+        <Navbar setSidebarOpen={setSidebarOpen} />
+      </div>
 
-        {/* Sticky Navbar */}
-        <div
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 30,
-          }}
-        >
-          <Navbar setSidebarOpen={setSidebarOpen} />
-        </div>
-
-        {/* Scrollable content */}
-        <div className="p-4 md:p-6" style={{ flex: 1 }}>
+      {/* Content — pushed down by navbar height (80px = h-20) and left by sidebar on desktop */}
+      <div
+        className="md:ml-72"
+        style={{ paddingTop: "80px" }}
+      >
+        <div className="p-4 md:p-6">
           {children}
         </div>
-
       </div>
 
     </div>
