@@ -345,10 +345,9 @@ function TaskDetails() {
     }
   };
 
-
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-  
+
     return new Date(
       date.getTime() + 5.5 * 60 * 60 * 1000
     ).toLocaleTimeString("en-IN", {
@@ -368,14 +367,14 @@ function TaskDetails() {
           rounded-xl
           shadow
           p-8
-          "
+        "
       >
         <h1
           className="
             text-4xl
             font-bold
             mb-6
-            "
+          "
         >
           {task.title}
         </h1>
@@ -384,27 +383,21 @@ function TaskDetails() {
           <button
             onClick={() => setShowChatSidebar(true)}
             className="
-      bg-blue-600
-      hover:bg-blue-700
-      text-white
-      px-4
-      py-2
-      rounded-xl
-      shadow-md
-      transition
-    "
+              bg-blue-600
+              hover:bg-blue-700
+              text-white
+              px-4
+              py-2
+              rounded-xl
+              shadow-md
+              transition
+            "
           >
             💬 Discussion
           </button>
         </div>
 
-        <p
-          className="
-            mb-4
-            "
-        >
-          {task.description}
-        </p>
+        <p className="mb-4">{task.description}</p>
 
         {task.audio_url && (
           <div className="mt-6">
@@ -417,11 +410,11 @@ function TaskDetails() {
               target="_blank"
               rel="noopener noreferrer"
               className="
-        inline-block
-        mt-2
-        text-blue-600
-        hover:underline
-      "
+                inline-block
+                mt-2
+                text-blue-600
+                hover:underline
+              "
             >
               Open Audio in New Tab
             </a>
@@ -456,27 +449,21 @@ function TaskDetails() {
           })}
         </p>
 
-        <div
-          className="
-            flex
-            gap-4
-            mt-8
-            "
-        >
+        <div className="flex gap-4 mt-8">
           <button
             disabled={!!loadingAction}
             onClick={() => updateStatus("In Progress")}
             className={`
-                text-white
-                px-4
-                py-2
-                rounded
-                ${
-                  loadingAction
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-yellow-500"
-                }
-              `}
+              text-white
+              px-4
+              py-2
+              rounded
+              ${
+                loadingAction
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-yellow-500"
+              }
+            `}
           >
             {loadingAction === "In Progress" ? "Updating..." : "In Progress"}
           </button>
@@ -485,16 +472,16 @@ function TaskDetails() {
             disabled={!!loadingAction}
             onClick={() => updateStatus("Done")}
             className={`
-                text-white
-                px-4
-                py-2
-                rounded
-                ${
-                  loadingAction
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-green-600"
-                }
-              `}
+              text-white
+              px-4
+              py-2
+              rounded
+              ${
+                loadingAction
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-green-600"
+              }
+            `}
           >
             {loadingAction === "Done" ? "Updating..." : "Mark Done"}
           </button>
@@ -503,16 +490,16 @@ function TaskDetails() {
             disabled={!!loadingAction}
             onClick={deleteTask}
             className={`
-                text-white
-                px-4
-                py-2
-                rounded
-                ${
-                  loadingAction
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-red-600"
-                }
-              `}
+              text-white
+              px-4
+              py-2
+              rounded
+              ${
+                loadingAction
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-red-600"
+              }
+            `}
           >
             {loadingAction === "delete" ? "Deleting..." : "Delete"}
           </button>
@@ -524,334 +511,308 @@ function TaskDetails() {
       {loadingAction && (
         <div
           className="
-              fixed
-              inset-0
-              bg-black/40
-              flex
-              items-center
-              justify-center
-              z-50
-              "
+            fixed
+            inset-0
+            bg-black/40
+            flex
+            items-center
+            justify-center
+            z-50
+          "
         >
           <div
             className="
-                bg-white
-                px-8
-                py-6
-                rounded-xl
-                shadow-xl
-                text-lg
-                font-semibold
-                "
+              bg-white
+              px-8
+              py-6
+              rounded-xl
+              shadow-xl
+              text-lg
+              font-semibold
+            "
           >
             Processing... Please wait.
           </div>
         </div>
       )}
 
-      {/* CHAT SIDEBAR */}
+      {/* ── DISCUSSION DRAWER ── */}
 
       {showChatSidebar && (
-        <div
-          className="
-       fixed
-       top-0
-       right-0
-       h-[100dvh]
-     
-       w-full
-       md:w-[450px]
-     
-       bg-white
-       shadow-2xl
-       z-50
-       flex
-       flex-col
-       border-l
-       overflow-hidden
-     "
-        >
-          {/* Header */}
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={() => setShowChatSidebar(false)}
+            className="
+              fixed
+              inset-0
+              bg-black/40
+              backdrop-blur-sm
+              z-40
+            "
+          />
 
+          {/* Drawer panel */}
           <div
             className="
-    sticky
-    top-0
-    z-50
-    bg-white
-    border-b
-    shadow-sm
-    px-4
-    py-3
-    shrink-0
-  "
+              fixed
+              top-0
+              right-0
+              h-[100dvh]
+              w-full
+              sm:w-[420px]
+              bg-white
+              shadow-2xl
+              z-50
+              flex
+              flex-col
+              overflow-hidden
+            "
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <h2 className="font-bold text-2xl flex items-center gap-2">
-                  💬 Discussion
-                </h2>
+            {/* ── Header ── */}
+            <div
+              className="
+                sticky
+                top-0
+                z-50
+                bg-white
+                border-b
+                px-4
+                py-4
+                shadow-sm
+                shrink-0
+              "
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold">💬 Discussion</h2>
 
-                {isRecording && (
-                  <p className="text-red-500 text-xs animate-pulse mt-1">
-                    🎙️ Recording...
-                  </p>
-                )}
-
-                {!isRecording &&
-                  recordingUsers.some((u) => u !== currentUser) && (
+                  {isRecording && (
                     <p className="text-red-500 text-xs animate-pulse mt-1">
-                      🎙️ Someone is recording...
+                      🔴 Recording...
                     </p>
                   )}
 
-                {!isRecording &&
-                  !recordingUsers.some((u) => u !== currentUser) &&
-                  typingUsers.some((u) => u !== currentUser) && (
-                    <p className="text-green-500 text-xs animate-pulse mt-1">
-                      ✍️ Typing...
-                    </p>
-                  )}
-              </div>
+                  {!isRecording &&
+                    recordingUsers.some((u) => u !== currentUser) && (
+                      <p className="text-red-500 text-xs animate-pulse mt-1">
+                        🎙️ Someone is recording...
+                      </p>
+                    )}
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={clearDiscussion}
-                  className="
-          text-red-500
-          text-xs
-          px-2
-          py-1
-          rounded
-          bg-red-50
-        "
-                >
-                  🗑 Clear
-                </button>
+                  {!isRecording &&
+                    !recordingUsers.some((u) => u !== currentUser) &&
+                    typingUsers.some((u) => u !== currentUser) && (
+                      <p className="text-green-500 text-xs animate-pulse mt-1">
+                        ✍️ Typing...
+                      </p>
+                    )}
+                </div>
 
-                <button
-                  onClick={() => setShowChatSidebar(false)}
-                  className="
-          text-black
-          font-bold
-          text-xl
-        "
-                >
-                  ✕
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={clearDiscussion}
+                    className="
+                      px-3
+                      py-2
+                      text-xs
+                      rounded-lg
+                      bg-red-50
+                      text-red-600
+                      hover:bg-red-100
+                      transition
+                    "
+                  >
+                    🗑 Clear
+                  </button>
+
+                  <button
+                    onClick={() => setShowChatSidebar(false)}
+                    className="
+                      w-9
+                      h-9
+                      rounded-lg
+                      hover:bg-slate-100
+                      flex
+                      items-center
+                      justify-center
+                      text-slate-600
+                      font-bold
+                      transition
+                    "
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Messages */}
+            {/* ── Messages ── */}
+            <div
+              ref={messagesContainerRef}
+              onScroll={handleScroll}
+              className="
+                flex-1
+                overflow-y-auto
+                bg-slate-50
+                px-3
+                py-4
+                pb-32
+                space-y-4
+              "
+            >
+              {messages.length === 0 ? (
+                <div className="text-center text-slate-400 mt-10">
+                  No messages yet.
+                  <br />
+                  Start the conversation.
+                </div>
+              ) : (
+                messages.map((msg) => {
+                  const isMine = msg.sender_id === currentUser;
 
-          <div
-            ref={messagesContainerRef}
-            onScroll={handleScroll}
-            className="
-    flex-1
-    overflow-y-auto
-    p-4
-    space-y-4
-    bg-slate-50
-    pb-28
-  "
-          >
-            {messages.length === 0 ? (
-              <div className="text-center text-slate-400 mt-10">
-                No discussion yet.
-                <br />
-                Start the conversation.
-              </div>
-            ) : (
-              messages.map((msg) => {
-                const isMine = msg.sender_id === currentUser;
-
-                return (
-                  <div
-                    key={msg._id}
-                    className={`
-          flex
-          ${isMine ? "justify-end" : "justify-start"}
-        `}
-                  >
+                  return (
                     <div
+                      key={msg._id}
                       className={`
-            max-w-[85%] md:max-w-[75%]
-            px-4
-            py-3
-            rounded-2xl
-            shadow-sm
-
-            ${
-              isMine
-                ? `
-                  bg-blue-500
-                  text-white
-                  rounded-br-md
-                `
-                : `
-                  bg-slate-100
-                  text-slate-800
-                  rounded-bl-md
-                `
-            }
-          `}
+                        flex
+                        ${isMine ? "justify-end" : "justify-start"}
+                      `}
                     >
                       <div
-                        className="
-              text-xs
-              opacity-70
-              mb-1
-            "
+                        className={`
+                          max-w-[80%]
+                          px-4
+                          py-3
+                          rounded-2xl
+                          shadow-sm
+                          ${
+                            isMine
+                              ? "bg-blue-500 text-white rounded-br-md"
+                              : "bg-white text-slate-800 rounded-bl-md border border-slate-100"
+                          }
+                        `}
                       >
-                        {isMine ? "You" : getUserName(msg.sender_id)}
-                      </div>
+                        <div className="text-xs opacity-70 mb-1">
+                          {isMine ? "You" : getUserName(msg.sender_id)}
+                        </div>
 
-                      <>
                         {msg.message_type === "audio" ? (
                           <audio
                             controls
                             src={msg.audio_url}
-                            className="
-        w-56
-        rounded-lg
-      "
+                            className="w-56 rounded-lg"
                           />
                         ) : (
-                          <div
-                            className="
-        break-words
-        text-sm
-      "
-                          >
+                          <div className="break-words text-sm">
                             {msg.message}
                           </div>
                         )}
 
-                        <div
-                          className="
-      text-[10px]
-      opacity-70
-      mt-1
-    "
-                        >
+                        <div className="text-[10px] opacity-70 mt-1 text-right">
                           {formatTime(msg.created_at)}
                         </div>
-                      </>
+                      </div>
                     </div>
-                  </div>
-                );
-              })
-            )}
+                  );
+                })
+              )}
 
-            <div ref={messagesEndRef}></div>
-          </div>
+              <div ref={messagesEndRef} />
+            </div>
 
-          {isRecording && (
+            {/* ── Input Area ── */}
             <div
               className="
-      text-red-500
-      text-sm
-      font-semibold
-      animate-pulse
-      mb-2
-    "
+                sticky
+                bottom-0
+                border-t
+                bg-white
+                p-3
+                shrink-0
+              "
+              style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
             >
-              🔴 Recording...
-            </div>
-          )}
+              <div className="flex items-center gap-3">
+                {/* Mic button */}
+                <button
+                  onClick={() => {
+                    if (!isRecording) {
+                      startRecording();
+                    } else {
+                      stopRecording();
+                    }
+                  }}
+                  className={`
+                    w-11
+                    h-11
+                    rounded-full
+                    flex
+                    items-center
+                    justify-center
+                    shadow
+                    text-white
+                    transition
+                    shrink-0
+                    ${isRecording ? "bg-red-600 animate-pulse" : "bg-red-500 hover:bg-red-600"}
+                  `}
+                >
+                  {isRecording ? "⏹" : "🎤"}
+                </button>
 
-          {/* Message Input */}
+                {/* Text input */}
+                <textarea
+                  value={question}
+                  onChange={async (e) => {
+                    setQuestion(e.target.value);
 
-          <div
-            className="
-    border-t
-    p-3
-    bg-white
-    shrink-0
-  "
-          >
-            <div
-              className="
-      flex
-      items-center
-      gap-3
-    "
-            >
-              {/* MIC */}
+                    await api.post(`/discussion/${id}/typing`, {
+                      is_typing: true,
+                    });
+                  }}
+                  onKeyDown={handleEnter}
+                  rows={1}
+                  placeholder="Type a message..."
+                  className="
+                    flex-1
+                    border
+                    border-slate-200
+                    rounded-full
+                    px-5
+                    py-3
+                    resize-none
+                    focus:outline-none
+                    focus:border-blue-400
+                    text-sm
+                    bg-slate-50
+                  "
+                />
 
-              <button
-                onClick={() => {
-                  if (!isRecording) {
-                    startRecording();
-                  } else {
-                    stopRecording();
-                  }
-                }}
-                className="
-    w-12
-    h-12
-    rounded-full
-    bg-red-500
-    text-white
-    flex
-    items-center
-    justify-center
-    shadow
-  "
-              >
-                {isRecording ? "⏹" : "🎤"}
-              </button>
-
-              {/* INPUT */}
-
-              <textarea
-                value={question}
-                onChange={async (e) => {
-                  setQuestion(e.target.value);
-
-                  await api.post(`/discussion/${id}/typing`, {
-                    is_typing: true,
-                  });
-                }}
-                onKeyDown={handleEnter}
-                rows={1}
-                placeholder="Type a message..."
-                className="
-        flex-1
-        border
-        rounded-full
-        px-5
-        py-3
-        resize-none
-        focus:outline-none
-      "
-              />
-
-              {/* SEND */}
-
-              <button
-                onClick={sendMessage}
-                className="
-        w-12
-        h-12
-        rounded-full
-        bg-blue-600
-        hover:bg-blue-700
-        text-white
-        flex
-        items-center
-        justify-center
-        text-xl
-        shadow
-      "
-              >
-                ➤
-              </button>
+                {/* Send button */}
+                <button
+                  onClick={sendMessage}
+                  className="
+                    w-11
+                    h-11
+                    rounded-full
+                    bg-blue-600
+                    hover:bg-blue-700
+                    text-white
+                    flex
+                    items-center
+                    justify-center
+                    text-lg
+                    shadow
+                    transition
+                    shrink-0
+                  "
+                >
+                  📤
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </MainLayout>
   );

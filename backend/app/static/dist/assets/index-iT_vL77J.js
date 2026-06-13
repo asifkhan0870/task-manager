@@ -736,184 +736,168 @@ gap-4
           rounded-xl
           shadow
           p-8
-          `,children:[(0,U.jsx)(`h1`,{className:`
+        `,children:[(0,U.jsx)(`h1`,{className:`
             text-4xl
             font-bold
             mb-6
-            `,children:i.title}),(0,U.jsx)(`div`,{className:`flex justify-end mb-4`,children:(0,U.jsx)(`button`,{onClick:()=>d(!0),className:`
-      bg-blue-600
-      hover:bg-blue-700
-      text-white
-      px-4
-      py-2
-      rounded-xl
-      shadow-md
-      transition
-    `,children:`💬 Discussion`})}),(0,U.jsx)(`p`,{className:`
-            mb-4
-            `,children:i.description}),i.audio_url&&(0,U.jsxs)(`div`,{className:`mt-6`,children:[(0,U.jsx)(`h3`,{className:`text-lg font-semibold mb-2`,children:`🎤 Voice Note`}),(0,U.jsx)(`audio`,{controls:!0,src:i.audio_url,className:`w-full`}),(0,U.jsx)(`a`,{href:i.audio_url,target:`_blank`,rel:`noopener noreferrer`,className:`
-        inline-block
-        mt-2
-        text-blue-600
-        hover:underline
-      `,children:`Open Audio in New Tab`})]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Priority:`}),` `,i.priority]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Status:`}),` `,i.status]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Assigned By:`}),` `,le(i.assigned_by)]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Assigned To:`}),` `,le(i.assigned_to)]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Due Date:`}),` `,new Date(i.due_date).toLocaleString(`en-US`,{day:`numeric`,month:`long`,year:`numeric`,hour:`numeric`,minute:`2-digit`,hour12:!0})]}),(0,U.jsxs)(`div`,{className:`
+          `,children:i.title}),(0,U.jsx)(`div`,{className:`flex justify-end mb-4`,children:(0,U.jsx)(`button`,{onClick:()=>d(!0),className:`
+              bg-blue-600
+              hover:bg-blue-700
+              text-white
+              px-4
+              py-2
+              rounded-xl
+              shadow-md
+              transition
+            `,children:`💬 Discussion`})}),(0,U.jsx)(`p`,{className:`mb-4`,children:i.description}),i.audio_url&&(0,U.jsxs)(`div`,{className:`mt-6`,children:[(0,U.jsx)(`h3`,{className:`text-lg font-semibold mb-2`,children:`🎤 Voice Note`}),(0,U.jsx)(`audio`,{controls:!0,src:i.audio_url,className:`w-full`}),(0,U.jsx)(`a`,{href:i.audio_url,target:`_blank`,rel:`noopener noreferrer`,className:`
+                inline-block
+                mt-2
+                text-blue-600
+                hover:underline
+              `,children:`Open Audio in New Tab`})]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Priority:`}),` `,i.priority]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Status:`}),` `,i.status]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Assigned By:`}),` `,le(i.assigned_by)]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Assigned To:`}),` `,le(i.assigned_to)]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Due Date:`}),` `,new Date(i.due_date).toLocaleString(`en-US`,{day:`numeric`,month:`long`,year:`numeric`,hour:`numeric`,minute:`2-digit`,hour12:!0})]}),(0,U.jsxs)(`div`,{className:`flex gap-4 mt-8`,children:[(0,U.jsx)(`button`,{disabled:!!c,onClick:()=>j(`In Progress`),className:`
+              text-white
+              px-4
+              py-2
+              rounded
+              ${c?`bg-gray-500 cursor-not-allowed`:`bg-yellow-500`}
+            `,children:c===`In Progress`?`Updating...`:`In Progress`}),(0,U.jsx)(`button`,{disabled:!!c,onClick:()=>j(`Done`),className:`
+              text-white
+              px-4
+              py-2
+              rounded
+              ${c?`bg-gray-500 cursor-not-allowed`:`bg-green-600`}
+            `,children:c===`Done`?`Updating...`:`Mark Done`}),(0,U.jsx)(`button`,{disabled:!!c,onClick:de,className:`
+              text-white
+              px-4
+              py-2
+              rounded
+              ${c?`bg-gray-500 cursor-not-allowed`:`bg-red-600`}
+            `,children:c===`delete`?`Deleting...`:`Delete`})]})]}),(0,U.jsx)(Ps,{taskId:n}),c&&(0,U.jsx)(`div`,{className:`
+            fixed
+            inset-0
+            bg-black/40
             flex
-            gap-4
-            mt-8
-            `,children:[(0,U.jsx)(`button`,{disabled:!!c,onClick:()=>j(`In Progress`),className:`
-                text-white
-                px-4
-                py-2
-                rounded
-                ${c?`bg-gray-500 cursor-not-allowed`:`bg-yellow-500`}
-              `,children:c===`In Progress`?`Updating...`:`In Progress`}),(0,U.jsx)(`button`,{disabled:!!c,onClick:()=>j(`Done`),className:`
-                text-white
-                px-4
-                py-2
-                rounded
-                ${c?`bg-gray-500 cursor-not-allowed`:`bg-green-600`}
-              `,children:c===`Done`?`Updating...`:`Mark Done`}),(0,U.jsx)(`button`,{disabled:!!c,onClick:de,className:`
-                text-white
-                px-4
-                py-2
-                rounded
-                ${c?`bg-gray-500 cursor-not-allowed`:`bg-red-600`}
-              `,children:c===`delete`?`Deleting...`:`Delete`})]})]}),(0,U.jsx)(Ps,{taskId:n}),c&&(0,U.jsx)(`div`,{className:`
+            items-center
+            justify-center
+            z-50
+          `,children:(0,U.jsx)(`div`,{className:`
+              bg-white
+              px-8
+              py-6
+              rounded-xl
+              shadow-xl
+              text-lg
+              font-semibold
+            `,children:`Processing... Please wait.`})}),u&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsx)(`div`,{onClick:()=>d(!1),className:`
               fixed
               inset-0
               bg-black/40
-              flex
-              items-center
-              justify-center
+              backdrop-blur-sm
+              z-40
+            `}),(0,U.jsxs)(`div`,{className:`
+              fixed
+              top-0
+              right-0
+              h-[100dvh]
+              w-full
+              sm:w-[420px]
+              bg-white
+              shadow-2xl
               z-50
-              `,children:(0,U.jsx)(`div`,{className:`
+              flex
+              flex-col
+              overflow-hidden
+            `,children:[(0,U.jsx)(`div`,{className:`
+                sticky
+                top-0
+                z-50
                 bg-white
-                px-8
-                py-6
-                rounded-xl
-                shadow-xl
-                text-lg
-                font-semibold
-                `,children:`Processing... Please wait.`})}),u&&(0,U.jsxs)(`div`,{className:`
-       fixed
-       top-0
-       right-0
-       h-[100dvh]
-     
-       w-full
-       md:w-[450px]
-     
-       bg-white
-       shadow-2xl
-       z-50
-       flex
-       flex-col
-       border-l
-       overflow-hidden
-     `,children:[(0,U.jsx)(`div`,{className:`
-    sticky
-    top-0
-    z-50
-    bg-white
-    border-b
-    shadow-sm
-    px-4
-    py-3
-    shrink-0
-  `,children:(0,U.jsxs)(`div`,{className:`flex items-start justify-between`,children:[(0,U.jsxs)(`div`,{className:`flex-1`,children:[(0,U.jsx)(`h2`,{className:`font-bold text-2xl flex items-center gap-2`,children:`💬 Discussion`}),v&&(0,U.jsx)(`p`,{className:`text-red-500 text-xs animate-pulse mt-1`,children:`🎙️ Recording...`}),!v&&ee.some(e=>e!==g)&&(0,U.jsx)(`p`,{className:`text-red-500 text-xs animate-pulse mt-1`,children:`🎙️ Someone is recording...`}),!v&&!ee.some(e=>e!==g)&&C.some(e=>e!==g)&&(0,U.jsx)(`p`,{className:`text-green-500 text-xs animate-pulse mt-1`,children:`✍️ Typing...`})]}),(0,U.jsxs)(`div`,{className:`flex items-center gap-2`,children:[(0,U.jsx)(`button`,{onClick:fe,className:`
-          text-red-500
-          text-xs
-          px-2
-          py-1
-          rounded
-          bg-red-50
-        `,children:`🗑 Clear`}),(0,U.jsx)(`button`,{onClick:()=>d(!1),className:`
-          text-black
-          font-bold
-          text-xl
-        `,children:`✕`})]})]})}),(0,U.jsxs)(`div`,{ref:e,onScroll:te,className:`
-    flex-1
-    overflow-y-auto
-    p-4
-    space-y-4
-    bg-slate-50
-    pb-28
-  `,children:[m.length===0?(0,U.jsxs)(`div`,{className:`text-center text-slate-400 mt-10`,children:[`No discussion yet.`,(0,U.jsx)(`br`,{}),`Start the conversation.`]}):m.map(e=>{let t=e.sender_id===g;return(0,U.jsx)(`div`,{className:`
-          flex
-          ${t?`justify-end`:`justify-start`}
-        `,children:(0,U.jsxs)(`div`,{className:`
-            max-w-[85%] md:max-w-[75%]
-            px-4
-            py-3
-            rounded-2xl
-            shadow-sm
-
-            ${t?`
-                  bg-blue-500
-                  text-white
-                  rounded-br-md
-                `:`
-                  bg-slate-100
-                  text-slate-800
-                  rounded-bl-md
-                `}
-          `,children:[(0,U.jsx)(`div`,{className:`
-              text-xs
-              opacity-70
-              mb-1
-            `,children:t?`You`:le(e.sender_id)}),(0,U.jsxs)(U.Fragment,{children:[e.message_type===`audio`?(0,U.jsx)(`audio`,{controls:!0,src:e.audio_url,className:`
-        w-56
-        rounded-lg
-      `}):(0,U.jsx)(`div`,{className:`
-        break-words
-        text-sm
-      `,children:e.message}),(0,U.jsx)(`div`,{className:`
-      text-[10px]
-      opacity-70
-      mt-1
-    `,children:me(e.created_at)})]})]})},e._id)}),(0,U.jsx)(`div`,{ref:t})]}),v&&(0,U.jsx)(`div`,{className:`
-      text-red-500
-      text-sm
-      font-semibold
-      animate-pulse
-      mb-2
-    `,children:`🔴 Recording...`}),(0,U.jsx)(`div`,{className:`
-    border-t
-    p-3
-    bg-white
-    shrink-0
-  `,children:(0,U.jsxs)(`div`,{className:`
-      flex
-      items-center
-      gap-3
-    `,children:[(0,U.jsx)(`button`,{onClick:()=>{v?A():k()},className:`
-    w-12
-    h-12
-    rounded-full
-    bg-red-500
-    text-white
-    flex
-    items-center
-    justify-center
-    shadow
-  `,children:v?`⏹`:`🎤`}),(0,U.jsx)(`textarea`,{value:f,onChange:async e=>{p(e.target.value),await H.post(`/discussion/${n}/typing`,{is_typing:!0})},onKeyDown:pe,rows:1,placeholder:`Type a message...`,className:`
-        flex-1
-        border
-        rounded-full
-        px-5
-        py-3
-        resize-none
-        focus:outline-none
-      `}),(0,U.jsx)(`button`,{onClick:oe,className:`
-        w-12
-        h-12
-        rounded-full
-        bg-blue-600
-        hover:bg-blue-700
-        text-white
-        flex
-        items-center
-        justify-center
-        text-xl
-        shadow
-      `,children:`➤`})]})})]})]}):(0,U.jsx)(Os,{children:`Loading...`})}function Is(){return(0,U.jsxs)(En,{children:[(0,U.jsx)(ri,{position:`top-right`,toastOptions:{duration:3e3}}),(0,U.jsxs)(Rt,{children:[(0,U.jsx)(It,{path:`/`,element:(0,U.jsx)(Ts,{})}),(0,U.jsx)(It,{path:`/dashboard`,element:(0,U.jsx)(As,{})}),(0,U.jsx)(It,{path:`/tasks`,element:(0,U.jsx)(js,{})}),(0,U.jsx)(It,{path:`/create-task`,element:(0,U.jsx)(Ms,{})}),(0,U.jsx)(It,{path:`/my-tasks`,element:(0,U.jsx)(Ns,{})}),(0,U.jsx)(It,{path:`/tasks/:id`,element:(0,U.jsx)(Fs,{})})]})]})}qn.createRoot(document.getElementById(`root`)).render((0,U.jsx)(S.StrictMode,{children:(0,U.jsx)(Is,{})}));
+                border-b
+                px-4
+                py-4
+                shadow-sm
+                shrink-0
+              `,children:(0,U.jsxs)(`div`,{className:`flex items-center justify-between`,children:[(0,U.jsxs)(`div`,{children:[(0,U.jsx)(`h2`,{className:`text-xl font-bold`,children:`💬 Discussion`}),v&&(0,U.jsx)(`p`,{className:`text-red-500 text-xs animate-pulse mt-1`,children:`🔴 Recording...`}),!v&&ee.some(e=>e!==g)&&(0,U.jsx)(`p`,{className:`text-red-500 text-xs animate-pulse mt-1`,children:`🎙️ Someone is recording...`}),!v&&!ee.some(e=>e!==g)&&C.some(e=>e!==g)&&(0,U.jsx)(`p`,{className:`text-green-500 text-xs animate-pulse mt-1`,children:`✍️ Typing...`})]}),(0,U.jsxs)(`div`,{className:`flex items-center gap-2`,children:[(0,U.jsx)(`button`,{onClick:fe,className:`
+                      px-3
+                      py-2
+                      text-xs
+                      rounded-lg
+                      bg-red-50
+                      text-red-600
+                      hover:bg-red-100
+                      transition
+                    `,children:`🗑 Clear`}),(0,U.jsx)(`button`,{onClick:()=>d(!1),className:`
+                      w-9
+                      h-9
+                      rounded-lg
+                      hover:bg-slate-100
+                      flex
+                      items-center
+                      justify-center
+                      text-slate-600
+                      font-bold
+                      transition
+                    `,children:`✕`})]})]})}),(0,U.jsxs)(`div`,{ref:e,onScroll:te,className:`
+                flex-1
+                overflow-y-auto
+                bg-slate-50
+                px-3
+                py-4
+                pb-32
+                space-y-4
+              `,children:[m.length===0?(0,U.jsxs)(`div`,{className:`text-center text-slate-400 mt-10`,children:[`No messages yet.`,(0,U.jsx)(`br`,{}),`Start the conversation.`]}):m.map(e=>{let t=e.sender_id===g;return(0,U.jsx)(`div`,{className:`
+                        flex
+                        ${t?`justify-end`:`justify-start`}
+                      `,children:(0,U.jsxs)(`div`,{className:`
+                          max-w-[80%]
+                          px-4
+                          py-3
+                          rounded-2xl
+                          shadow-sm
+                          ${t?`bg-blue-500 text-white rounded-br-md`:`bg-white text-slate-800 rounded-bl-md border border-slate-100`}
+                        `,children:[(0,U.jsx)(`div`,{className:`text-xs opacity-70 mb-1`,children:t?`You`:le(e.sender_id)}),e.message_type===`audio`?(0,U.jsx)(`audio`,{controls:!0,src:e.audio_url,className:`w-56 rounded-lg`}):(0,U.jsx)(`div`,{className:`break-words text-sm`,children:e.message}),(0,U.jsx)(`div`,{className:`text-[10px] opacity-70 mt-1 text-right`,children:me(e.created_at)})]})},e._id)}),(0,U.jsx)(`div`,{ref:t})]}),(0,U.jsx)(`div`,{className:`
+                sticky
+                bottom-0
+                border-t
+                bg-white
+                p-3
+                shrink-0
+              `,style:{paddingBottom:`calc(0.75rem + env(safe-area-inset-bottom))`},children:(0,U.jsxs)(`div`,{className:`flex items-center gap-3`,children:[(0,U.jsx)(`button`,{onClick:()=>{v?A():k()},className:`
+                    w-11
+                    h-11
+                    rounded-full
+                    flex
+                    items-center
+                    justify-center
+                    shadow
+                    text-white
+                    transition
+                    shrink-0
+                    ${v?`bg-red-600 animate-pulse`:`bg-red-500 hover:bg-red-600`}
+                  `,children:v?`⏹`:`🎤`}),(0,U.jsx)(`textarea`,{value:f,onChange:async e=>{p(e.target.value),await H.post(`/discussion/${n}/typing`,{is_typing:!0})},onKeyDown:pe,rows:1,placeholder:`Type a message...`,className:`
+                    flex-1
+                    border
+                    border-slate-200
+                    rounded-full
+                    px-5
+                    py-3
+                    resize-none
+                    focus:outline-none
+                    focus:border-blue-400
+                    text-sm
+                    bg-slate-50
+                  `}),(0,U.jsx)(`button`,{onClick:oe,className:`
+                    w-11
+                    h-11
+                    rounded-full
+                    bg-blue-600
+                    hover:bg-blue-700
+                    text-white
+                    flex
+                    items-center
+                    justify-center
+                    text-lg
+                    shadow
+                    transition
+                    shrink-0
+                  `,children:`📤`})]})})]})]})]}):(0,U.jsx)(Os,{children:`Loading...`})}function Is(){return(0,U.jsxs)(En,{children:[(0,U.jsx)(ri,{position:`top-right`,toastOptions:{duration:3e3}}),(0,U.jsxs)(Rt,{children:[(0,U.jsx)(It,{path:`/`,element:(0,U.jsx)(Ts,{})}),(0,U.jsx)(It,{path:`/dashboard`,element:(0,U.jsx)(As,{})}),(0,U.jsx)(It,{path:`/tasks`,element:(0,U.jsx)(js,{})}),(0,U.jsx)(It,{path:`/create-task`,element:(0,U.jsx)(Ms,{})}),(0,U.jsx)(It,{path:`/my-tasks`,element:(0,U.jsx)(Ns,{})}),(0,U.jsx)(It,{path:`/tasks/:id`,element:(0,U.jsx)(Fs,{})})]})]})}qn.createRoot(document.getElementById(`root`)).render((0,U.jsx)(S.StrictMode,{children:(0,U.jsx)(Is,{})}));
