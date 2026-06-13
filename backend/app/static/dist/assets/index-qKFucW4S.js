@@ -351,44 +351,56 @@ to {
               p-3
               rounded-lg
               hover:bg-slate-800
-              `,children:[(0,U.jsx)(hi,{size:20}),`Create Task`]})]})]})]})}function Ds({setSidebarOpen:e}){return(0,U.jsxs)(`div`,{className:`
-        bg-white
-        h-20
-        shadow-sm
+              `,children:[(0,U.jsx)(hi,{size:20}),`Create Task`]})]})]})]})}function Ds({setSidebarOpen:e}){return(0,U.jsxs)(`header`,{className:`
+      sticky
+      top-0
+      z-30
+      h-20
+      bg-white
+      border-b
+      border-slate-200
+      shadow-sm
+      flex
+      justify-between
+      items-center
+      px-4
+      md:px-8
+      `,children:[(0,U.jsxs)(`div`,{className:`
         flex
-        justify-between
         items-center
+        gap-3
+        `,children:[(0,U.jsx)(`button`,{onClick:()=>e(!0),className:`
+          md:hidden
+          `,children:(0,U.jsx)(bi,{size:28})}),(0,U.jsx)(`h1`,{className:`
+          text-xl
+          md:text-3xl
+          font-bold
+          text-slate-900
+          `,children:`Task Manager`})]}),(0,U.jsxs)(`button`,{onClick:()=>{localStorage.removeItem(`token`),window.location.href=`/`},className:`
+        flex
+        items-center
+        gap-2
+        bg-red-500
+        hover:bg-red-600
+        text-white
         px-4
-        md:px-8
-        `,children:[(0,U.jsxs)(`div`,{className:`
-          flex
-          items-center
-          gap-3
-          `,children:[(0,U.jsx)(`button`,{onClick:()=>e(!0),className:`
-            md:hidden
-            `,children:(0,U.jsx)(bi,{size:28})}),(0,U.jsx)(`h1`,{className:`
-            text-xl
-            md:text-3xl
-            font-bold
-            `,children:`Task Manager`})]}),(0,U.jsxs)(`button`,{onClick:()=>{localStorage.removeItem(`token`),window.location.href=`/`},className:`
-          flex
-          items-center
-          gap-2
-          bg-red-500
-          hover:bg-red-600
-          text-white
-          px-4
-          md:px-5
-          py-2
-          rounded-lg
-          `,children:[(0,U.jsx)(yi,{size:18}),`Logout`]})]})}function Os({children:e}){let[t,n]=(0,S.useState)(!1);return(0,U.jsxs)(`div`,{className:`
-     min-h-screen
-  bg-slate-100
+        md:px-5
+        py-2
+        rounded-lg
+        transition
+        `,children:[(0,U.jsx)(yi,{size:18}),`Logout`]})]})}function Os({children:e}){let[t,n]=(0,S.useState)(!1);return(0,U.jsxs)(`div`,{className:`
+      flex
+      min-h-screen
+      bg-slate-100
       `,children:[(0,U.jsx)(Es,{sidebarOpen:t,setSidebarOpen:n}),(0,U.jsxs)(`div`,{className:`
         flex-1
-        min-w-0
         md:ml-72
-        `,children:[(0,U.jsx)(Ds,{setSidebarOpen:n}),(0,U.jsx)(`div`,{className:`
+        min-w-0
+        flex
+        flex-col
+        `,children:[(0,U.jsx)(Ds,{setSidebarOpen:n}),(0,U.jsx)(`main`,{className:`
+          flex-1
+          overflow-y-auto
           p-4
           md:p-6
           `,children:e})]})]})}var ks={Done:`bg-green-100 text-green-800`,"In Progress":`bg-blue-100 text-blue-800`,Incomplete:`bg-amber-100 text-amber-800`,Overdue:`bg-red-100 text-red-800`},As=[{key:`all`,label:`All Tasks`},{key:`done`,label:`Done`},{key:`inprogress`,label:`In Progress`},{key:`incomplete`,label:`Incomplete`},{key:`overdue`,label:`Overdue`}];function js(){let[e,t]=(0,S.useState)({total:0,done:0,in_progress:0,incomplete:0,overdue:0}),[n,r]=(0,S.useState)([]),[i,a]=(0,S.useState)(`all`),[o,s]=(0,S.useState)(`Total Tasks`);(0,S.useEffect)(()=>{c(),u(`all`)},[]);let c=async()=>{try{t((await H.get(`/dashboard/stats`)).data)}catch(e){console.log(e)}},l={all:`/tasks/`,done:`/tasks/completed`,inprogress:`/tasks/in-progress`,incomplete:`/tasks/incomplete`,overdue:`/tasks/overdue`},u=async e=>{try{r((await H.get(l[e])).data),a(e),s(As.find(t=>t.key===e)?.label||``)}catch(e){console.log(e)}},d=[{key:`all`,label:`Total Tasks`,value:e.total,icon:`ti-layout-list`,color:`text-violet-600`,bg:`bg-violet-50`,wide:!0},{key:`done`,label:`Done`,value:e.done,icon:`ti-circle-check`,color:`text-emerald-700`,bg:`bg-emerald-50`},{key:`inprogress`,label:`In Progress`,value:e.in_progress,icon:`ti-progress`,color:`text-blue-700`,bg:`bg-blue-50`},{key:`incomplete`,label:`Incomplete`,value:e.incomplete,icon:`ti-clock-exclamation`,color:`text-amber-700`,bg:`bg-amber-50`},{key:`overdue`,label:`Overdue`,value:e.overdue,icon:`ti-alert-circle`,color:`text-red-700`,bg:`bg-red-50`}];return(0,U.jsxs)(Os,{children:[(0,U.jsx)(`h1`,{className:`text-3xl font-semibold mb-6`,children:`Dashboard`}),(0,U.jsx)(`div`,{className:`grid grid-cols-2 gap-3 mb-6`,children:d.map(e=>(0,U.jsxs)(`div`,{onClick:()=>u(e.key),className:`
@@ -923,11 +935,14 @@ to {
         /* ── DRAWER ── */
         .td-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); backdrop-filter: blur(4px); z-index: 40; }
         .td-drawer {
-          position: fixed; top: 0; right: 0; height: 100dvh;
-          width: 100%; max-width: 420px;
+          position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+          width: 100vw; max-width: 100vw; height: 100dvh;
           background: #fff; z-index: 50; display: flex; flex-direction: column;
           overflow: hidden; animation: slideIn 0.25s cubic-bezier(0.4,0,0.2,1);
-          box-shadow: -8px 0 32px rgba(15,23,42,0.15);
+          box-shadow: none; margin: 0;
+        }
+        @media (min-width: 640px) {
+          .td-drawer { left: auto; width: 420px; max-width: 420px; box-shadow: -8px 0 32px rgba(15,23,42,0.15); }
         }
         .td-drawer-header {
           background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
