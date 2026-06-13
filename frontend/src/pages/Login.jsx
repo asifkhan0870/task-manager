@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import {
+  Loader2,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 import api from "../api/axios";
@@ -9,10 +14,10 @@ function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,16 +29,15 @@ function Login() {
     const loadingToast = toast.loading("Signing in...");
 
     try {
-      console.log("LOGIN START");
-
       const response = await api.post("/auth/login", {
         email,
         password,
       });
 
-      console.log("LOGIN RESPONSE", response);
-
-      localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem(
+        "token",
+        response.data.access_token
+      );
 
       toast.success("Login successful", {
         id: loadingToast,
@@ -41,10 +45,6 @@ function Login() {
 
       navigate("/dashboard");
     } catch (err) {
-      console.log("LOGIN ERROR", err);
-      console.log("LOGIN ERROR RESPONSE", err?.response);
-      console.log("LOGIN ERROR DATA", err?.response?.data);
-
       toast.error("Invalid email or password", {
         id: loadingToast,
       });
@@ -56,65 +56,138 @@ function Login() {
   return (
     <div
       className="
+      relative
       min-h-screen
+      overflow-hidden
       flex
       items-center
       justify-center
-      bg-gradient-to-br
-      from-slate-100
-      via-blue-50
-      to-slate-200
       px-4
+      bg-slate-950
       "
     >
-      <div
-        className="
-        w-full
-        max-w-md
-        bg-white
-        rounded-3xl
-        shadow-2xl
-        p-8
-        "
-      >
+      {/* Animated Background */}
+
+      <div className="absolute inset-0">
         <div
           className="
-          text-center
-          mb-8
+          absolute
+          top-[-150px]
+          left-[-150px]
+          w-[400px]
+          h-[400px]
+          bg-blue-600/30
+          blur-3xl
+          rounded-full
+          animate-pulse
           "
-        >
-          <h1
+        />
+
+        <div
+          className="
+          absolute
+          bottom-[-180px]
+          right-[-180px]
+          w-[450px]
+          h-[450px]
+          bg-cyan-500/20
+          blur-3xl
+          rounded-full
+          animate-pulse
+          "
+        />
+
+        <div
+          className="
+          absolute
+          top-1/2
+          left-1/2
+          -translate-x-1/2
+          -translate-y-1/2
+          w-[500px]
+          h-[500px]
+          bg-indigo-500/10
+          blur-3xl
+          rounded-full
+          "
+        />
+      </div>
+
+      {/* Login Card */}
+
+      <div
+        className="
+        relative
+        z-10
+        w-full
+        max-w-md
+        backdrop-blur-xl
+        bg-white/10
+        border
+        border-white/20
+        rounded-3xl
+        shadow-[0_20px_80px_rgba(0,0,0,0.35)]
+        p-8
+        md:p-10
+        animate-[fadeIn_.5s_ease]
+        "
+      >
+        {/* Logo */}
+
+        <div className="text-center mb-8">
+          <div
             className="
-            text-4xl
-            font-bold
-            text-slate-900
+            mx-auto
+            w-20
+            h-20
+            rounded-2xl
+            bg-gradient-to-r
+            from-blue-500
+            to-cyan-500
+            flex
+            items-center
+            justify-center
+            shadow-lg
             "
           >
-            Task Manager (THG)
+            <CheckCircle2
+              size={40}
+              className="text-white"
+            />
+          </div>
+
+          <h1
+            className="
+            text-white
+            text-4xl
+            font-bold
+            mt-5
+            "
+          >
+            Task Manager
           </h1>
 
           <p
             className="
-            text-slate-500
-            mt-3
+            text-slate-300
+            mt-2
             "
           >
-            The Official Task Manager Platform
+            Welcome back to THG Platform
           </p>
         </div>
 
+        {/* Form */}
+
         <form onSubmit={handleLogin}>
-          <div
-            className="
-            mb-4
-            "
-          >
+          {/* Email */}
+
+          <div className="mb-5">
             <label
               className="
               block
               text-sm
-              font-medium
-              text-slate-700
+              text-slate-300
               mb-2
               "
             >
@@ -125,77 +198,117 @@ function Login() {
               type="email"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              placeholder="john@example.com"
               className="
               w-full
+              bg-white/10
+              border
+              border-white/20
+              text-white
+              placeholder:text-slate-400
+              rounded-xl
               px-4
               py-3
-              border
-              border-slate-300
-              rounded-xl
-              focus:outline-none
-              focus:ring-2
-              focus:ring-blue-500
+              outline-none
+              transition-all
               focus:border-blue-500
-              transition
+              focus:ring-2
+              focus:ring-blue-500/30
               "
             />
           </div>
 
-          <div
-            className="
-            mb-6
-            "
-          >
+          {/* Password */}
+
+          <div className="mb-6">
             <label
               className="
               block
               text-sm
-              font-medium
-              text-slate-700
+              text-slate-300
               mb-2
               "
             >
               Password
             </label>
 
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="
-              w-full
-              px-4
-              py-3
-              border
-              border-slate-300
-              rounded-xl
-              focus:outline-none
-              focus:ring-2
-              focus:ring-blue-500
-              focus:border-blue-500
-              transition
-              "
-            />
+            <div className="relative">
+              <input
+                type={
+                  showPassword
+                    ? "text"
+                    : "password"
+                }
+                required
+                value={password}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
+                placeholder="Enter password"
+                className="
+                w-full
+                bg-white/10
+                border
+                border-white/20
+                text-white
+                placeholder:text-slate-400
+                rounded-xl
+                px-4
+                py-3
+                pr-12
+                outline-none
+                transition-all
+                focus:border-blue-500
+                focus:ring-2
+                focus:ring-blue-500/30
+                "
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPassword(!showPassword)
+                }
+                className="
+                absolute
+                right-4
+                top-1/2
+                -translate-y-1/2
+                text-slate-400
+                hover:text-white
+                "
+              >
+                {showPassword ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Button */}
 
           <button
             type="submit"
             disabled={loading}
             className="
             w-full
-            bg-blue-600
-            hover:bg-blue-700
-            disabled:bg-blue-400
-            disabled:cursor-not-allowed
-            text-white
-            py-3
+            py-3.5
             rounded-xl
+            text-white
             font-semibold
-            transition
+            bg-gradient-to-r
+            from-blue-600
+            to-cyan-500
+            hover:scale-[1.02]
+            active:scale-[0.98]
+            transition-all
+            shadow-lg
+            disabled:opacity-70
             flex
             items-center
             justify-center
@@ -206,9 +319,7 @@ function Login() {
               <>
                 <Loader2
                   size={18}
-                  className="
-                    animate-spin
-                    "
+                  className="animate-spin"
                 />
                 Signing In...
               </>
@@ -218,6 +329,8 @@ function Login() {
           </button>
         </form>
 
+        {/* Footer */}
+
         <div
           className="
           mt-8
@@ -226,7 +339,7 @@ function Login() {
           text-slate-400
           "
         >
-          © 2026 Hashmi Group
+          © 2026 Hashmi Group • Secure Access
         </div>
       </div>
     </div>
