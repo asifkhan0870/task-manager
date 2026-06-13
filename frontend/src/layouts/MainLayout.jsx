@@ -5,16 +5,13 @@ import Navbar from "../components/Navbar";
 
 function MainLayout({ children }) {
 
-  const [sidebarOpen, setSidebarOpen] =
-    useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
 
     <div
-      className="
-     min-h-screen
-  bg-slate-100
-      "
+      className="min-h-screen bg-slate-100"
+      style={{ display: "flex" }}
     >
 
       <Sidebar
@@ -23,23 +20,23 @@ function MainLayout({ children }) {
       />
 
       <div
-        className="
-        flex-1
-        min-w-0
-        md:ml-72
-        "
+        className="flex-1 min-w-0 md:ml-72"
+        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
 
-        <Navbar
-          setSidebarOpen={setSidebarOpen}
-        />
-
+        {/* Sticky Navbar */}
         <div
-          className="
-          p-4
-          md:p-6
-          "
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 30,
+          }}
         >
+          <Navbar setSidebarOpen={setSidebarOpen} />
+        </div>
+
+        {/* Scrollable content */}
+        <div className="p-4 md:p-6" style={{ flex: 1 }}>
           {children}
         </div>
 
