@@ -405,37 +405,13 @@ to {
           text-5xl
           font-bold
           mt-2
-          `,children:t})]})}function As(){let[e,t]=(0,S.useState)({total:0,done:0,in_progress:0,incomplete:0,overdue:0}),[n,r]=(0,S.useState)([]),[i,a]=(0,S.useState)(`Total Tasks`);(0,S.useEffect)(()=>{o(),s()},[]);let o=async()=>{try{t((await H.get(`/dashboard/stats`)).data)}catch(e){console.log(e)}},s=async()=>{try{r((await H.get(`/tasks/`)).data),a(`Total Tasks`)}catch(e){console.log(e)}};return(0,U.jsxs)(Os,{children:[(0,U.jsx)(`h1`,{className:`
-          text-4xl
-          font-bold
-          mb-8
-          `,children:`Dashboard`}),(0,U.jsxs)(`div`,{className:`
+          `,children:t})]})}function As(){let[e,t]=(0,S.useState)({total:0,done:0,in_progress:0,incomplete:0,overdue:0}),[n,r]=(0,S.useState)([]),[i,a]=(0,S.useState)(`Total Tasks`);(0,S.useEffect)(()=>{o(),s()},[]);let o=async()=>{try{t((await H.get(`/dashboard/stats`)).data)}catch(e){console.log(e)}},s=async()=>{try{r((await H.get(`/tasks/`)).data),a(`Total Tasks`)}catch(e){console.log(e)}};return(0,U.jsxs)(Os,{children:[(0,U.jsx)(`h1`,{className:`text-4xl font-bold mb-8`,children:`Dashboard`}),(0,U.jsxs)(`div`,{className:`
           grid
-grid-cols-2
-lg:grid-cols-5
-gap-4
-          `,children:[(0,U.jsx)(`div`,{className:`cursor-pointer`,onClick:s,children:(0,U.jsx)(ks,{title:`Total Tasks`,value:e.total})}),(0,U.jsx)(`div`,{className:`cursor-pointer`,onClick:async()=>{try{r((await H.get(`/tasks/completed`)).data),a(`Done`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`Done`,value:e.done})}),(0,U.jsx)(`div`,{className:`cursor-pointer`,onClick:async()=>{try{r((await H.get(`/tasks/in-progress`)).data),a(`In Progress`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`In Progress`,value:e.in_progress})}),(0,U.jsx)(`div`,{className:`cursor-pointer`,onClick:async()=>{try{r((await H.get(`/tasks/incomplete`)).data),a(`Incomplete`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`Incomplete`,value:e.incomplete})}),(0,U.jsx)(`div`,{className:`cursor-pointer`,onClick:async()=>{try{r((await H.get(`/tasks/overdue`)).data),a(`Overdue`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`Overdue`,value:e.overdue})})]}),(0,U.jsxs)(`div`,{className:`mt-10`,children:[(0,U.jsx)(`h2`,{className:`
-            text-2xl
-            font-bold
-            mb-4
-            `,children:i}),(0,U.jsx)(`div`,{className:`
-            bg-white
-            rounded-lg
-            shadow
-            overflow-x-auto
-            `,children:(0,U.jsx)(`div`,{className:`overflow-x-auto`,children:(0,U.jsxs)(`table`,{className:`min-w-[700px] w-full`,children:[(0,U.jsx)(`thead`,{children:(0,U.jsxs)(`tr`,{className:`
-                  bg-gray-100
-                  text-left
-                  `,children:[(0,U.jsx)(`th`,{className:`p-3`,children:`Title`}),(0,U.jsx)(`th`,{className:`p-3`,children:`Priority`}),(0,U.jsx)(`th`,{className:`p-3`,children:`Status`}),(0,U.jsx)(`th`,{className:`p-3`,children:`Due Date`})]})}),(0,U.jsx)(`tbody`,{children:n.length>0?n.map(e=>(0,U.jsxs)(`tr`,{className:`
-                      border-t
-                      `,children:[(0,U.jsx)(`td`,{className:`p-3`,children:(0,U.jsx)(kn,{to:`/tasks/${e._id}`,className:`
-    text-blue-600
-    hover:underline
-    font-medium
-    `,children:e.title})}),(0,U.jsx)(`td`,{className:`p-3`,children:e.priority}),(0,U.jsx)(`td`,{className:`p-3`,children:e.status}),(0,U.jsx)(`td`,{className:`p-3`,children:e.due_date?new Date(e.due_date).toLocaleDateString():`-`})]},e._id)):(0,U.jsx)(`tr`,{children:(0,U.jsx)(`td`,{colSpan:`4`,className:`
-                      text-center
-                      p-6
-                      `,children:`No Tasks Found`})})})]})})})]})]})}function js(){let[e,t]=(0,S.useState)([]);(0,S.useEffect)(()=>{n()},[]);let n=async()=>{try{t((await H.get(`/tasks/`)).data)}catch(e){console.log(e)}};return(0,U.jsxs)(Os,{children:[(0,U.jsx)(`h1`,{className:`
+          grid-cols-1
+          sm:grid-cols-2
+          lg:grid-cols-5
+          gap-4
+        `,children:[(0,U.jsx)(`div`,{className:`cursor-pointer hover:scale-[1.02] transition`,onClick:s,children:(0,U.jsx)(ks,{title:`Total Tasks`,value:e.total})}),(0,U.jsx)(`div`,{className:`cursor-pointer hover:scale-[1.02] transition`,onClick:async()=>{try{r((await H.get(`/tasks/completed`)).data),a(`Done`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`Done`,value:e.done})}),(0,U.jsx)(`div`,{className:`cursor-pointer hover:scale-[1.02] transition`,onClick:async()=>{try{r((await H.get(`/tasks/in-progress`)).data),a(`In Progress`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`In Progress`,value:e.in_progress})}),(0,U.jsx)(`div`,{className:`cursor-pointer hover:scale-[1.02] transition`,onClick:async()=>{try{r((await H.get(`/tasks/incomplete`)).data),a(`Incomplete`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`Incomplete`,value:e.incomplete})}),(0,U.jsx)(`div`,{className:`cursor-pointer hover:scale-[1.02] transition`,onClick:async()=>{try{r((await H.get(`/tasks/overdue`)).data),a(`Overdue`)}catch(e){console.log(e)}},children:(0,U.jsx)(ks,{title:`Overdue`,value:e.overdue})})]}),(0,U.jsxs)(`div`,{className:`mt-10`,children:[(0,U.jsx)(`h2`,{className:`text-2xl font-bold mb-4`,children:i}),(0,U.jsx)(`div`,{className:`bg-white rounded-xl shadow overflow-hidden`,children:(0,U.jsx)(`div`,{className:`overflow-x-auto`,children:(0,U.jsxs)(`table`,{className:`w-full min-w-[700px]`,children:[(0,U.jsx)(`thead`,{className:`bg-slate-100`,children:(0,U.jsxs)(`tr`,{children:[(0,U.jsx)(`th`,{className:`p-4 text-left`,children:`Title`}),(0,U.jsx)(`th`,{className:`p-4 text-left`,children:`Priority`}),(0,U.jsx)(`th`,{className:`p-4 text-left`,children:`Status`}),(0,U.jsx)(`th`,{className:`p-4 text-left`,children:`Due Date`})]})}),(0,U.jsx)(`tbody`,{children:n.length>0?n.map(e=>(0,U.jsxs)(`tr`,{className:`border-t hover:bg-slate-50 transition`,children:[(0,U.jsx)(`td`,{className:`p-4`,children:(0,U.jsx)(kn,{to:`/tasks/${e._id}`,className:`text-blue-600 hover:underline font-medium`,children:e.title})}),(0,U.jsx)(`td`,{className:`p-4`,children:e.priority}),(0,U.jsx)(`td`,{className:`p-4`,children:e.status}),(0,U.jsx)(`td`,{className:`p-4`,children:e.due_date?new Date(e.due_date).toLocaleDateString():`-`})]},e._id)):(0,U.jsx)(`tr`,{children:(0,U.jsx)(`td`,{colSpan:`4`,className:`text-center p-8 text-slate-500`,children:`No Tasks Found`})})})]})})})]})]})}function js(){let[e,t]=(0,S.useState)([]);(0,S.useEffect)(()=>{n()},[]);let n=async()=>{try{t((await H.get(`/tasks/`)).data)}catch(e){console.log(e)}};return(0,U.jsxs)(Os,{children:[(0,U.jsx)(`h1`,{className:`
         text-4xl
         font-bold
         mb-8
