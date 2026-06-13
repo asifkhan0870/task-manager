@@ -327,11 +327,14 @@ function TaskDetails() {
         /* ── DRAWER ── */
         .td-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); backdrop-filter: blur(4px); z-index: 40; }
         .td-drawer {
-          position: fixed; top: 0; right: 0; height: 100dvh;
-          width: 100%; max-width: 420px;
+          position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+          width: 100vw; max-width: 100vw; height: 100dvh;
           background: #fff; z-index: 50; display: flex; flex-direction: column;
           overflow: hidden; animation: slideIn 0.25s cubic-bezier(0.4,0,0.2,1);
-          box-shadow: -8px 0 32px rgba(15,23,42,0.15);
+          box-shadow: none; margin: 0;
+        }
+        @media (min-width: 640px) {
+          .td-drawer { left: auto; width: 420px; max-width: 420px; box-shadow: -8px 0 32px rgba(15,23,42,0.15); }
         }
         .td-drawer-header {
           background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
