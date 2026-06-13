@@ -12,8 +12,8 @@ function MainLayout({ children }) {
 
     <div
       className="
-      flex
-      min-h-screen
+     min-h-screen
+  bg-slate-100
       "
     >
 
@@ -26,6 +26,7 @@ function MainLayout({ children }) {
         className="
         flex-1
         min-w-0
+        md:ml-72
         "
       >
 
