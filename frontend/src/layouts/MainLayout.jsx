@@ -9,36 +9,38 @@ function MainLayout({ children }) {
 
   return (
 
-    <div className="min-h-screen bg-slate-100">
+    <div style={{ minHeight: "100vh", backgroundColor: "#f1f5f9" }}>
 
-      {/* Sidebar is already fixed inside the component */}
+      {/* Sidebar — already fixed at z-50 inside component */}
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
 
-      {/* Fixed Navbar */}
-      <div
-        style={{
+      {/* Main column — offset from sidebar on desktop */}
+      <div style={{ marginLeft: 0 }} className="md:ml-72">
+
+        {/* Fixed Navbar */}
+        <nav style={{
           position: "fixed",
           top: 0,
-          left: 0,
           right: 0,
-          zIndex: 20,
+          left: 0,
+          zIndex: 25,
+          marginLeft: 0,
         }}
-        className="md:pl-72"
-      >
-        <Navbar setSidebarOpen={setSidebarOpen} />
-      </div>
+          className="md:pl-72"
+        >
+          <Navbar setSidebarOpen={setSidebarOpen} />
+        </nav>
 
-      {/* Content — pushed down by navbar height (80px = h-20) and left by sidebar on desktop */}
-      <div
-        className="md:ml-72"
-        style={{ paddingTop: "80px" }}
-      >
-        <div className="p-4 md:p-6">
-          {children}
-        </div>
+        {/* Page content — padded below fixed navbar (h-20 = 80px) */}
+        <main style={{ paddingTop: "80px" }}>
+          <div className="p-4 md:p-6">
+            {children}
+          </div>
+        </main>
+
       </div>
 
     </div>
