@@ -802,173 +802,203 @@ to {
                 `,children:[`By:`,` `,l(e.performed_by)]}),(0,U.jsx)(`p`,{className:`
                 text-sm
                 text-gray-500
-                `,children:new Date(e.timestamp).toLocaleString(`en-US`,{day:`numeric`,month:`long`,year:`numeric`,hour:`numeric`,minute:`2-digit`,hour12:!0})})]},e._id))})]})}function Is(){let e=(0,S.useRef)(null),t=(0,S.useRef)(null),{id:n}=ft(),r=ut(),[i,a]=(0,S.useState)(null),[o,s]=(0,S.useState)([]),[c,l]=(0,S.useState)(``),[u,d]=(0,S.useState)(!1),[f,p]=(0,S.useState)(``),[m,h]=(0,S.useState)([]),[g,_]=(0,S.useState)(null),[v,y]=(0,S.useState)(!1),[b,x]=(0,S.useState)(null),[C,w]=(0,S.useState)([]),[ee,T]=(0,S.useState)([]),[E,D]=(0,S.useState)(!0);(0,S.useEffect)(()=>{ce(),ue(),ae(),ie()},[n]),(0,S.useEffect)(()=>{E&&t.current?.scrollIntoView({behavior:`smooth`})},[m,E]),(0,S.useEffect)(()=>{ne(),O(),re();let e=setInterval(()=>{ne(),O(),re()},1e3);return()=>clearInterval(e)},[n]);let te=()=>{let t=e.current;D(t.scrollHeight-t.scrollTop-t.clientHeight<150)},ne=async()=>{try{let e=await H.get(`/discussion/${n}`);h(t=>t.length===e.data.length&&t[t.length-1]?._id===e.data[e.data.length-1]?._id?t:e.data)}catch(e){console.error(e)}},O=async()=>{try{w((await H.get(`/discussion/${n}/typing`)).data)}catch(e){console.log(e)}},re=async()=>{try{T((await H.get(`/discussion/${n}/recording`)).data)}catch(e){console.log(e)}},ie=async()=>{try{_((await H.get(`/me`)).data.user_id)}catch(e){console.error(e)}},ae=async()=>{try{h((await H.get(`/discussion/${n}`)).data)}catch(e){console.error(e)}},oe=async()=>{if(f.trim())try{await H.post(`/discussion/${n}/message`,{message:f}),p(``),await H.post(`/discussion/${n}/typing`,{is_typing:!1}),await ae()}catch(e){console.error(e),ii.error(`Failed to send message`)}},k=async()=>{try{let e=await navigator.mediaDevices.getUserMedia({audio:!0}),t=new MediaRecorder(e);await H.post(`/discussion/${n}/recording`,{is_recording:!0});let r=[];t.ondataavailable=e=>{r.push(e.data)},t.onstop=async()=>{await se(new Blob(r,{type:`audio/webm`}))},t.start(),x(t),y(!0)}catch(e){console.error(e),alert(`Microphone access denied`)}},A=async()=>{await H.post(`/discussion/${n}/recording`,{is_recording:!1}),b&&(b.stop(),y(!1))},se=async e=>{try{let t=new FormData;t.append(`file`,e,`voice.webm`);let r=await H.post(`/upload/audio`,t);await H.post(`/discussion/${n}/message`,{audio_url:r.data.audio_url,message:``}),await ae(),console.log(r.data.audio_url)}catch(e){console.error(e)}},ce=async()=>{try{a((await H.get(`/tasks/id/${n}`)).data)}catch(e){console.log(e),ii.error(`Failed to load task`)}},le=e=>{let t=o.find(t=>t._id===e);return t?t.name:e},ue=async()=>{try{s((await H.get(`/users/`)).data||[])}catch(e){console.log(e)}},de=async()=>{if(c||!window.confirm(`Delete this task?`))return;l(`delete`);let e=ii.loading(`Deleting task...`);try{await H.delete(`/tasks/id/${n}`),ii.success(`Task deleted successfully`,{id:e}),r(`/tasks`)}catch(t){console.log(t),ii.error(`Failed to delete task`,{id:e})}finally{l(``)}},j=async e=>{if(c)return;l(e);let t=ii.loading(`Updating status...`);try{await H.patch(`/tasks/id/${n}/status`,{status:e}),await ce(),ii.success(`Status updated to ${e}`,{id:t})}catch(e){console.log(e),ii.error(`Failed to update status`,{id:t})}finally{l(``)}},fe=async()=>{if(window.confirm(`Clear entire discussion?`))try{await H.delete(`/discussion/${n}`),h([]),ii.success(`Discussion cleared`)}catch{ii.error(`Failed`)}},pe=e=>{e.key!==`Enter`||e.shiftKey||(e.preventDefault(),v?A():oe())},me=e=>{let t=new Date(e);return new Date(t.getTime()+5.5*60*60*1e3).toLocaleTimeString(`en-IN`,{hour:`2-digit`,minute:`2-digit`,hour12:!0})};return i?(0,U.jsxs)(Os,{children:[(0,U.jsxs)(`div`,{className:`
-          bg-white
-          rounded-xl
-          shadow
-          p-8
-        `,children:[(0,U.jsx)(`h1`,{className:`
-            text-4xl
-            font-bold
-            mb-6
-          `,children:i.title}),(0,U.jsx)(`div`,{className:`flex justify-end mb-4`,children:(0,U.jsx)(`button`,{onClick:()=>d(!0),className:`
-              bg-blue-600
-              hover:bg-blue-700
-              text-white
-              px-4
-              py-2
-              rounded-xl
-              shadow-md
-              transition
-            `,children:`💬 Discussion`})}),(0,U.jsx)(`p`,{className:`mb-4`,children:i.description}),i.audio_url&&(0,U.jsxs)(`div`,{className:`mt-6`,children:[(0,U.jsx)(`h3`,{className:`text-lg font-semibold mb-2`,children:`🎤 Voice Note`}),(0,U.jsx)(`audio`,{controls:!0,src:i.audio_url,className:`w-full`}),(0,U.jsx)(`a`,{href:i.audio_url,target:`_blank`,rel:`noopener noreferrer`,className:`
-                inline-block
-                mt-2
-                text-blue-600
-                hover:underline
-              `,children:`Open Audio in New Tab`})]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Priority:`}),` `,i.priority]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Status:`}),` `,i.status]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Assigned By:`}),` `,le(i.assigned_by)]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Assigned To:`}),` `,le(i.assigned_to)]}),(0,U.jsxs)(`p`,{children:[(0,U.jsx)(`b`,{children:`Due Date:`}),` `,new Date(i.due_date).toLocaleString(`en-US`,{day:`numeric`,month:`long`,year:`numeric`,hour:`numeric`,minute:`2-digit`,hour12:!0})]}),(0,U.jsxs)(`div`,{className:`flex gap-4 mt-8`,children:[(0,U.jsx)(`button`,{disabled:!!c,onClick:()=>j(`In Progress`),className:`
-              text-white
-              px-4
-              py-2
-              rounded
-              ${c?`bg-gray-500 cursor-not-allowed`:`bg-yellow-500`}
-            `,children:c===`In Progress`?`Updating...`:`In Progress`}),(0,U.jsx)(`button`,{disabled:!!c,onClick:()=>j(`Done`),className:`
-              text-white
-              px-4
-              py-2
-              rounded
-              ${c?`bg-gray-500 cursor-not-allowed`:`bg-green-600`}
-            `,children:c===`Done`?`Updating...`:`Mark Done`}),(0,U.jsx)(`button`,{disabled:!!c,onClick:de,className:`
-              text-white
-              px-4
-              py-2
-              rounded
-              ${c?`bg-gray-500 cursor-not-allowed`:`bg-red-600`}
-            `,children:c===`delete`?`Deleting...`:`Delete`})]})]}),(0,U.jsx)(Fs,{taskId:n}),c&&(0,U.jsx)(`div`,{className:`
-            fixed
-            inset-0
-            bg-black/40
-            flex
-            items-center
-            justify-center
-            z-50
-          `,children:(0,U.jsx)(`div`,{className:`
-              bg-white
-              px-8
-              py-6
-              rounded-xl
-              shadow-xl
-              text-lg
-              font-semibold
-            `,children:`Processing... Please wait.`})}),u&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsx)(`div`,{onClick:()=>d(!1),className:`
-              fixed
-              inset-0
-              bg-black/40
-              backdrop-blur-sm
-              z-40
-            `}),(0,U.jsxs)(`div`,{className:`
-              fixed
-              top-0
-              right-0
-              h-[100dvh]
-              w-full
-              sm:w-[420px]
-              bg-white
-              shadow-2xl
-              z-50
-              flex
-              flex-col
-              overflow-hidden
-            `,children:[(0,U.jsx)(`div`,{className:`
-                sticky
-                top-0
-                z-50
-                bg-white
-                border-b
-                px-4
-                py-4
-                shadow-sm
-                shrink-0
-              `,children:(0,U.jsxs)(`div`,{className:`flex items-center justify-between`,children:[(0,U.jsxs)(`div`,{children:[(0,U.jsx)(`h2`,{className:`text-xl font-bold`,children:`💬 Discussion`}),v&&(0,U.jsx)(`p`,{className:`text-red-500 text-xs animate-pulse mt-1`,children:`🔴 Recording...`}),!v&&ee.some(e=>e!==g)&&(0,U.jsx)(`p`,{className:`text-red-500 text-xs animate-pulse mt-1`,children:`🎙️ Someone is recording...`}),!v&&!ee.some(e=>e!==g)&&C.some(e=>e!==g)&&(0,U.jsx)(`p`,{className:`text-green-500 text-xs animate-pulse mt-1`,children:`✍️ Typing...`})]}),(0,U.jsxs)(`div`,{className:`flex items-center gap-2`,children:[(0,U.jsx)(`button`,{onClick:fe,className:`
-                      px-3
-                      py-2
-                      text-xs
-                      rounded-lg
-                      bg-red-50
-                      text-red-600
-                      hover:bg-red-100
-                      transition
-                    `,children:`🗑 Clear`}),(0,U.jsx)(`button`,{onClick:()=>d(!1),className:`
-                      w-9
-                      h-9
-                      rounded-lg
-                      hover:bg-slate-100
-                      flex
-                      items-center
-                      justify-center
-                      text-slate-600
-                      font-bold
-                      transition
-                    `,children:`✕`})]})]})}),(0,U.jsxs)(`div`,{ref:e,onScroll:te,className:`
-                flex-1
-                overflow-y-auto
-                bg-slate-50
-                px-3
-                py-4
-                pb-32
-                space-y-4
-              `,children:[m.length===0?(0,U.jsxs)(`div`,{className:`text-center text-slate-400 mt-10`,children:[`No messages yet.`,(0,U.jsx)(`br`,{}),`Start the conversation.`]}):m.map(e=>{let t=e.sender_id===g;return(0,U.jsx)(`div`,{className:`
-                        flex
-                        ${t?`justify-end`:`justify-start`}
-                      `,children:(0,U.jsxs)(`div`,{className:`
-                          max-w-[80%]
-                          px-4
-                          py-3
-                          rounded-2xl
-                          shadow-sm
-                          ${t?`bg-blue-500 text-white rounded-br-md`:`bg-white text-slate-800 rounded-bl-md border border-slate-100`}
-                        `,children:[(0,U.jsx)(`div`,{className:`text-xs opacity-70 mb-1`,children:t?`You`:le(e.sender_id)}),e.message_type===`audio`?(0,U.jsx)(`audio`,{controls:!0,src:e.audio_url,className:`w-56 rounded-lg`}):(0,U.jsx)(`div`,{className:`break-words text-sm`,children:e.message}),(0,U.jsx)(`div`,{className:`text-[10px] opacity-70 mt-1 text-right`,children:me(e.created_at)})]})},e._id)}),(0,U.jsx)(`div`,{ref:t})]}),(0,U.jsx)(`div`,{className:`
-                sticky
-                bottom-0
-                border-t
-                bg-white
-                p-3
-                shrink-0
-              `,style:{paddingBottom:`calc(0.75rem + env(safe-area-inset-bottom))`},children:(0,U.jsxs)(`div`,{className:`flex items-center gap-3`,children:[(0,U.jsx)(`button`,{onClick:()=>{v?A():k()},className:`
-                    w-11
-                    h-11
-                    rounded-full
-                    flex
-                    items-center
-                    justify-center
-                    shadow
-                    text-white
-                    transition
-                    shrink-0
-                    ${v?`bg-red-600 animate-pulse`:`bg-red-500 hover:bg-red-600`}
-                  `,children:v?`⏹`:`🎤`}),(0,U.jsx)(`textarea`,{value:f,onChange:async e=>{p(e.target.value),await H.post(`/discussion/${n}/typing`,{is_typing:!0})},onKeyDown:pe,rows:1,placeholder:`Type a message...`,className:`
-                    flex-1
-                    border
-                    border-slate-200
-                    rounded-full
-                    px-5
-                    py-3
-                    resize-none
-                    focus:outline-none
-                    focus:border-blue-400
-                    text-sm
-                    bg-slate-50
-                  `}),(0,U.jsx)(`button`,{onClick:oe,className:`
-                    w-11
-                    h-11
-                    rounded-full
-                    bg-blue-600
-                    hover:bg-blue-700
-                    text-white
-                    flex
-                    items-center
-                    justify-center
-                    text-lg
-                    shadow
-                    transition
-                    shrink-0
-                  `,children:`📤`})]})})]})]})]}):(0,U.jsx)(Os,{children:`Loading...`})}function Ls(){return(0,U.jsxs)(En,{children:[(0,U.jsx)(ri,{position:`top-right`,toastOptions:{duration:3e3}}),(0,U.jsxs)(Rt,{children:[(0,U.jsx)(It,{path:`/`,element:(0,U.jsx)(Ts,{})}),(0,U.jsx)(It,{path:`/dashboard`,element:(0,U.jsx)(js,{})}),(0,U.jsx)(It,{path:`/tasks`,element:(0,U.jsx)(Ms,{})}),(0,U.jsx)(It,{path:`/create-task`,element:(0,U.jsx)(Ns,{})}),(0,U.jsx)(It,{path:`/my-tasks`,element:(0,U.jsx)(Ps,{})}),(0,U.jsx)(It,{path:`/tasks/:id`,element:(0,U.jsx)(Is,{})})]})]})}qn.createRoot(document.getElementById(`root`)).render((0,U.jsx)(S.StrictMode,{children:(0,U.jsx)(Ls,{})}));
+                `,children:new Date(e.timestamp).toLocaleString(`en-US`,{day:`numeric`,month:`long`,year:`numeric`,hour:`numeric`,minute:`2-digit`,hour12:!0})})]},e._id))})]})}function Is(){let e=(0,S.useRef)(null),t=(0,S.useRef)(null),{id:n}=ft(),r=ut(),[i,a]=(0,S.useState)(null),[o,s]=(0,S.useState)([]),[c,l]=(0,S.useState)(``),[u,d]=(0,S.useState)(!1),[f,p]=(0,S.useState)(``),[m,h]=(0,S.useState)([]),[g,_]=(0,S.useState)(null),[v,y]=(0,S.useState)(!1),[b,x]=(0,S.useState)(null),[C,w]=(0,S.useState)([]),[ee,T]=(0,S.useState)([]),[E,D]=(0,S.useState)(!0);(0,S.useEffect)(()=>{ce(),ue(),ae(),ie()},[n]),(0,S.useEffect)(()=>{E&&t.current?.scrollIntoView({behavior:`smooth`})},[m,E]),(0,S.useEffect)(()=>{ne(),O(),re();let e=setInterval(()=>{ne(),O(),re()},1e3);return()=>clearInterval(e)},[n]);let te=()=>{let t=e.current;D(t.scrollHeight-t.scrollTop-t.clientHeight<150)},ne=async()=>{try{let e=await H.get(`/discussion/${n}`);h(t=>t.length===e.data.length&&t[t.length-1]?._id===e.data[e.data.length-1]?._id?t:e.data)}catch(e){console.error(e)}},O=async()=>{try{w((await H.get(`/discussion/${n}/typing`)).data)}catch(e){console.log(e)}},re=async()=>{try{T((await H.get(`/discussion/${n}/recording`)).data)}catch(e){console.log(e)}},ie=async()=>{try{_((await H.get(`/me`)).data.user_id)}catch(e){console.error(e)}},ae=async()=>{try{h((await H.get(`/discussion/${n}`)).data)}catch(e){console.error(e)}},oe=async()=>{if(f.trim())try{await H.post(`/discussion/${n}/message`,{message:f}),p(``),await H.post(`/discussion/${n}/typing`,{is_typing:!1}),await ae()}catch(e){console.error(e),ii.error(`Failed to send message`)}},k=async()=>{try{let e=await navigator.mediaDevices.getUserMedia({audio:!0}),t=new MediaRecorder(e);await H.post(`/discussion/${n}/recording`,{is_recording:!0});let r=[];t.ondataavailable=e=>r.push(e.data),t.onstop=async()=>{await se(new Blob(r,{type:`audio/webm`}))},t.start(),x(t),y(!0)}catch(e){console.error(e),alert(`Microphone access denied`)}},A=async()=>{await H.post(`/discussion/${n}/recording`,{is_recording:!1}),b&&(b.stop(),y(!1))},se=async e=>{try{let t=new FormData;t.append(`file`,e,`voice.webm`);let r=await H.post(`/upload/audio`,t);await H.post(`/discussion/${n}/message`,{audio_url:r.data.audio_url,message:``}),await ae()}catch(e){console.error(e)}},ce=async()=>{try{a((await H.get(`/tasks/id/${n}`)).data)}catch(e){console.log(e),ii.error(`Failed to load task`)}},le=e=>{let t=o.find(t=>t._id===e);return t?t.name:e},ue=async()=>{try{s((await H.get(`/users/`)).data||[])}catch(e){console.log(e)}},de=async()=>{if(c||!window.confirm(`Delete this task?`))return;l(`delete`);let e=ii.loading(`Deleting task...`);try{await H.delete(`/tasks/id/${n}`),ii.success(`Task deleted successfully`,{id:e}),r(`/tasks`)}catch(t){console.log(t),ii.error(`Failed to delete task`,{id:e})}finally{l(``)}},j=async e=>{if(c)return;l(e);let t=ii.loading(`Updating status...`);try{await H.patch(`/tasks/id/${n}/status`,{status:e}),await ce(),ii.success(`Status updated to ${e}`,{id:t})}catch(e){console.log(e),ii.error(`Failed to update status`,{id:t})}finally{l(``)}},fe=async()=>{if(window.confirm(`Clear entire discussion?`))try{await H.delete(`/discussion/${n}`),h([]),ii.success(`Discussion cleared`)}catch{ii.error(`Failed`)}},pe=e=>{e.key!==`Enter`||e.shiftKey||(e.preventDefault(),v?A():oe())},me=e=>{let t=new Date(e);return new Date(t.getTime()+5.5*60*60*1e3).toLocaleTimeString(`en-IN`,{hour:`2-digit`,minute:`2-digit`,hour12:!0})},he={High:{color:`#EF4444`,bg:`#FEF2F2`,border:`#FECACA`,emoji:`🔴`},Medium:{color:`#F59E0B`,bg:`#FFFBEB`,border:`#FDE68A`,emoji:`🟡`},Low:{color:`#10B981`,bg:`#F0FDF4`,border:`#A7F3D0`,emoji:`🟢`}},ge={Incomplete:{color:`#64748B`,bg:`#F1F5F9`,border:`#E2E8F0`,emoji:`⏳`},"In Progress":{color:`#F59E0B`,bg:`#FFFBEB`,border:`#FDE68A`,emoji:`🔄`},Done:{color:`#10B981`,bg:`#F0FDF4`,border:`#A7F3D0`,emoji:`✅`}},_e=he[i?.priority]||he.Medium,ve=ge[i?.status]||ge.Incomplete;return i?(0,U.jsxs)(Os,{children:[(0,U.jsx)(`style`,{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        .td-root * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+        @keyframes pulse-soft { 0%,100%{opacity:1}50%{opacity:0.6} }
+        @keyframes slideIn { from{transform:translateX(100%)}to{transform:translateX(0)} }
+
+        /* Header */
+        .td-header { margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .td-title { font-size: 28px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; margin: 0 0 6px; }
+        .td-subtitle { font-size: 13px; color: #94A3B8; margin: 0; }
+
+        /* Discussion btn */
+        .td-btn-discussion {
+          display: inline-flex; align-items: center; gap: 7px;
+          background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
+          color: #fff; border: none; border-radius: 12px;
+          padding: 11px 20px; font-size: 14px; font-weight: 600;
+          cursor: pointer; box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+          transition: opacity 0.18s, transform 0.1s;
+          font-family: 'Inter', sans-serif; white-space: nowrap;
+        }
+        .td-btn-discussion:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Stat pills row */
+        .td-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+        .td-pill {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 7px 14px; border-radius: 99px; border: 1.5px solid;
+          font-size: 13px; font-weight: 600;
+        }
+
+        /* Main card */
+        .td-card {
+          background: #fff; border-radius: 24px; padding: 32px;
+          border: 1.5px solid #E2E8F0;
+          box-shadow: 0 8px 32px rgba(15,23,42,0.06);
+          margin-bottom: 20px;
+        }
+
+        /* Description block */
+        .td-desc {
+          background: #F8FAFF; border: 1.5px solid #E2E8F0;
+          border-radius: 14px; padding: 18px 20px;
+          font-size: 15px; color: #334155; line-height: 1.65;
+          margin-bottom: 24px;
+        }
+
+        /* Voice note */
+        .td-voice {
+          background: linear-gradient(135deg, #F5F3FF 0%, #EEF2FF 100%);
+          border: 1.5px solid #C7D2FE; border-radius: 18px;
+          padding: 20px; margin-bottom: 24px;
+        }
+        .td-voice h3 { font-size: 14px; font-weight: 700; color: #3730A3; margin: 0 0 12px; }
+        .td-voice audio { width: 100%; accent-color: #6366F1; border-radius: 8px; }
+        .td-voice a {
+          display: inline-flex; align-items: center; gap: 5px;
+          margin-top: 10px; font-size: 12px; font-weight: 600;
+          color: #6366F1; text-decoration: none;
+        }
+        .td-voice a:hover { text-decoration: underline; }
+
+        /* Meta info grid */
+        .td-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+        @media (max-width: 560px) { .td-meta { grid-template-columns: 1fr; } }
+        .td-meta-item {
+          background: #F8FAFF; border: 1.5px solid #E2E8F0;
+          border-radius: 12px; padding: 14px 16px;
+        }
+        .td-meta-item .label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94A3B8; margin-bottom: 5px; }
+        .td-meta-item .value { font-size: 14px; font-weight: 600; color: #0F172A; }
+
+        /* Section label */
+        .td-section-label {
+          font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+          text-transform: uppercase; color: #94A3B8;
+          margin-bottom: 16px; padding-bottom: 10px;
+          border-bottom: 1px solid #F1F5F9;
+        }
+
+        /* Action buttons */
+        .td-actions { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid #F1F5F9; }
+        .td-btn-inprogress {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: #FFFBEB; color: #92400E; border: 1.5px solid #FDE68A;
+          border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
+        }
+        .td-btn-inprogress:hover:not(:disabled) { background: #FEF3C7; }
+        .td-btn-done {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: #F0FDF4; color: #065F46; border: 1.5px solid #A7F3D0;
+          border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
+        }
+        .td-btn-done:hover:not(:disabled) { background: #D1FAE5; }
+        .td-btn-delete {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: #FEF2F2; color: #B91C1C; border: 1.5px solid #FECACA;
+          border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
+          margin-left: auto;
+        }
+        .td-btn-delete:hover:not(:disabled) { background: #FEE2E2; }
+        .td-btn-disabled { opacity: 0.5; cursor: not-allowed !important; }
+
+        /* Overlay */
+        .td-overlay {
+          position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+          backdrop-filter: blur(4px); display: flex; align-items: center;
+          justify-content: center; z-index: 50;
+        }
+        .td-overlay-card { background: #fff; border-radius: 20px; padding: 36px 48px; text-align: center; box-shadow: 0 24px 64px rgba(15,23,42,0.2); }
+        .td-overlay-spinner { width: 40px; height: 40px; border: 3px solid #E2E8F0; border-top-color: #6366F1; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+        .td-overlay-card p { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0 0 4px; }
+        .td-overlay-card span { font-size: 13px; color: #94A3B8; }
+
+        /* ── DRAWER ── */
+        .td-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); backdrop-filter: blur(4px); z-index: 40; }
+        .td-drawer {
+          position: fixed; top: 0; right: 0; height: 100dvh;
+          width: 100%; max-width: 420px;
+          background: #fff; z-index: 50; display: flex; flex-direction: column;
+          overflow: hidden; animation: slideIn 0.25s cubic-bezier(0.4,0,0.2,1);
+          box-shadow: -8px 0 32px rgba(15,23,42,0.15);
+        }
+        .td-drawer-header {
+          background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
+          padding: 18px 20px; display: flex; align-items: center;
+          justify-content: space-between; shrink: 0;
+        }
+        .td-drawer-header-left h2 { font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 2px; }
+        .td-drawer-status { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75); animation: pulse-soft 1.4s ease-in-out infinite; }
+        .td-drawer-header-right { display: flex; align-items: center; gap: 8px; }
+        .td-btn-clear {
+          background: rgba(255,255,255,0.15); color: #fff; border: none;
+          border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600;
+          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
+        }
+        .td-btn-clear:hover { background: rgba(255,255,255,0.25); }
+        .td-btn-close {
+          width: 34px; height: 34px; border-radius: 8px; border: none;
+          background: rgba(255,255,255,0.15); color: #fff; font-size: 16px;
+          cursor: pointer; display: flex; align-items: center; justify-content: center;
+          transition: background 0.18s; font-family: 'Inter', sans-serif;
+        }
+        .td-btn-close:hover { background: rgba(255,255,255,0.25); }
+
+        .td-messages {
+          flex: 1; overflow-y: auto; background: #F8FAFF;
+          padding: 16px 14px 120px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .td-empty { text-align: center; color: #94A3B8; margin-top: 60px; font-size: 14px; line-height: 1.6; }
+        .td-msg-row { display: flex; }
+        .td-msg-row.mine { justify-content: flex-end; }
+        .td-msg-row.theirs { justify-content: flex-start; }
+        .td-bubble {
+          max-width: 80%; padding: 11px 14px; border-radius: 18px; box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+        }
+        .td-bubble.mine { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; border-bottom-right-radius: 4px; }
+        .td-bubble.theirs { background: #fff; color: #0F172A; border: 1.5px solid #E2E8F0; border-bottom-left-radius: 4px; }
+        .td-bubble-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; opacity: 0.75; }
+        .td-bubble-text { font-size: 14px; line-height: 1.45; word-break: break-word; }
+        .td-bubble-time { font-size: 10px; opacity: 0.6; margin-top: 4px; text-align: right; }
+        .td-bubble audio { width: 200px; border-radius: 8px; accent-color: #6366F1; }
+
+        .td-input-area {
+          border-top: 1.5px solid #E2E8F0; background: #fff;
+          padding: 12px 14px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
+          shrink: 0;
+        }
+        .td-input-row { display: flex; align-items: center; gap: 10px; }
+        .td-btn-mic {
+          width: 44px; height: 44px; border-radius: 50%; border: none;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 18px; cursor: pointer; transition: background 0.18s, transform 0.1s;
+          shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .td-btn-mic.idle { background: #EF4444; }
+        .td-btn-mic.idle:hover { background: #DC2626; transform: scale(1.05); }
+        .td-btn-mic.recording { background: #0F172A; animation: pulse-soft 1s ease-in-out infinite; }
+        .td-msg-input {
+          flex: 1; border: 1.5px solid #E2E8F0; border-radius: 24px;
+          padding: 11px 18px; font-size: 14px; resize: none;
+          outline: none; background: #F8FAFF; transition: border-color 0.18s;
+          font-family: 'Inter', sans-serif; color: #0F172A;
+        }
+        .td-msg-input:focus { border-color: #6366F1; background: #fff; }
+        .td-msg-input::placeholder { color: #CBD5E1; }
+        .td-btn-send {
+          width: 44px; height: 44px; border-radius: 50%; border: none;
+          background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+          font-size: 18px; cursor: pointer; display: flex; align-items: center;
+          justify-content: center; box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+          transition: opacity 0.18s, transform 0.1s; shrink: 0;
+        }
+        .td-btn-send:hover { opacity: 0.9; transform: scale(1.05); }
+      `}),(0,U.jsxs)(`div`,{className:`td-root`,children:[(0,U.jsxs)(`div`,{className:`td-header`,children:[(0,U.jsxs)(`div`,{children:[(0,U.jsx)(`h1`,{className:`td-title`,children:i.title}),(0,U.jsxs)(`p`,{className:`td-subtitle`,children:[`Task #`,n.slice(-8).toUpperCase()]})]}),(0,U.jsx)(`button`,{className:`td-btn-discussion`,onClick:()=>d(!0),children:`💬 Discussion`})]}),(0,U.jsxs)(`div`,{className:`td-stats`,children:[(0,U.jsxs)(`span`,{className:`td-pill`,style:{color:_e.color,background:_e.bg,borderColor:_e.border},children:[_e.emoji,` `,i.priority,` Priority`]}),(0,U.jsxs)(`span`,{className:`td-pill`,style:{color:ve.color,background:ve.bg,borderColor:ve.border},children:[ve.emoji,` `,i.status]})]}),(0,U.jsxs)(`div`,{className:`td-card`,children:[(0,U.jsx)(`div`,{className:`td-section-label`,children:`Description`}),(0,U.jsx)(`div`,{className:`td-desc`,children:i.description}),i.audio_url&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsx)(`div`,{className:`td-section-label`,children:`Voice Note`}),(0,U.jsxs)(`div`,{className:`td-voice`,children:[(0,U.jsx)(`h3`,{children:`🎤 Attached Voice Note`}),(0,U.jsx)(`audio`,{controls:!0,src:i.audio_url}),(0,U.jsx)(`a`,{href:i.audio_url,target:`_blank`,rel:`noopener noreferrer`,children:`↗ Open in new tab`})]})]}),(0,U.jsx)(`div`,{className:`td-section-label`,style:{marginTop:4},children:`Task Info`}),(0,U.jsxs)(`div`,{className:`td-meta`,children:[(0,U.jsxs)(`div`,{className:`td-meta-item`,children:[(0,U.jsx)(`div`,{className:`label`,children:`Assigned By`}),(0,U.jsxs)(`div`,{className:`value`,children:[`👤 `,le(i.assigned_by)]})]}),(0,U.jsxs)(`div`,{className:`td-meta-item`,children:[(0,U.jsx)(`div`,{className:`label`,children:`Assigned To`}),(0,U.jsxs)(`div`,{className:`value`,children:[`👤 `,le(i.assigned_to)]})]}),(0,U.jsxs)(`div`,{className:`td-meta-item`,style:{gridColumn:`1 / -1`},children:[(0,U.jsx)(`div`,{className:`label`,children:`Due Date`}),(0,U.jsxs)(`div`,{className:`value`,children:[`📅 `,new Date(i.due_date).toLocaleString(`en-US`,{day:`numeric`,month:`long`,year:`numeric`,hour:`numeric`,minute:`2-digit`,hour12:!0})]})]})]}),(0,U.jsx)(`div`,{className:`td-section-label`,children:`Update Status`}),(0,U.jsxs)(`div`,{className:`td-actions`,children:[(0,U.jsx)(`button`,{className:`td-btn-inprogress ${c?`td-btn-disabled`:``}`,disabled:!!c,onClick:()=>j(`In Progress`),children:c===`In Progress`?`⏳ Updating…`:`🔄 In Progress`}),(0,U.jsx)(`button`,{className:`td-btn-done ${c?`td-btn-disabled`:``}`,disabled:!!c,onClick:()=>j(`Done`),children:c===`Done`?`⏳ Updating…`:`✅ Mark Done`}),(0,U.jsx)(`button`,{className:`td-btn-delete ${c?`td-btn-disabled`:``}`,disabled:!!c,onClick:de,children:c===`delete`?`⏳ Deleting…`:`🗑 Delete`})]})]}),(0,U.jsx)(Fs,{taskId:n})]}),c&&(0,U.jsx)(`div`,{className:`td-overlay`,children:(0,U.jsxs)(`div`,{className:`td-overlay-card`,children:[(0,U.jsx)(`div`,{className:`td-overlay-spinner`}),(0,U.jsx)(`p`,{children:`Processing…`}),(0,U.jsx)(`span`,{children:`Please wait a moment`})]})}),u&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsx)(`div`,{className:`td-backdrop`,onClick:()=>d(!1)}),(0,U.jsxs)(`div`,{className:`td-drawer`,children:[(0,U.jsxs)(`div`,{className:`td-drawer-header`,children:[(0,U.jsxs)(`div`,{className:`td-drawer-header-left`,children:[(0,U.jsx)(`h2`,{children:`💬 Discussion`}),v&&(0,U.jsx)(`div`,{className:`td-drawer-status`,children:`🔴 Recording…`}),!v&&ee.some(e=>e!==g)&&(0,U.jsx)(`div`,{className:`td-drawer-status`,children:`🎙️ Someone is recording…`}),!v&&!ee.some(e=>e!==g)&&C.some(e=>e!==g)&&(0,U.jsx)(`div`,{className:`td-drawer-status`,children:`✍️ Typing…`})]}),(0,U.jsxs)(`div`,{className:`td-drawer-header-right`,children:[(0,U.jsx)(`button`,{className:`td-btn-clear`,onClick:fe,children:`🗑 Clear`}),(0,U.jsx)(`button`,{className:`td-btn-close`,onClick:()=>d(!1),children:`✕`})]})]}),(0,U.jsxs)(`div`,{className:`td-messages`,ref:e,onScroll:te,children:[m.length===0?(0,U.jsxs)(`div`,{className:`td-empty`,children:[`No messages yet.`,(0,U.jsx)(`br`,{}),`Be the first to say something! 👋`]}):m.map(e=>{let t=e.sender_id===g;return(0,U.jsx)(`div`,{className:`td-msg-row ${t?`mine`:`theirs`}`,children:(0,U.jsxs)(`div`,{className:`td-bubble ${t?`mine`:`theirs`}`,children:[(0,U.jsx)(`div`,{className:`td-bubble-sender`,children:t?`You`:le(e.sender_id)}),e.message_type===`audio`?(0,U.jsx)(`audio`,{controls:!0,src:e.audio_url}):(0,U.jsx)(`div`,{className:`td-bubble-text`,children:e.message}),(0,U.jsx)(`div`,{className:`td-bubble-time`,children:me(e.created_at)})]})},e._id)}),(0,U.jsx)(`div`,{ref:t})]}),(0,U.jsx)(`div`,{className:`td-input-area`,children:(0,U.jsxs)(`div`,{className:`td-input-row`,children:[(0,U.jsx)(`button`,{className:`td-btn-mic ${v?`recording`:`idle`}`,onClick:()=>{v?A():k()},children:v?`⏹`:`🎤`}),(0,U.jsx)(`textarea`,{className:`td-msg-input`,value:f,rows:1,placeholder:`Type a message…`,onChange:async e=>{p(e.target.value),await H.post(`/discussion/${n}/typing`,{is_typing:!0})},onKeyDown:pe}),(0,U.jsx)(`button`,{className:`td-btn-send`,onClick:oe,children:`📤`})]})})]})]})]}):(0,U.jsx)(Os,{children:(0,U.jsx)(`div`,{style:{display:`flex`,alignItems:`center`,justifyContent:`center`,minHeight:300,fontFamily:`Inter, sans-serif`,color:`#94A3B8`,fontSize:15},children:(0,U.jsxs)(`div`,{style:{textAlign:`center`},children:[(0,U.jsx)(`div`,{style:{width:36,height:36,border:`3px solid #E2E8F0`,borderTopColor:`#6366F1`,borderRadius:`50%`,animation:`spin 0.7s linear infinite`,margin:`0 auto 12px`}}),`Loading task…`]})})})}function Ls(){return(0,U.jsxs)(En,{children:[(0,U.jsx)(ri,{position:`top-right`,toastOptions:{duration:3e3}}),(0,U.jsxs)(Rt,{children:[(0,U.jsx)(It,{path:`/`,element:(0,U.jsx)(Ts,{})}),(0,U.jsx)(It,{path:`/dashboard`,element:(0,U.jsx)(js,{})}),(0,U.jsx)(It,{path:`/tasks`,element:(0,U.jsx)(Ms,{})}),(0,U.jsx)(It,{path:`/create-task`,element:(0,U.jsx)(Ns,{})}),(0,U.jsx)(It,{path:`/my-tasks`,element:(0,U.jsx)(Ps,{})}),(0,U.jsx)(It,{path:`/tasks/:id`,element:(0,U.jsx)(Is,{})})]})]})}qn.createRoot(document.getElementById(`root`)).render((0,U.jsx)(S.StrictMode,{children:(0,U.jsx)(Ls,{})}));
