@@ -1,8 +1,22 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import MainLayout from "../layouts/MainLayout";
-import StatsCard from "../components/StatsCard";
 import { Link } from "react-router-dom";
+
+const STATUS_STYLES = {
+  Done: "bg-green-100 text-green-800",
+  "In Progress": "bg-blue-100 text-blue-800",
+  Incomplete: "bg-amber-100 text-amber-800",
+  Overdue: "bg-red-100 text-red-800",
+};
+
+const FILTERS = [
+  { key: "all", label: "All Tasks" },
+  { key: "done", label: "Done" },
+  { key: "inprogress", label: "In Progress" },
+  { key: "incomplete", label: "Incomplete" },
+  { key: "overdue", label: "Overdue" },
+];
 
 function Dashboard() {
   const [stats, setStats] = useState({
@@ -12,13 +26,13 @@ function Dashboard() {
     incomplete: 0,
     overdue: 0,
   });
-
   const [tasks, setTasks] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState("Total Tasks");
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [selectedLabel, setSelectedLabel] = useState("Total Tasks");
 
   useEffect(() => {
     fetchStats();
-    loadAllTasks();
+    loadTasks("all");
   }, []);
 
   const fetchStats = async () => {
@@ -30,142 +44,179 @@ function Dashboard() {
     }
   };
 
-  const loadAllTasks = async () => {
+  const ENDPOINTS = {
+    all: "/tasks/",
+    done: "/tasks/completed",
+    inprogress: "/tasks/in-progress",
+    incomplete: "/tasks/incomplete",
+    overdue: "/tasks/overdue",
+  };
+
+  const loadTasks = async (filter) => {
     try {
-      const response = await api.get("/tasks/");
+      const response = await api.get(ENDPOINTS[filter]);
       setTasks(response.data);
-      setSelectedFilter("Total Tasks");
+      setSelectedFilter(filter);
+      setSelectedLabel(FILTERS.find((f) => f.key === filter)?.label || "");
     } catch (err) {
       console.log(err);
     }
   };
 
-  const loadCompletedTasks = async () => {
-    try {
-      const response = await api.get("/tasks/completed");
-      setTasks(response.data);
-      setSelectedFilter("Done");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadInProgressTasks = async () => {
-    try {
-      const response = await api.get("/tasks/in-progress");
-      setTasks(response.data);
-      setSelectedFilter("In Progress");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadIncompleteTasks = async () => {
-    try {
-      const response = await api.get("/tasks/incomplete");
-      setTasks(response.data);
-      setSelectedFilter("Incomplete");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadOverdueTasks = async () => {
-    try {
-      const response = await api.get("/tasks/overdue");
-      setTasks(response.data);
-      setSelectedFilter("Overdue");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const CARDS = [
+    {
+      key: "all",
+      label: "Total Tasks",
+      value: stats.total,
+      icon: "ti-layout-list",
+      color: "text-violet-600",
+      bg: "bg-violet-50",
+      wide: true,
+    },
+    {
+      key: "done",
+      label: "Done",
+      value: stats.done,
+      icon: "ti-circle-check",
+      color: "text-emerald-700",
+      bg: "bg-emerald-50",
+    },
+    {
+      key: "inprogress",
+      label: "In Progress",
+      value: stats.in_progress,
+      icon: "ti-progress",
+      color: "text-blue-700",
+      bg: "bg-blue-50",
+    },
+    {
+      key: "incomplete",
+      label: "Incomplete",
+      value: stats.incomplete,
+      icon: "ti-clock-exclamation",
+      color: "text-amber-700",
+      bg: "bg-amber-50",
+    },
+    {
+      key: "overdue",
+      label: "Overdue",
+      value: stats.overdue,
+      icon: "ti-alert-circle",
+      color: "text-red-700",
+      bg: "bg-red-50",
+    },
+  ];
 
   return (
     <MainLayout>
-      <h1 className="text-4xl font-bold mb-8">Dashboard</h1>
+      <h1 className="text-3xl font-semibold mb-6">Dashboard</h1>
 
-      {/* UPDATED: Cards grid — 1 col on mobile, 2 on sm, 5 on lg */}
-      <div
-        className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-5
-          gap-4
-        "
-      >
-        <div className="cursor-pointer hover:scale-[1.02] transition" onClick={loadAllTasks}>
-          <StatsCard title="Total Tasks" value={stats.total} />
-        </div>
-
-        <div className="cursor-pointer hover:scale-[1.02] transition" onClick={loadCompletedTasks}>
-          <StatsCard title="Done" value={stats.done} />
-        </div>
-
-        <div className="cursor-pointer hover:scale-[1.02] transition" onClick={loadInProgressTasks}>
-          <StatsCard title="In Progress" value={stats.in_progress} />
-        </div>
-
-        <div className="cursor-pointer hover:scale-[1.02] transition" onClick={loadIncompleteTasks}>
-          <StatsCard title="Incomplete" value={stats.incomplete} />
-        </div>
-
-        <div className="cursor-pointer hover:scale-[1.02] transition" onClick={loadOverdueTasks}>
-          <StatsCard title="Overdue" value={stats.overdue} />
-        </div>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        {CARDS.map((card) => (
+          <div
+            key={card.key}
+            onClick={() => loadTasks(card.key)}
+            className={`
+              bg-white rounded-2xl border border-gray-100 p-4 cursor-pointer
+              active:scale-95 transition-transform
+              ${card.wide ? "col-span-2" : ""}
+            `}
+          >
+            <i
+              className={`ti ${card.icon} text-lg mb-2 block ${card.color}`}
+              aria-hidden="true"
+            />
+            <p className="text-xs text-gray-500 mb-1">{card.label}</p>
+            <p className={`text-3xl font-semibold ${card.color}`}>
+              {card.value}
+            </p>
+          </div>
+        ))}
       </div>
 
-      {/* UPDATED: Table section with mobile horizontal scroll */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">{selectedFilter}</h2>
+      {/* Filter Pills */}
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-3 scrollbar-hide">
+        {FILTERS.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => loadTasks(f.key)}
+            className={`
+              text-xs px-4 py-1.5 rounded-full border whitespace-nowrap transition-all
+              ${
+                selectedFilter === f.key
+                  ? "bg-violet-600 text-white border-violet-600"
+                  : "bg-white text-gray-500 border-gray-200"
+              }
+            `}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
 
-        <div className="bg-white rounded-xl shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="p-4 text-left">Title</th>
-                  <th className="p-4 text-left">Priority</th>
-                  <th className="p-4 text-left">Status</th>
-                  <th className="p-4 text-left">Due Date</th>
-                </tr>
-              </thead>
+      {/* Section Title */}
+      <h2 className="text-base font-semibold mb-3 text-gray-800">
+        {selectedLabel}
+      </h2>
 
-              <tbody>
-                {tasks.length > 0 ? (
-                  tasks.map((task) => (
-                    <tr
-                      key={task._id}
-                      className="border-t hover:bg-slate-50 transition"
-                    >
-                      <td className="p-4">
-                        <Link
-                          to={`/tasks/${task._id}`}
-                          className="text-blue-600 hover:underline font-medium"
-                        >
-                          {task.title}
-                        </Link>
-                      </td>
-                      <td className="p-4">{task.priority}</td>
-                      <td className="p-4">{task.status}</td>
-                      <td className="p-4">
-                        {task.due_date
-                          ? new Date(task.due_date).toLocaleDateString()
-                          : "-"}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="text-center p-8 text-slate-500">
-                      No Tasks Found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+      {/* Task List — card-based on mobile, no horizontal scroll */}
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        {tasks.length > 0 ? (
+          <>
+            {/* Header row — hidden on mobile, shown on sm+ */}
+            <div className="hidden sm:grid grid-cols-4 px-4 py-2 bg-slate-50 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              <span>Title</span>
+              <span>Priority</span>
+              <span>Status</span>
+              <span>Due Date</span>
+            </div>
+
+            {tasks.map((task) => (
+              <div
+                key={task._id}
+                className="border-t border-gray-100 px-4 py-3 flex flex-col gap-1.5 sm:grid sm:grid-cols-4 sm:items-center"
+              >
+                {/* Title */}
+                <Link
+                  to={`/tasks/${task._id}`}
+                  className="text-blue-600 font-medium text-sm hover:underline"
+                >
+                  {task.title}
+                </Link>
+
+                {/* Meta row on mobile */}
+                <div className="flex items-center gap-2 flex-wrap sm:contents">
+                  {/* Priority */}
+                  <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                    {task.priority}
+                  </span>
+
+                  {/* Status */}
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      STATUS_STYLES[task.status] || "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {task.status}
+                  </span>
+
+                  {/* Due Date */}
+                  <span className="text-xs text-gray-400 ml-auto sm:ml-0">
+                    {task.due_date
+                      ? new Date(task.due_date).toLocaleDateString()
+                      : "—"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <i className="ti ti-mood-empty text-3xl mb-2" aria-hidden="true" />
+            <p className="text-sm">No tasks found</p>
           </div>
-        </div>
+        )}
       </div>
     </MainLayout>
   );
