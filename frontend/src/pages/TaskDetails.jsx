@@ -289,27 +289,26 @@ function TaskDetails() {
         }
 
         /* Action buttons */
-        .td-actions { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid #F1F5F9; }
+        .td-actions { display: flex; gap: 10px; flex-wrap: nowrap; padding-top: 24px; border-top: 1px solid #F1F5F9; }
         .td-btn-inprogress {
-          display: inline-flex; align-items: center; gap: 6px;
+          flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
           background: #FFFBEB; color: #92400E; border: 1.5px solid #FDE68A;
-          border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
+          border-radius: 12px; padding: 11px 10px; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
         }
         .td-btn-inprogress:hover:not(:disabled) { background: #FEF3C7; }
         .td-btn-done {
-          display: inline-flex; align-items: center; gap: 6px;
+          flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
           background: #F0FDF4; color: #065F46; border: 1.5px solid #A7F3D0;
-          border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
+          border-radius: 12px; padding: 11px 10px; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
         }
         .td-btn-done:hover:not(:disabled) { background: #D1FAE5; }
         .td-btn-delete {
-          display: inline-flex; align-items: center; gap: 6px;
+          flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
           background: #FEF2F2; color: #B91C1C; border: 1.5px solid #FECACA;
-          border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 700;
+          border-radius: 12px; padding: 11px 10px; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
-          
         }
         .td-btn-delete:hover:not(:disabled) { background: #FEE2E2; }
         .td-btn-disabled { opacity: 0.5; cursor: not-allowed !important; }
