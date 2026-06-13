@@ -6,78 +6,54 @@ import toast from "react-hot-toast";
 import api from "../api/axios";
 
 function Login() {
+  const navigate = useNavigate();
 
-  const navigate =
-    useNavigate();
+  const [email, setEmail] = useState("");
 
-  const [email, setEmail] =
-    useState("");
+  const [password, setPassword] = useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] =
-    useState(false);
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  const handleLogin =
-    async (e) => {
+    if (loading) return;
 
-      e.preventDefault();
+    setLoading(true);
 
-      if (loading) return;
+    const loadingToast = toast.loading("Signing in...");
 
-      setLoading(true);
+    try {
+      console.log("LOGIN START");
 
-      const loadingToast =
-        toast.loading(
-          "Signing in..."
-        );
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-      try {
+      console.log("LOGIN RESPONSE", response);
 
-        const response =
-          await api.post(
-            "/auth/login",
-            {
-              email,
-              password
-            }
-          );
+      localStorage.setItem("token", response.data.access_token);
 
-        localStorage.setItem(
-          "token",
-          response.data.access_token
-        );
+      toast.success("Login successful", {
+        id: loadingToast,
+      });
 
-        toast.success(
-          "Login successful",
-          {
-            id: loadingToast
-          }
-        );
+      navigate("/dashboard");
+    } catch (err) {
+      console.log("LOGIN ERROR", err);
+      console.log("LOGIN ERROR RESPONSE", err?.response);
+      console.log("LOGIN ERROR DATA", err?.response?.data);
 
-        navigate(
-          "/dashboard"
-        );
-
-      } catch (err) {
-
-        toast.error(
-          "Invalid email or password",
-          {
-            id: loadingToast
-          }
-        );
-
-      } finally {
-
-        setLoading(false);
-
-      }
-    };
+      toast.error("Invalid email or password", {
+        id: loadingToast,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-
     <div
       className="
       min-h-screen
@@ -91,7 +67,6 @@ function Login() {
       px-4
       "
     >
-
       <div
         className="
         w-full
@@ -102,14 +77,12 @@ function Login() {
         p-8
         "
       >
-
         <div
           className="
           text-center
           mb-8
           "
         >
-
           <h1
             className="
             text-4xl
@@ -128,19 +101,14 @@ function Login() {
           >
             The Official Task Manager Platform
           </p>
-
         </div>
 
-        <form
-          onSubmit={handleLogin}
-        >
-
+        <form onSubmit={handleLogin}>
           <div
             className="
             mb-4
             "
           >
-
             <label
               className="
               block
@@ -157,11 +125,7 @@ function Login() {
               type="email"
               required
               value={email}
-              onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="
               w-full
@@ -177,7 +141,6 @@ function Login() {
               transition
               "
             />
-
           </div>
 
           <div
@@ -185,7 +148,6 @@ function Login() {
             mb-6
             "
           >
-
             <label
               className="
               block
@@ -202,11 +164,7 @@ function Login() {
               type="password"
               required
               value={password}
-              onChange={(e) =>
-                setPassword(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               className="
               w-full
@@ -222,7 +180,6 @@ function Login() {
               transition
               "
             />
-
           </div>
 
           <button
@@ -245,25 +202,20 @@ function Login() {
             gap-2
             "
           >
-
-            {
-              loading ? (
-                <>
-                  <Loader2
-                    size={18}
-                    className="
+            {loading ? (
+              <>
+                <Loader2
+                  size={18}
+                  className="
                     animate-spin
                     "
-                  />
-                  Signing In...
-                </>
-              ) : (
-                "Sign In"
-              )
-            }
-
+                />
+                Signing In...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </button>
-
         </form>
 
         <div
@@ -276,11 +228,8 @@ function Login() {
         >
           © 2026 Hashmi Group
         </div>
-
       </div>
-
     </div>
-
   );
 }
 

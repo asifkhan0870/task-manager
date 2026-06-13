@@ -219,7 +219,7 @@ to {
             `,children:`Task Manager (THG)`}),(0,U.jsx)(`p`,{className:`
             text-slate-500
             mt-3
-            `,children:`The Official Task Manager Platform`})]}),(0,U.jsxs)(`form`,{onSubmit:async n=>{if(n.preventDefault(),a)return;o(!0);let i=ii.loading(`Signing in...`);try{let n=await H.post(`/auth/login`,{email:t,password:r});localStorage.setItem(`token`,n.data.access_token),ii.success(`Login successful`,{id:i}),e(`/dashboard`)}catch{ii.error(`Invalid email or password`,{id:i})}finally{o(!1)}},children:[(0,U.jsxs)(`div`,{className:`
+            `,children:`The Official Task Manager Platform`})]}),(0,U.jsxs)(`form`,{onSubmit:async n=>{if(n.preventDefault(),a)return;o(!0);let i=ii.loading(`Signing in...`);try{console.log(`LOGIN START`);let n=await H.post(`/auth/login`,{email:t,password:r});console.log(`LOGIN RESPONSE`,n),localStorage.setItem(`token`,n.data.access_token),ii.success(`Login successful`,{id:i}),e(`/dashboard`)}catch(e){console.log(`LOGIN ERROR`,e),console.log(`LOGIN ERROR RESPONSE`,e?.response),console.log(`LOGIN ERROR DATA`,e?.response?.data),ii.error(`Invalid email or password`,{id:i})}finally{o(!1)}},children:[(0,U.jsxs)(`div`,{className:`
             mb-4
             `,children:[(0,U.jsx)(`label`,{className:`
               block
