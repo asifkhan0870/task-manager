@@ -15,6 +15,10 @@ scheduler = AsyncIOScheduler()
 
 async def check_due_tasks():
 
+    print("================================")
+    print("CHECKING TASKS")
+    print("================================")
+
     now = datetime.utcnow()
 
     async for task in tasks_collection.find(
@@ -27,35 +31,29 @@ async def check_due_tasks():
 
         due = task["due_date"]
 
+        print("TASK:", task["title"])
+        print("NOW :", now)
+        print("DUE :", due)
+
         diff = due - now
 
         hours_left = diff.total_seconds() / 3600
 
-        # Send reminder 24 hours before due date
+        print("HOURS LEFT:", hours_left)
+
         if 23 <= hours_left <= 24:
+            print("24 HOUR REMINDER TRIGGERED")
+            await send_reminder(task, "24_hours")
 
-            await send_reminder(
-                task,
-                "24_hours"
-            )
-
-        # Send reminder 1 hour before due date
         elif 0.5 <= hours_left <= 1:
+            print("1 HOUR REMINDER TRIGGERED")
+            await send_reminder(task, "1_hour")
 
-            await send_reminder(
-                task,
-                "1_hour"
-            )
-
-        # Send reminder when due time arrives
         elif -0.1 <= hours_left <= 0:
+            print("DUE NOW REMINDER TRIGGERED")
+            await send_reminder(task, "due_now")
 
-            await send_reminder(
-                task,
-                "due_now"
-            )
-
-
+            
 def start_scheduler():
 
     if not scheduler.running:
