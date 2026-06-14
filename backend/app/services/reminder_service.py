@@ -63,15 +63,19 @@ Reminder Type:
 {reminder_type}
 """
 
-    TEST_EMAIL = "khanasif0870@gmail.com"
+    if assigner:
+        send_email(
+            assigner["email"],
+            subject,
+            body
+        )
 
-    print("SENDING TEST EMAIL TO:", TEST_EMAIL)
-
-    send_email(
-        TEST_EMAIL,
-        subject,
-        body
-    )
+    if assignee:
+        send_email(
+            assignee["email"],
+            subject,
+            body
+        )
 
     await notifications_collection.insert_one(
         {
