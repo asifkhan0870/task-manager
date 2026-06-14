@@ -18,6 +18,8 @@ from app.api.discussions import router as discussion_router
 
 from app.scheduler.reminder_scheduler import start_scheduler
 
+import asyncio
+
 app = FastAPI(
     title="Task Manager API",
     version="1.0.0"
@@ -44,9 +46,14 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
+
     print("Starting Reminder Scheduler...")
+
     start_scheduler()
-    print("Reminder Scheduler Started")
+
+    await asyncio.sleep(2)
+
+    print("Startup completed")
 
 # ==========================
 # API ROUTES
