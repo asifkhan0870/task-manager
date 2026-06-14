@@ -1,5 +1,4 @@
 from datetime import datetime
-import asyncio
 import traceback
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -11,14 +10,27 @@ scheduler = AsyncIOScheduler()
 
 
 async def check_due_tasks():
+
     try:
+
         print("\n========== CHECKING TASKS ==========")
 
         now = datetime.utcnow()
 
+        print("CURRENT UTC:", now)
+
+        count = 0
+
         async for task in tasks_collection.find(
-            {"status": {"$ne": "Done"}}
+            {
+                "status": {
+                    "$ne": "Done"
+                }
+            }
         ):
+
+            count += 1
+
             due = task["due_date"]
 
             print("TASK:", task["title"])
@@ -42,14 +54,12 @@ async def check_due_tasks():
                 print("DUE NOW REMINDER")
                 await send_reminder(task, "due_now")
 
+        print("TOTAL TASKS FOUND:", count)
+
     except Exception as e:
-        print("ERROR:", str(e))
+
+        print("REMINDER ERROR:", str(e))
         traceback.print_exc()
-
-
-def run_task():
-    print("Scheduler Trigger Fired")
-    asyncio.create_task(check_due_tasks())
 
 
 def start_scheduler():
@@ -58,14 +68,22 @@ def start_scheduler():
         return
 
     scheduler.add_job(
-        run_task,
+        check_due_tasks,
         "interval",
         minutes=1,
         id="task_reminder_scheduler",
         replace_existing=True,
+        max_instances=1,
+        coalesce=True,
     )
 
     scheduler.start()
 
     print("Scheduler started successfully")
     print("Jobs:", scheduler.get_jobs())
+
+    # Run once immediately after startup
+    scheduler.add_job(
+        check_due_tasks,
+        trigger="date"
+    )
