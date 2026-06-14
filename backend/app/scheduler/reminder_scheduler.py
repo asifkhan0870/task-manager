@@ -53,7 +53,7 @@ async def check_due_tasks():
             elif -0.1 <= hours_left <= 0:
                 await send_reminder(task, "due_now")
 
-                    print("TOTAL TASKS FOUND:", count)
+            print("TOTAL TASKS FOUND:", count)
 
     except Exception as e:
 
