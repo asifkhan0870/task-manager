@@ -15,8 +15,11 @@ class Settings(BaseSettings):
 
     DATABASE_NAME: str
 
-    RESEND_API_KEY: str
+    # Email Services
+    RESEND_API_KEY: str | None = None
+    BREVO_API_KEY: str | None = None
 
+    # Cloudinary
     CLOUDINARY_CLOUD_NAME: str
 
     CLOUDINARY_API_KEY: str
