@@ -43,7 +43,9 @@ async def check_due_tasks():
             print("HOURS LEFT:", hours_left)
 
             
-
+            if 0 <= hours_left <= 6:
+                print("TEST REMINDER")
+                await send_reminder(task, "test")
             if 23 <= hours_left <= 24:
                 await send_reminder(task, "24_hours")
 
