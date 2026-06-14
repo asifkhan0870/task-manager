@@ -17,6 +17,12 @@ def send_email(
 
         if settings.BREVO_API_KEY:
 
+            print("=" * 50)
+            print("USING BREVO")
+            print("BREVO KEY EXISTS:", bool(settings.BREVO_API_KEY))
+            print("RECEIVER:", receiver_email)
+            print("SUBJECT:", subject)
+
             response = requests.post(
                 "https://api.brevo.com/v3/smtp/email",
                 headers={
@@ -40,21 +46,21 @@ def send_email(
                 timeout=15
             )
 
-            print(
-                f"BREVO STATUS: {response.status_code}"
-            )
+            print("BREVO STATUS:", response.status_code)
+            print("BREVO RESPONSE:", response.text)
+            print("=" * 50)
 
-            print(
-                response.text
-            )
-
-            return
+            return response.status_code
 
         # ==========================
         # RESEND FALLBACK
         # ==========================
 
         if settings.RESEND_API_KEY:
+
+            print("=" * 50)
+            print("USING RESEND")
+            print("RECEIVER:", receiver_email)
 
             response = requests.post(
                 "https://api.resend.com/emails",
@@ -71,22 +77,14 @@ def send_email(
                 timeout=15
             )
 
-            print(
-                f"RESEND STATUS: {response.status_code}"
-            )
+            print("RESEND STATUS:", response.status_code)
+            print("RESEND RESPONSE:", response.text)
+            print("=" * 50)
 
-            print(
-                response.text
-            )
+            return response.status_code
 
-            return
-
-        print(
-            "NO EMAIL PROVIDER CONFIGURED"
-        )
+        print("NO EMAIL PROVIDER CONFIGURED")
 
     except Exception as e:
 
-        print(
-            f"EMAIL ERROR: {e}"
-        )
+        print("EMAIL ERROR:", str(e))
