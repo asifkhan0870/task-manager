@@ -464,10 +464,16 @@ function TaskDetails() {
             <div className="td-meta-item" style={{ gridColumn: "1 / -1" }}>
               <div className="label">Due Date</div>
               <div className="value">
-                📅 {new Date(task.due_date).toLocaleString("en-US", {
-                  day: "numeric", month: "long", year: "numeric",
-                  hour: "numeric", minute: "2-digit", hour12: true,
-                })}
+                 📅 {new Date(
+  new Date(task.due_date).getTime() + (5.5 * 60 * 60 * 1000)
+).toLocaleString("en-IN", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+})}
               </div>
             </div>
           </div>
