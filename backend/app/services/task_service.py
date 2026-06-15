@@ -43,11 +43,22 @@ async def create_task(data, current_user):
     return str(result.inserted_id)
 
 
-async def get_tasks():
+async def get_tasks(user_id):
 
     tasks = []
 
-    async for task in tasks_collection.find():
+    async for task in tasks_collection.find(
+        {
+            "$or": [
+                {
+                    "assigned_by": user_id
+                },
+                {
+                    "assigned_to": user_id
+                }
+            ]
+        }
+    ):
 
         task["_id"] = str(task["_id"])
 

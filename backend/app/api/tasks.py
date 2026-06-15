@@ -49,9 +49,11 @@ async def create_new_task(
 # ==========================
 
 @router.get("/")
-async def all_tasks():
+async def all_tasks(
+    user=Depends(get_current_user)
+):
 
-    return await get_tasks()
+    return await get_tasks(user)
 
 
 # ==========================
