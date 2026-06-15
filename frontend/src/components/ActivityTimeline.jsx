@@ -190,11 +190,12 @@ function ActivityTimeline({ taskId }) {
                 text-gray-500
                 "
               >
-                {
+            {
   new Date(
-    activity.timestamp
+    new Date(activity.timestamp).getTime() +
+    (5.5 * 60 * 60 * 1000)
   ).toLocaleString(
-    "en-US",
+    "en-IN",
     {
       day: "numeric",
       month: "long",
