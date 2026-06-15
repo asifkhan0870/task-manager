@@ -45,6 +45,8 @@ async def create_task(data, current_user):
 
 async def get_tasks(user_id):
 
+    print("FILTER USER:", user_id)
+
     tasks = []
 
     async for task in tasks_collection.find(
