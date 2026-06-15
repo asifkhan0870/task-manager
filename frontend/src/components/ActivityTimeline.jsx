@@ -191,20 +191,20 @@ function ActivityTimeline({ taskId }) {
                 "
               >
                 {
-                  new Date(
-                    activity.timestamp
-                  ).toLocaleString(
-                    "en-US",
-                    {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    }
-                  )
-                }
+  new Date(
+    activity.timestamp
+  ).toLocaleString(
+    "en-US",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }
+  )
+}
               </p>
 
             </div>
