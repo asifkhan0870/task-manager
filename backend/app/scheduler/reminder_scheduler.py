@@ -52,7 +52,25 @@ async def check_due_tasks():
                     "24_hours"
                 )
 
-            elif 0 <= hours_left <= 0.5:
+            elif 11 <= hours_left <= 12:
+
+                print("12 HOUR REMINDER")
+
+                await send_reminder(
+                    task,
+                    "12_hours"
+                )
+
+            elif 5 <= hours_left <= 6:
+
+                print("6 HOUR REMINDER")
+
+                await send_reminder(
+                    task,
+                    "6_hours"
+                )
+
+            elif 0 <= hours_left <= 1:
 
                 print("1 HOUR REMINDER")
 

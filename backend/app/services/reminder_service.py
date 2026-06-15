@@ -74,20 +74,16 @@ Reminder Type:
 {reminder_type}
 """
 
-    if assigner:
-
-        send_email(
-            assigner["email"],
-            subject,
-            body
-        )
-
     if assignee:
 
         send_email(
             assignee["email"],
             subject,
             body
+        )
+
+        print(
+            f"Reminder sent to {assignee['email']}"
         )
 
     await notifications_collection.insert_one(
