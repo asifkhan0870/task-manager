@@ -29,11 +29,19 @@ async def get_current_user(
             ]
         )
 
-        print("CURRENT USER:", payload["user_id"])
+        print(
+            "CURRENT USER:",
+            payload["user_id"]
+        )
 
         return payload["user_id"]
 
-    except:
+    except Exception as e:
+
+        print(
+            "AUTH ERROR:",
+            str(e)
+        )
 
         raise HTTPException(
             status_code=401,

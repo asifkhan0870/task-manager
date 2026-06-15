@@ -45,7 +45,10 @@ async def create_task(data, current_user):
 
 async def get_tasks(user_id):
 
-    print("FILTER USER:", user_id)
+    print(
+        "FILTER USER:",
+        user_id
+    )
 
     tasks = []
 
@@ -60,9 +63,14 @@ async def get_tasks(user_id):
         ]
     }
 
-    print("QUERY:", query)
+    print(
+        "QUERY:",
+        query
+    )
 
-    async for task in tasks_collection.find(query):
+    async for task in tasks_collection.find(
+        query
+    ):
 
         print(
             "FOUND TASK:",
@@ -73,13 +81,20 @@ async def get_tasks(user_id):
             task["assigned_to"]
         )
 
-            task["_id"] = str(task["_id"])
+        task["_id"] = str(
+            task["_id"]
+        )
 
-            tasks.append(task)
+        tasks.append(task)
 
-        return tasks
+    print(
+        "TOTAL MATCHED TASKS:",
+        len(tasks)
+    )
 
+    return tasks
 
+    
 async def get_task(task_id):
 
     task = await tasks_collection.find_one(
