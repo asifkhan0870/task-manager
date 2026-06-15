@@ -1,5 +1,5 @@
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app.core.database import users_collection
 from app.core.database import tasks_collection
@@ -14,11 +14,18 @@ def format_date(date_value):
         if isinstance(date_value, str):
             return date_value
 
-        return date_value.strftime(
+        # Convert UTC → IST
+        ist_date = date_value + timedelta(
+            hours=5,
+            minutes=30
+        )
+
+        return ist_date.strftime(
             "%d %B %Y, %I:%M %p"
         )
 
-    except:
+    except Exception:
+
         return str(date_value)
 
 

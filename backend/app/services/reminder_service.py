@@ -1,4 +1,5 @@
 from bson import ObjectId
+from datetime import timedelta
 
 from app.core.database import (
     users_collection,
@@ -39,6 +40,16 @@ async def send_reminder(
         }
     )
 
+    # Convert UTC → IST
+    due_date_ist = task["due_date"] + timedelta(
+        hours=5,
+        minutes=30
+    )
+
+    formatted_due_date = due_date_ist.strftime(
+        "%d %B %Y, %I:%M %p"
+    )
+
     subject = f"Reminder: {task['title']}"
 
     body = f"""
@@ -57,13 +68,14 @@ Status:
 {task['status']}
 
 Due Date:
-{task['due_date']}
+{formatted_due_date}
 
 Reminder Type:
 {reminder_type}
 """
 
     if assigner:
+
         send_email(
             assigner["email"],
             subject,
@@ -71,6 +83,7 @@ Reminder Type:
         )
 
     if assignee:
+
         send_email(
             assignee["email"],
             subject,
