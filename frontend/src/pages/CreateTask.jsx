@@ -4,6 +4,9 @@ import toast from "react-hot-toast";
 import api from "../api/axios";
 import MainLayout from "../layouts/MainLayout";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 function CreateTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -113,9 +116,9 @@ function CreateTask() {
   const selectedUser = users.find((u) => u._id === assignedTo);
 
   const priorityConfig = {
-    High:   { emoji: "🔴", color: "#EF4444", bg: "#FEF2F2", border: "#FECACA" },
+    High: { emoji: "🔴", color: "#EF4444", bg: "#FEF2F2", border: "#FECACA" },
     Medium: { emoji: "🟡", color: "#F59E0B", bg: "#FFFBEB", border: "#FDE68A" },
-    Low:    { emoji: "🟢", color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0" },
+    Low: { emoji: "🟢", color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0" },
   };
   const pc = priorityConfig[priority];
 
@@ -467,7 +470,9 @@ function CreateTask() {
         {/* Header */}
         <div className="ct-header">
           <h1>Create New Task</h1>
-          <p>Assign focused work to the right person, with the right context.</p>
+          <p>
+            Assign focused work to the right person, with the right context.
+          </p>
         </div>
 
         {/* Progress */}
@@ -477,7 +482,10 @@ function CreateTask() {
             <span>{progress}%</span>
           </div>
           <div className="ct-progress-track">
-            <div className="ct-progress-fill" style={{ width: `${progress}%` }} />
+            <div
+              className="ct-progress-fill"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
 
@@ -504,7 +512,10 @@ function CreateTask() {
             <div className="label">Due Date</div>
             <div className="value">
               {dueDate
-                ? `📅 ${new Date(dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
+                ? `📅 ${new Date(dueDate).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}`
                 : "Not Set"}
             </div>
           </div>
@@ -549,17 +560,29 @@ function CreateTask() {
               </div>
               <div className="ct-voice-btns">
                 {!isRecording && (
-                  <button type="button" className="ct-btn-record" onClick={startRecording}>
+                  <button
+                    type="button"
+                    className="ct-btn-record"
+                    onClick={startRecording}
+                  >
                     🎙 Start Recording
                   </button>
                 )}
                 {isRecording && (
-                  <button type="button" className="ct-btn-stop" onClick={stopRecording}>
+                  <button
+                    type="button"
+                    className="ct-btn-stop"
+                    onClick={stopRecording}
+                  >
                     ⏹ Stop Recording
                   </button>
                 )}
                 {audioUrl && (
-                  <button type="button" className="ct-btn-delete" onClick={deleteRecording}>
+                  <button
+                    type="button"
+                    className="ct-btn-delete"
+                    onClick={deleteRecording}
+                  >
                     🗑 Delete
                   </button>
                 )}
@@ -622,12 +645,15 @@ function CreateTask() {
 
             <div className="ct-field">
               <label className="ct-label">Due Date & Time</label>
-              <input
-                type="datetime-local"
+
+              <DatePicker
+                selected={dueDate}
+                onChange={(date) => setDueDate(date)}
+                showTimeSelect
+                timeIntervals={1}
+                dateFormat="dd/MM/yyyy hh:mm aa"
                 className="ct-input"
-                value={dueDate}
-                disabled={isSubmitting}
-                onChange={(e) => setDueDate(e.target.value)}
+                placeholderText="Select Due Date"
                 required
               />
             </div>
@@ -646,7 +672,11 @@ function CreateTask() {
               >
                 Cancel
               </button>
-              <button type="submit" className="ct-btn-submit" disabled={isSubmitting}>
+              <button
+                type="submit"
+                className="ct-btn-submit"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "⏳ Creating…" : "🚀 Create Task"}
               </button>
             </div>
