@@ -49,24 +49,35 @@ async def get_tasks(user_id):
 
     tasks = []
 
-    async for task in tasks_collection.find(
-        {
-            "$or": [
-                {
-                    "assigned_by": user_id
-                },
-                {
-                    "assigned_to": user_id
-                }
-            ]
-        }
-    ):
+    query = {
+        "$or": [
+            {
+                "assigned_by": user_id
+            },
+            {
+                "assigned_to": user_id
+            }
+        ]
+    }
 
-        task["_id"] = str(task["_id"])
+    print("QUERY:", query)
 
-        tasks.append(task)
+    async for task in tasks_collection.find(query):
 
-    return tasks
+        print(
+            "FOUND TASK:",
+            task["title"],
+            "ASSIGNED_BY:",
+            task["assigned_by"],
+            "ASSIGNED_TO:",
+            task["assigned_to"]
+        )
+
+            task["_id"] = str(task["_id"])
+
+            tasks.append(task)
+
+        return tasks
 
 
 async def get_task(task_id):
