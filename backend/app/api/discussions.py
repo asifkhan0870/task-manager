@@ -14,6 +14,17 @@ from app.core.database import (
 )
 
 
+from app.core.database import (
+    tasks_collection,
+    users_collection
+)
+
+from app.services.notification_service import (
+    create_message_notification
+)
+
+
+
 router = APIRouter(
     prefix="/discussion",
     tags=["Discussion"]
@@ -26,6 +37,13 @@ async def send_message(
     payload: dict,
     user=Depends(get_current_user)
 ):
+
+    print("====================================")
+    print("MESSAGE ENDPOINT HIT")
+    print("TASK ID =", task_id)
+    print("PAYLOAD =", payload)
+    print("USER =", user)
+    print("====================================")
 
     message_type = "audio" if payload.get("audio_url") else "text"
 
@@ -43,6 +61,44 @@ async def send_message(
     result = await discussion_collection.insert_one(
         message
     )
+
+    try:
+
+        task = await tasks_collection.find_one(
+            {
+                "_id": ObjectId(task_id)
+            }
+        )
+
+        sender = await users_collection.find_one(
+            {
+                "_id": ObjectId(str(user))
+            }
+        )
+
+        print("TASK =", task)
+        print("SENDER =", sender)
+        print("CURRENT USER =", user)
+
+        if task and sender:
+
+            print("CALLING create_message_notification")
+
+            await create_message_notification(
+                task=task,
+                sender_id=str(user),
+                sender_name=sender["name"],
+                message_text=payload.get(
+                    "message",
+                    ""
+                )
+            )
+
+    except Exception as e:
+
+        print(
+            f"Notification Error: {e}"
+        )
 
     return {
         "message_id": str(result.inserted_id)

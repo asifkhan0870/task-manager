@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate ,  useSearchParams
+} from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/axios";
 import MainLayout from "../layouts/MainLayout";
 import ActivityTimeline from "../components/ActivityTimeline";
 
+
 function TaskDetails() {
   const messagesContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
   const { id } = useParams();
+  const [searchParams] =
+  useSearchParams();
   const navigate = useNavigate();
 
   const [task, setTask] = useState(null);
@@ -26,8 +30,25 @@ function TaskDetails() {
   const [autoScroll, setAutoScroll] = useState(true);
 
   useEffect(() => {
-    fetchTask(); fetchUsers(); loadMessages(); loadCurrentUser();
+    fetchTask();
+    fetchUsers();
+    loadMessages();
+    loadCurrentUser();
   }, [id]);
+
+  useEffect(() => {
+
+    if (
+      searchParams.get("discussion") === "true"
+    ) {
+  
+      setShowChatSidebar(true);
+      markNotificationsRead();
+
+  
+    }
+  
+  }, [searchParams]);
 
   useEffect(() => {
     if (!autoScroll) return;
@@ -35,43 +56,95 @@ function TaskDetails() {
   }, [messages, autoScroll]);
 
   useEffect(() => {
-    fetchDiscussion(); fetchTypingUsers(); fetchRecordingUsers();
+    if (!showChatSidebar) return;
+  
+    fetchDiscussion();
+    fetchTypingUsers();
+    fetchRecordingUsers();
+  
     const interval = setInterval(() => {
-      fetchDiscussion(); fetchTypingUsers(); fetchRecordingUsers();
-    }, 1000);
+      fetchDiscussion();
+      fetchTypingUsers();
+      fetchRecordingUsers();
+    }, 3000);
+  
     return () => clearInterval(interval);
-  }, [id]);
+  }, [id, showChatSidebar]);
 
   const handleScroll = () => {
     const container = messagesContainerRef.current;
-    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
     setAutoScroll(distanceFromBottom < 150);
+  };
+
+
+  const markNotificationsRead = async () => {
+
+    try {
+  
+      await api.patch(
+        `/notifications/task/${id}/read`
+      );
+  
+    } catch (err) {
+  
+      console.log(err);
+  
+    }
+  
   };
 
   const fetchDiscussion = async () => {
     try {
       const res = await api.get(`/discussion/${id}`);
       setMessages((prev) => {
-        if (prev.length === res.data.length && prev[prev.length - 1]?._id === res.data[res.data.length - 1]?._id) return prev;
+        if (
+          prev.length === res.data.length &&
+          prev[prev.length - 1]?._id === res.data[res.data.length - 1]?._id
+        )
+          return prev;
         return res.data;
       });
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const fetchTypingUsers = async () => {
-    try { const res = await api.get(`/discussion/${id}/typing`); setTypingUsers(res.data); } catch (err) { console.log(err); }
+    try {
+      const res = await api.get(`/discussion/${id}/typing`);
+      setTypingUsers(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fetchRecordingUsers = async () => {
-    try { const res = await api.get(`/discussion/${id}/recording`); setRecordingUsers(res.data); } catch (err) { console.log(err); }
+    try {
+      const res = await api.get(`/discussion/${id}/recording`);
+      setRecordingUsers(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const loadCurrentUser = async () => {
-    try { const response = await api.get("/me"); setCurrentUser(response.data.user_id); } catch (error) { console.error(error); }
+    try {
+      const response = await api.get("/me");
+      setCurrentUser(response.data.user_id);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const loadMessages = async () => {
-    try { const response = await api.get(`/discussion/${id}`); setMessages(response.data); } catch (error) { console.error(error); }
+    try {
+      const response = await api.get(`/discussion/${id}`);
+      setMessages(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const sendMessage = async () => {
@@ -81,7 +154,10 @@ function TaskDetails() {
       setQuestion("");
       await api.post(`/discussion/${id}/typing`, { is_typing: false });
       await loadMessages();
-    } catch (error) { console.error(error); toast.error("Failed to send message"); }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send message");
+    }
   };
 
   const startRecording = async () => {
@@ -91,11 +167,17 @@ function TaskDetails() {
       await api.post(`/discussion/${id}/recording`, { is_recording: true });
       const chunks = [];
       recorder.ondataavailable = (e) => chunks.push(e.data);
-      recorder.onstop = async () => { const audioBlob = new Blob(chunks, { type: "audio/webm" }); await uploadAudio(audioBlob); };
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: "audio/webm" });
+        await uploadAudio(audioBlob);
+      };
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
-    } catch (err) { console.error(err); alert("Microphone access denied"); }
+    } catch (err) {
+      console.error(err);
+      alert("Microphone access denied");
+    }
   };
 
   const stopRecording = async () => {
@@ -110,14 +192,24 @@ function TaskDetails() {
       const formData = new FormData();
       formData.append("file", audioBlob, "voice.webm");
       const response = await api.post("/upload/audio", formData);
-      await api.post(`/discussion/${id}/message`, { audio_url: response.data.audio_url, message: "" });
+      await api.post(`/discussion/${id}/message`, {
+        audio_url: response.data.audio_url,
+        message: "",
+      });
       await loadMessages();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const fetchTask = async () => {
-    try { const response = await api.get(`/tasks/id/${id}`); setTask(response.data); }
-    catch (err) { console.log(err); toast.error("Failed to load task"); }
+    try {
+      const response = await api.get(`/tasks/id/${id}`);
+      setTask(response.data);
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to load task");
+    }
   };
 
   const getUserName = (userId) => {
@@ -126,7 +218,12 @@ function TaskDetails() {
   };
 
   const fetchUsers = async () => {
-    try { const response = await api.get("/users/"); setUsers(response.data || []); } catch (err) { console.log(err); }
+    try {
+      const response = await api.get("/users/");
+      setUsers(response.data || []);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const deleteTask = async () => {
@@ -139,8 +236,12 @@ function TaskDetails() {
       await api.delete(`/tasks/id/${id}`);
       toast.success("Task deleted successfully", { id: loadingToast });
       navigate("/tasks");
-    } catch (err) { console.log(err); toast.error("Failed to delete task", { id: loadingToast }); }
-    finally { setLoadingAction(""); }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete task", { id: loadingToast });
+    } finally {
+      setLoadingAction("");
+    }
   };
 
   const updateStatus = async (status) => {
@@ -151,8 +252,12 @@ function TaskDetails() {
       await api.patch(`/tasks/id/${id}/status`, { status });
       await fetchTask();
       toast.success(`Status updated to ${status}`, { id: loadingToast });
-    } catch (err) { console.log(err); toast.error("Failed to update status", { id: loadingToast }); }
-    finally { setLoadingAction(""); }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to update status", { id: loadingToast });
+    } finally {
+      setLoadingAction("");
+    }
   };
 
   const clearDiscussion = async () => {
@@ -162,47 +267,86 @@ function TaskDetails() {
       await api.delete(`/discussion/${id}`);
       setMessages([]);
       toast.success("Discussion cleared");
-    } catch (error) { toast.error("Failed"); }
+    } catch (error) {
+      toast.error("Failed");
+    }
   };
 
   const handleEnter = (e) => {
     if (e.key !== "Enter" || e.shiftKey) return;
     e.preventDefault();
-    if (isRecording) stopRecording(); else sendMessage();
+    if (isRecording) stopRecording();
+    else sendMessage();
   };
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return new Date(date.getTime() + 5.5 * 60 * 60 * 1000).toLocaleTimeString("en-IN", {
-      hour: "2-digit", minute: "2-digit", hour12: true,
-    });
+    return new Date(date.getTime() + 5.5 * 60 * 60 * 1000).toLocaleTimeString(
+      "en-IN",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }
+    );
   };
 
   const priorityConfig = {
-    High:   { color: "#EF4444", bg: "#FEF2F2", border: "#FECACA", emoji: "🔴" },
+    High: { color: "#EF4444", bg: "#FEF2F2", border: "#FECACA", emoji: "🔴" },
     Medium: { color: "#F59E0B", bg: "#FFFBEB", border: "#FDE68A", emoji: "🟡" },
-    Low:    { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "🟢" },
+    Low: { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "🟢" },
   };
 
   const statusConfig = {
-    "Incomplete":  { color: "#64748B", bg: "#F1F5F9", border: "#E2E8F0", emoji: "⏳" },
-    "In Progress": { color: "#F59E0B", bg: "#FFFBEB", border: "#FDE68A", emoji: "🔄" },
-    "Done":        { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "✅" },
+    Incomplete: {
+      color: "#64748B",
+      bg: "#F1F5F9",
+      border: "#E2E8F0",
+      emoji: "⏳",
+    },
+    "In Progress": {
+      color: "#F59E0B",
+      bg: "#FFFBEB",
+      border: "#FDE68A",
+      emoji: "🔄",
+    },
+    Done: { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "✅" },
   };
 
   const pc = priorityConfig[task?.priority] || priorityConfig["Medium"];
   const sc = statusConfig[task?.status] || statusConfig["Incomplete"];
 
-  if (!task) return (
-    <MainLayout>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 300, fontFamily: "Inter, sans-serif", color: "#94A3B8", fontSize: 15 }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ width: 36, height: 36, border: "3px solid #E2E8F0", borderTopColor: "#6366F1", borderRadius: "50%", animation: "spin 0.7s linear infinite", margin: "0 auto 12px" }} />
-          Loading task…
+  if (!task)
+    return (
+      <MainLayout>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 300,
+            fontFamily: "Inter, sans-serif",
+            color: "#94A3B8",
+            fontSize: 15,
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                border: "3px solid #E2E8F0",
+                borderTopColor: "#6366F1",
+                borderRadius: "50%",
+                animation: "spin 0.7s linear infinite",
+                margin: "0 auto 12px",
+              }}
+            />
+            Loading task…
+          </div>
         </div>
-      </div>
-    </MainLayout>
-  );
+      </MainLayout>
+    );
 
   return (
     <MainLayout>
@@ -327,15 +471,51 @@ function TaskDetails() {
         /* ── DRAWER ── */
         .td-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); backdrop-filter: blur(4px); z-index: 40; }
         .td-drawer {
-          position: fixed; top: 0; right: 0; bottom: 0; left: 0;
-          width: 100vw; max-width: 100vw; height: 100dvh;
-          background: #fff; z-index: 50; display: flex; flex-direction: column;
-          overflow: hidden; animation: slideIn 0.25s cubic-bezier(0.4,0,0.2,1);
-          box-shadow: none; margin: 0;
-        }
-        @media (min-width: 640px) {
-          .td-drawer { left: auto; width: 420px; max-width: 420px; box-shadow: -8px 0 32px rgba(15,23,42,0.15); }
-        }
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 95vw;
+  max-width: 950px;
+
+  height: 85vh;
+
+  background: #fff;
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 50;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.25);
+}
+
+@media (max-width: 640px) {
+
+  .td-drawer {
+
+    top: 0;
+    left: 0;
+
+    transform: none;
+
+    width: 100vw;
+    height: 100vh;
+
+    max-width: none;
+
+    border-radius: 0;
+  }
+
+}
         .td-drawer-header {
           background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
           padding: 18px 20px; display: flex; align-items: center;
@@ -359,9 +539,11 @@ function TaskDetails() {
         .td-btn-close:hover { background: rgba(255,255,255,0.25); }
 
         .td-messages {
-          flex: 1; overflow-y: auto; background: #F8FAFF;
-          padding: 16px 14px 120px; display: flex; flex-direction: column; gap: 12px;
-        }
+  flex: 1;
+  overflow-y: auto;
+  background: #F8FAFF;
+  padding: 24px 24px 140px;
+}
         .td-empty { text-align: center; color: #94A3B8; margin-top: 60px; font-size: 14px; line-height: 1.6; }
         .td-msg-row { display: flex; }
         .td-msg-row.mine { justify-content: flex-end; }
@@ -416,17 +598,34 @@ function TaskDetails() {
             <h1 className="td-title">{task.title}</h1>
             <p className="td-subtitle">Task #{id.slice(-8).toUpperCase()}</p>
           </div>
-          <button className="td-btn-discussion" onClick={() => setShowChatSidebar(true)}>
+          <button
+            className="td-btn-discussion"
+            onClick={() => setShowChatSidebar(true)}
+          >
             💬 Discussion
           </button>
         </div>
 
         {/* Status & Priority pills */}
         <div className="td-stats">
-          <span className="td-pill" style={{ color: pc.color, background: pc.bg, borderColor: pc.border }}>
+          <span
+            className="td-pill"
+            style={{
+              color: pc.color,
+              background: pc.bg,
+              borderColor: pc.border,
+            }}
+          >
             {pc.emoji} {task.priority} Priority
           </span>
-          <span className="td-pill" style={{ color: sc.color, background: sc.bg, borderColor: sc.border }}>
+          <span
+            className="td-pill"
+            style={{
+              color: sc.color,
+              background: sc.bg,
+              borderColor: sc.border,
+            }}
+          >
             {sc.emoji} {task.status}
           </span>
         </div>
@@ -443,7 +642,11 @@ function TaskDetails() {
               <div className="td-voice">
                 <h3>🎤 Attached Voice Note</h3>
                 <audio controls src={task.audio_url} />
-                <a href={task.audio_url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={task.audio_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   ↗ Open in new tab
                 </a>
               </div>
@@ -451,7 +654,9 @@ function TaskDetails() {
           )}
 
           {/* Meta grid */}
-          <div className="td-section-label" style={{ marginTop: 4 }}>Task Info</div>
+          <div className="td-section-label" style={{ marginTop: 4 }}>
+            Task Info
+          </div>
           <div className="td-meta">
             <div className="td-meta-item">
               <div className="label">Assigned By</div>
@@ -464,16 +669,17 @@ function TaskDetails() {
             <div className="td-meta-item" style={{ gridColumn: "1 / -1" }}>
               <div className="label">Due Date</div>
               <div className="value">
-                 📅 {new Date(
-  new Date(task.due_date).getTime() + (5.5 * 60 * 60 * 1000)
-).toLocaleString("en-IN", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  hour12: true,
-})}
+                📅{" "}
+                {new Date(
+                  new Date(task.due_date).getTime() + 5.5 * 60 * 60 * 1000
+                ).toLocaleString("en-IN", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
               </div>
             </div>
           </div>
@@ -482,21 +688,29 @@ function TaskDetails() {
           <div className="td-section-label">Update Status</div>
           <div className="td-actions">
             <button
-              className={`td-btn-inprogress ${loadingAction ? "td-btn-disabled" : ""}`}
+              className={`td-btn-inprogress ${
+                loadingAction ? "td-btn-disabled" : ""
+              }`}
               disabled={!!loadingAction}
               onClick={() => updateStatus("In Progress")}
             >
-              {loadingAction === "In Progress" ? "⏳ Updating…" : "🔄 In Progress"}
+              {loadingAction === "In Progress"
+                ? "⏳ Updating…"
+                : "🔄 In Progress"}
             </button>
             <button
-              className={`td-btn-done ${loadingAction ? "td-btn-disabled" : ""}`}
+              className={`td-btn-done ${
+                loadingAction ? "td-btn-disabled" : ""
+              }`}
               disabled={!!loadingAction}
               onClick={() => updateStatus("Done")}
             >
               {loadingAction === "Done" ? "⏳ Updating…" : "✅ Mark Done"}
             </button>
             <button
-              className={`td-btn-delete ${loadingAction ? "td-btn-disabled" : ""}`}
+              className={`td-btn-delete ${
+                loadingAction ? "td-btn-disabled" : ""
+              }`}
               disabled={!!loadingAction}
               onClick={deleteTask}
             >
@@ -522,38 +736,66 @@ function TaskDetails() {
       {/* Discussion Drawer */}
       {showChatSidebar && (
         <>
-          <div className="td-backdrop" onClick={() => setShowChatSidebar(false)} />
+          <div
+            className="td-backdrop"
+            onClick={() => setShowChatSidebar(false)}
+          />
           <div className="td-drawer">
             {/* Drawer header */}
             <div className="td-drawer-header">
               <div className="td-drawer-header-left">
                 <h2>💬 Discussion</h2>
-                {isRecording && <div className="td-drawer-status">🔴 Recording…</div>}
-                {!isRecording && recordingUsers.some((u) => u !== currentUser) && (
-                  <div className="td-drawer-status">🎙️ Someone is recording…</div>
+                {isRecording && (
+                  <div className="td-drawer-status">🔴 Recording…</div>
                 )}
-                {!isRecording && !recordingUsers.some((u) => u !== currentUser) && typingUsers.some((u) => u !== currentUser) && (
-                  <div className="td-drawer-status">✍️ Typing…</div>
-                )}
+                {!isRecording &&
+                  recordingUsers.some((u) => u !== currentUser) && (
+                    <div className="td-drawer-status">
+                      🎙️ Someone is recording…
+                    </div>
+                  )}
+                {!isRecording &&
+                  !recordingUsers.some((u) => u !== currentUser) &&
+                  typingUsers.some((u) => u !== currentUser) && (
+                    <div className="td-drawer-status">✍️ Typing…</div>
+                  )}
               </div>
               <div className="td-drawer-header-right">
-                <button className="td-btn-clear" onClick={clearDiscussion}>🗑 Clear</button>
-                <button className="td-btn-close" onClick={() => setShowChatSidebar(false)}>✕</button>
+                <button className="td-btn-clear" onClick={clearDiscussion}>
+                  🗑 Clear
+                </button>
+                <button
+                  className="td-btn-close"
+                  onClick={() => setShowChatSidebar(false)}
+                >
+                  ✕
+                </button>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="td-messages" ref={messagesContainerRef} onScroll={handleScroll}>
+            <div
+              className="td-messages"
+              ref={messagesContainerRef}
+              onScroll={handleScroll}
+            >
               {messages.length === 0 ? (
                 <div className="td-empty">
-                  No messages yet.<br />Be the first to say something! 👋
+                  No messages yet.
+                  <br />
+                  Be the first to say something! 👋
                 </div>
               ) : (
                 messages.map((msg) => {
                   const isMine = msg.sender_id === currentUser;
                   return (
-                    <div key={msg._id} className={`td-msg-row ${isMine ? "mine" : "theirs"}`}>
-                      <div className={`td-bubble ${isMine ? "mine" : "theirs"}`}>
+                    <div
+                      key={msg._id}
+                      className={`td-msg-row ${isMine ? "mine" : "theirs"}`}
+                    >
+                      <div
+                        className={`td-bubble ${isMine ? "mine" : "theirs"}`}
+                      >
                         <div className="td-bubble-sender">
                           {isMine ? "You" : getUserName(msg.sender_id)}
                         </div>
@@ -562,7 +804,9 @@ function TaskDetails() {
                         ) : (
                           <div className="td-bubble-text">{msg.message}</div>
                         )}
-                        <div className="td-bubble-time">{formatTime(msg.created_at)}</div>
+                        <div className="td-bubble-time">
+                          {formatTime(msg.created_at)}
+                        </div>
                       </div>
                     </div>
                   );
@@ -576,7 +820,10 @@ function TaskDetails() {
               <div className="td-input-row">
                 <button
                   className={`td-btn-mic ${isRecording ? "recording" : "idle"}`}
-                  onClick={() => { if (!isRecording) startRecording(); else stopRecording(); }}
+                  onClick={() => {
+                    if (!isRecording) startRecording();
+                    else stopRecording();
+                  }}
                 >
                   {isRecording ? "⏹" : "🎤"}
                 </button>
@@ -587,11 +834,15 @@ function TaskDetails() {
                   placeholder="Type a message…"
                   onChange={async (e) => {
                     setQuestion(e.target.value);
-                    await api.post(`/discussion/${id}/typing`, { is_typing: true });
+                    await api.post(`/discussion/${id}/typing`, {
+                      is_typing: true,
+                    });
                   }}
                   onKeyDown={handleEnter}
                 />
-                <button className="td-btn-send" onClick={sendMessage}>📤</button>
+                <button className="td-btn-send" onClick={sendMessage}>
+                  📤
+                </button>
               </div>
             </div>
           </div>

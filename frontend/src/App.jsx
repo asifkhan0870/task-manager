@@ -8,6 +8,8 @@ import CreateTask from "./pages/CreateTask";
 import MyTasks from "./pages/MyTasks";
 import TaskDetails from "./pages/TaskDetails";
 import ChangePassword from "./pages/ChangePassword";
+import Notifications
+from "./pages/Notifications";
 
 function App() {
   return (
@@ -32,6 +34,11 @@ function App() {
 
         <Route path="/tasks/:id" element={<TaskDetails />} />
         <Route path="/change-password" element={<ChangePassword />} />
+        <Route
+  path="/notifications"
+  element={<Notifications />}
+/>
+ 
       </Routes>
     </BrowserRouter>
   );

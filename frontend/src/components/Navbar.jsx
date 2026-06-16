@@ -1,16 +1,58 @@
 import {
   LogOut,
   Menu,
-  KeyRound
+  KeyRound,
+  Bell
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import api from "../api/axios";
+import NotificationDrawer
+from "./NotificationDrawer";
 
 function Navbar({
   setSidebarOpen
 }) {
 
   const navigate = useNavigate();
+
+  // Temporary count until backend notifications are connected
+  const [notificationCount, setNotificationCount] =
+  useState(0);
+  const [
+    showNotifications,
+    setShowNotifications
+  ] = useState(false);
+
+
+  const loadNotifications = async () => {
+
+    try {
+  
+      const res = await api.get(
+        "/notifications/unread-count"
+      );
+  
+      setNotificationCount(
+        res.data.count || 0
+      );
+  
+    } catch (err) {
+  
+      console.error(err);
+  
+    }
+  
+  };
+  
+  useEffect(() => {
+  
+    loadNotifications();
+  
+  }, []);
+
+
 
   const logout = () => {
 
@@ -20,6 +62,8 @@ function Navbar({
   };
 
   return (
+
+    <>
 
     <header
       className="
@@ -79,6 +123,57 @@ function Navbar({
         "
       >
 
+        {/* Notification Bell */}
+
+        <button
+          onClick={() =>
+            setShowNotifications(
+              !showNotifications
+            )
+          }
+          className="
+          relative
+          flex
+          items-center
+          justify-center
+          w-11
+          h-11
+          bg-white
+          border
+          border-slate-200
+          rounded-xl
+          hover:bg-slate-50
+          transition
+          "
+        >
+          <Bell size={20} />
+
+          {notificationCount > 0 && (
+            <span
+              className="
+              absolute
+              -top-1
+              -right-1
+              min-w-[20px]
+              h-5
+              px-1
+              rounded-full
+              bg-red-500
+              text-white
+              text-[10px]
+              font-bold
+              flex
+              items-center
+              justify-center
+              "
+            >
+              {notificationCount}
+            </span>
+          )}
+        </button>
+
+        {/* Change Password */}
+
         <button
           onClick={() =>
             navigate("/change-password")
@@ -100,6 +195,8 @@ function Navbar({
           <KeyRound size={18}/>
           Password
         </button>
+
+        {/* Logout */}
 
         <button
           onClick={logout}
@@ -124,6 +221,16 @@ function Navbar({
       </div>
 
     </header>
+
+<NotificationDrawer
+  open={showNotifications}
+  onClose={() =>
+    setShowNotifications(false)
+  }
+  refreshCount={loadNotifications}
+/>
+
+</>
 
   );
 }

@@ -5,6 +5,7 @@ from app.core.database import users_collection
 from app.core.database import tasks_collection
 
 from app.services.email_service import send_email
+from app.core.database import notifications_collection
 
 
 def format_date(date_value):
@@ -210,4 +211,98 @@ Task Manager Notification System
 
         print(
             f"Status Notification Error: {e}"
+        )
+
+async def create_message_notification(
+    task,
+    sender_id,
+    sender_name,
+    message_text
+):
+
+    print("CREATE NOTIFICATION CALLED")
+
+    try:
+
+        receiver_id = (
+            task["assigned_by"]
+            if sender_id == task["assigned_to"]
+            else task["assigned_to"]
+        )
+
+        receiver = await users_collection.find_one(
+            {
+                "_id": ObjectId(receiver_id)
+            }
+        )
+
+        if not receiver:
+            return
+
+        # Save notification in database
+
+        result=await notifications_collection.insert_one(
+            {
+                "user_id": receiver_id,
+                "task_id": str(task["_id"]),
+                "title": "💬 New Message",
+                "message": (
+                    f"{sender_name} sent a message"
+                ),
+                "preview": (
+                    message_text[:100]
+                    if message_text
+                    else "🎤 Audio message"
+                ),
+                "read": False,
+                "created_at": datetime.utcnow()
+            }
+        )
+
+        print("NOTIFICATION SAVED:", result.inserted_id)
+        print("FOR USER:", receiver_id)
+
+        # Send email
+
+        email_body = f"""
+Hello {receiver['name']},
+
+You have received a new message
+on the following task.
+
+====================================
+
+Task:
+{task['title']}
+
+Sender:
+{sender_name}
+
+Message:
+{message_text if message_text else 'Audio Message'}
+
+====================================
+
+Please login to Task Manager
+to continue the discussion.
+
+Regards,
+
+Task Manager Notification System
+"""
+
+        send_email(
+            receiver["email"],
+            f"💬 New Message - {task['title']}",
+            email_body
+        )
+
+        print(
+            f"Discussion notification sent to {receiver['email']}"
+        )
+
+    except Exception as e:
+
+        print(
+            f"Message Notification Error: {e}"
         )
