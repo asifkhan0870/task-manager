@@ -3,16 +3,16 @@ from pydantic import EmailStr
 
 
 class RegisterSchema(BaseModel):
-
     name: str
-
     email: EmailStr
-
     password: str
 
 
 class LoginSchema(BaseModel):
-
     email: EmailStr
-
     password: str
+
+
+class ChangePasswordSchema(BaseModel):
+    current_password: str
+    new_password: str

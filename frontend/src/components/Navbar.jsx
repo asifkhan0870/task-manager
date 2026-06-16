@@ -1,11 +1,16 @@
 import {
   LogOut,
-  Menu
+  Menu,
+  KeyRound
 } from "lucide-react";
+
+import { useNavigate } from "react-router-dom";
 
 function Navbar({
   setSidebarOpen
 }) {
+
+  const navigate = useNavigate();
 
   const logout = () => {
 
@@ -66,25 +71,57 @@ function Navbar({
 
       </div>
 
-      <button
-        onClick={logout}
+      <div
         className="
         flex
         items-center
-        gap-2
-        bg-red-500
-        hover:bg-red-600
-        text-white
-        px-4
-        md:px-5
-        py-2
-        rounded-lg
-        transition
+        gap-3
         "
       >
-        <LogOut size={18}/>
-        Logout
-      </button>
+
+        <button
+          onClick={() =>
+            navigate("/change-password")
+          }
+          className="
+          flex
+          items-center
+          gap-2
+          bg-blue-600
+          hover:bg-blue-700
+          text-white
+          px-4
+          md:px-5
+          py-2
+          rounded-lg
+          transition
+          "
+        >
+          <KeyRound size={18}/>
+          Password
+        </button>
+
+        <button
+          onClick={logout}
+          className="
+          flex
+          items-center
+          gap-2
+          bg-red-500
+          hover:bg-red-600
+          text-white
+          px-4
+          md:px-5
+          py-2
+          rounded-lg
+          transition
+          "
+        >
+          <LogOut size={18}/>
+          Logout
+        </button>
+
+      </div>
 
     </header>
 

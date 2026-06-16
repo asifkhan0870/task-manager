@@ -7,11 +7,11 @@ import AllTasks from "./pages/AllTasks";
 import CreateTask from "./pages/CreateTask";
 import MyTasks from "./pages/MyTasks";
 import TaskDetails from "./pages/TaskDetails";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
     <BrowserRouter>
-
       <Toaster
         position="top-right"
         toastOptions={{
@@ -20,39 +20,19 @@ function App() {
       />
 
       <Routes>
+        <Route path="/" element={<Login />} />
 
-        <Route
-          path="/"
-          element={<Login />}
-        />
+        <Route path="/dashboard" element={<Dashboard />} />
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+        <Route path="/tasks" element={<AllTasks />} />
 
-        <Route
-          path="/tasks"
-          element={<AllTasks />}
-        />
+        <Route path="/create-task" element={<CreateTask />} />
 
-        <Route
-          path="/create-task"
-          element={<CreateTask />}
-        />
+        <Route path="/my-tasks" element={<MyTasks />} />
 
-        <Route
-          path="/my-tasks"
-          element={<MyTasks />}
-        />
-
-        <Route
-          path="/tasks/:id"
-          element={<TaskDetails />}
-        />
-
+        <Route path="/tasks/:id" element={<TaskDetails />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Routes>
-
     </BrowserRouter>
   );
 }

@@ -5,6 +5,7 @@ from app.core.database import users_collection
 from app.core.security import hash_password
 from app.core.security import verify_password
 from app.core.security import create_access_token
+from bson import ObjectId
 
 
 async def register_user(data):
@@ -75,3 +76,40 @@ async def login_user(data):
     )
 
     return token
+
+
+async def change_password(
+    user_id: str,
+    current_password: str,
+    new_password: str
+):
+
+    user = await users_collection.find_one(
+        {"_id": ObjectId(user_id)}
+    )
+
+    if not user:
+        return False
+
+    valid = verify_password(
+        current_password,
+        user["password"]
+    )
+
+    if not valid:
+        return False
+
+    new_hash = hash_password(
+        new_password
+    )
+
+    await users_collection.update_one(
+        {"_id": ObjectId(user_id)},
+        {
+            "$set": {
+                "password": new_hash
+            }
+        }
+    )
+
+    return True    
