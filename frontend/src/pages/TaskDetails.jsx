@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { useParams, useNavigate ,  useSearchParams
-} from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/axios";
 import MainLayout from "../layouts/MainLayout";
@@ -12,8 +11,7 @@ function TaskDetails() {
   const messagesContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
   const { id } = useParams();
-  const [searchParams] =
-  useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [task, setTask] = useState(null);
@@ -37,17 +35,10 @@ function TaskDetails() {
   }, [id]);
 
   useEffect(() => {
-
-    if (
-      searchParams.get("discussion") === "true"
-    ) {
-  
+    if (searchParams.get("discussion") === "true") {
       setShowChatSidebar(true);
       markNotificationsRead();
-
-  
     }
-  
   }, [searchParams]);
 
   useEffect(() => {
@@ -57,17 +48,14 @@ function TaskDetails() {
 
   useEffect(() => {
     if (!showChatSidebar) return;
-  
     fetchDiscussion();
     fetchTypingUsers();
     fetchRecordingUsers();
-  
     const interval = setInterval(() => {
       fetchDiscussion();
       fetchTypingUsers();
       fetchRecordingUsers();
     }, 3000);
-  
     return () => clearInterval(interval);
   }, [id, showChatSidebar]);
 
@@ -78,21 +66,9 @@ function TaskDetails() {
     setAutoScroll(distanceFromBottom < 150);
   };
 
-
   const markNotificationsRead = async () => {
-
-    try {
-  
-      await api.patch(
-        `/notifications/task/${id}/read`
-      );
-  
-    } catch (err) {
-  
-      console.log(err);
-  
-    }
-  
+    try { await api.patch(`/notifications/task/${id}/read`); }
+    catch (err) { console.log(err); }
   };
 
   const fetchDiscussion = async () => {
@@ -102,49 +78,30 @@ function TaskDetails() {
         if (
           prev.length === res.data.length &&
           prev[prev.length - 1]?._id === res.data[res.data.length - 1]?._id
-        )
-          return prev;
+        ) return prev;
         return res.data;
       });
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
   };
 
   const fetchTypingUsers = async () => {
-    try {
-      const res = await api.get(`/discussion/${id}/typing`);
-      setTypingUsers(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+    try { const res = await api.get(`/discussion/${id}/typing`); setTypingUsers(res.data); }
+    catch (err) { console.log(err); }
   };
 
   const fetchRecordingUsers = async () => {
-    try {
-      const res = await api.get(`/discussion/${id}/recording`);
-      setRecordingUsers(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+    try { const res = await api.get(`/discussion/${id}/recording`); setRecordingUsers(res.data); }
+    catch (err) { console.log(err); }
   };
 
   const loadCurrentUser = async () => {
-    try {
-      const response = await api.get("/me");
-      setCurrentUser(response.data.user_id);
-    } catch (error) {
-      console.error(error);
-    }
+    try { const response = await api.get("/me"); setCurrentUser(response.data.user_id); }
+    catch (error) { console.error(error); }
   };
 
   const loadMessages = async () => {
-    try {
-      const response = await api.get(`/discussion/${id}`);
-      setMessages(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+    try { const response = await api.get(`/discussion/${id}`); setMessages(response.data); }
+    catch (error) { console.error(error); }
   };
 
   const sendMessage = async () => {
@@ -192,24 +149,14 @@ function TaskDetails() {
       const formData = new FormData();
       formData.append("file", audioBlob, "voice.webm");
       const response = await api.post("/upload/audio", formData);
-      await api.post(`/discussion/${id}/message`, {
-        audio_url: response.data.audio_url,
-        message: "",
-      });
+      await api.post(`/discussion/${id}/message`, { audio_url: response.data.audio_url, message: "" });
       await loadMessages();
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
   };
 
   const fetchTask = async () => {
-    try {
-      const response = await api.get(`/tasks/id/${id}`);
-      setTask(response.data);
-    } catch (err) {
-      console.log(err);
-      toast.error("Failed to load task");
-    }
+    try { const response = await api.get(`/tasks/id/${id}`); setTask(response.data); }
+    catch (err) { console.log(err); toast.error("Failed to load task"); }
   };
 
   const getUserName = (userId) => {
@@ -218,12 +165,8 @@ function TaskDetails() {
   };
 
   const fetchUsers = async () => {
-    try {
-      const response = await api.get("/users/");
-      setUsers(response.data || []);
-    } catch (err) {
-      console.log(err);
-    }
+    try { const response = await api.get("/users/"); setUsers(response.data || []); }
+    catch (err) { console.log(err); }
   };
 
   const deleteTask = async () => {
@@ -239,9 +182,7 @@ function TaskDetails() {
     } catch (err) {
       console.log(err);
       toast.error("Failed to delete task", { id: loadingToast });
-    } finally {
-      setLoadingAction("");
-    }
+    } finally { setLoadingAction(""); }
   };
 
   const updateStatus = async (status) => {
@@ -255,9 +196,7 @@ function TaskDetails() {
     } catch (err) {
       console.log(err);
       toast.error("Failed to update status", { id: loadingToast });
-    } finally {
-      setLoadingAction("");
-    }
+    } finally { setLoadingAction(""); }
   };
 
   const clearDiscussion = async () => {
@@ -267,9 +206,7 @@ function TaskDetails() {
       await api.delete(`/discussion/${id}`);
       setMessages([]);
       toast.success("Discussion cleared");
-    } catch (error) {
-      toast.error("Failed");
-    }
+    } catch (error) { toast.error("Failed"); }
   };
 
   const handleEnter = (e) => {
@@ -281,67 +218,31 @@ function TaskDetails() {
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return new Date(date.getTime() + 5.5 * 60 * 60 * 1000).toLocaleTimeString(
-      "en-IN",
-      {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      }
-    );
+    return new Date(date.getTime() + 5.5 * 60 * 60 * 1000).toLocaleTimeString("en-IN", {
+      hour: "2-digit", minute: "2-digit", hour12: true,
+    });
   };
 
   const priorityConfig = {
-    High: { color: "#EF4444", bg: "#FEF2F2", border: "#FECACA", emoji: "🔴" },
+    High:   { color: "#EF4444", bg: "#FEF2F2", border: "#FECACA", emoji: "🔴" },
     Medium: { color: "#F59E0B", bg: "#FFFBEB", border: "#FDE68A", emoji: "🟡" },
-    Low: { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "🟢" },
+    Low:    { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "🟢" },
   };
-
   const statusConfig = {
-    Incomplete: {
-      color: "#64748B",
-      bg: "#F1F5F9",
-      border: "#E2E8F0",
-      emoji: "⏳",
-    },
-    "In Progress": {
-      color: "#F59E0B",
-      bg: "#FFFBEB",
-      border: "#FDE68A",
-      emoji: "🔄",
-    },
-    Done: { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "✅" },
+    Incomplete:   { color: "#64748B", bg: "#F1F5F9", border: "#E2E8F0", emoji: "⏳" },
+    "In Progress":{ color: "#F59E0B", bg: "#FFFBEB", border: "#FDE68A", emoji: "🔄" },
+    Done:         { color: "#10B981", bg: "#F0FDF4", border: "#A7F3D0", emoji: "✅" },
   };
 
   const pc = priorityConfig[task?.priority] || priorityConfig["Medium"];
-  const sc = statusConfig[task?.status] || statusConfig["Incomplete"];
+  const sc = statusConfig[task?.status]   || statusConfig["Incomplete"];
 
   if (!task)
     return (
       <MainLayout>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: 300,
-            fontFamily: "Inter, sans-serif",
-            color: "#94A3B8",
-            fontSize: 15,
-          }}
-        >
-          <div style={{ textAlign: "center" }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                border: "3px solid #E2E8F0",
-                borderTopColor: "#6366F1",
-                borderRadius: "50%",
-                animation: "spin 0.7s linear infinite",
-                margin: "0 auto 12px",
-              }}
-            />
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", minHeight:300, fontFamily:"Inter,sans-serif", color:"#94A3B8", fontSize:15 }}>
+          <div style={{ textAlign:"center" }}>
+            <div style={{ width:36, height:36, border:"3px solid #E2E8F0", borderTopColor:"#6366F1", borderRadius:"50%", animation:"spin 0.7s linear infinite", margin:"0 auto 12px" }} />
             Loading task…
           </div>
         </div>
@@ -354,362 +255,222 @@ function TaskDetails() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         .td-root * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
         @keyframes pulse-soft { 0%,100%{opacity:1}50%{opacity:0.6} }
-        @keyframes slideIn { from{transform:translateX(100%)}to{transform:translateX(0)} }
 
-        /* Header */
-        .td-header { margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-        .td-title { font-size: 28px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; margin: 0 0 6px; }
-        .td-subtitle { font-size: 13px; color: #94A3B8; margin: 0; }
+        /* PAGE HEADER */
+        .td-header { margin-bottom:24px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+        .td-title  { font-size:28px; font-weight:800; color:#0F172A; letter-spacing:-0.5px; margin:0 0 6px; }
+        .td-subtitle { font-size:13px; color:#94A3B8; margin:0; }
 
-        /* FIX 1 — Mobile header: stack vertically, full-width button */
-        @media (max-width: 640px) {
-          .td-header {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .td-btn-discussion {
-            width: 100%;
-            justify-content: center;
-          }
+        @media (max-width:640px) {
+          .td-title { font-size:22px; }
+          .td-header { flex-direction:column; align-items:flex-start; }
+          .td-btn-discussion { width:100%; justify-content:center; }
         }
 
-        /* Discussion btn */
         .td-btn-discussion {
-          display: inline-flex; align-items: center; gap: 7px;
-          background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
-          color: #fff; border: none; border-radius: 12px;
-          padding: 11px 20px; font-size: 14px; font-weight: 600;
-          cursor: pointer; box-shadow: 0 4px 14px rgba(99,102,241,0.35);
-          transition: opacity 0.18s, transform 0.1s;
-          font-family: 'Inter', sans-serif; white-space: nowrap;
+          display:inline-flex; align-items:center; gap:7px;
+          background:linear-gradient(135deg,#6366F1 0%,#818CF8 100%);
+          color:#fff; border:none; border-radius:12px;
+          padding:11px 20px; font-size:14px; font-weight:600;
+          cursor:pointer; box-shadow:0 4px 14px rgba(99,102,241,.35);
+          transition:opacity .18s,transform .1s;
+          font-family:'Inter',sans-serif; white-space:nowrap;
         }
-        .td-btn-discussion:hover { opacity: 0.9; transform: translateY(-1px); }
+        .td-btn-discussion:hover { opacity:.9; transform:translateY(-1px); }
 
-        /* Stat pills row */
-        .td-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
-        .td-pill {
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 7px 14px; border-radius: 99px; border: 1.5px solid;
-          font-size: 13px; font-weight: 600;
-        }
+        /* PILLS */
+        .td-stats { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+        .td-pill  { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:99px; border:1.5px solid; font-size:13px; font-weight:600; }
 
-        /* Main card */
-        .td-card {
-          background: #fff; border-radius: 24px; padding: 32px;
-          border: 1.5px solid #E2E8F0;
-          box-shadow: 0 8px 32px rgba(15,23,42,0.06);
-          margin-bottom: 20px;
-        }
+        /* CARD */
+        .td-card { background:#fff; border-radius:24px; padding:32px; border:1.5px solid #E2E8F0; box-shadow:0 8px 32px rgba(15,23,42,.06); margin-bottom:20px; }
+        @media (max-width:640px) { .td-card { padding:20px 16px; border-radius:16px; } }
 
-        /* Description block */
-        .td-desc {
-          background: #F8FAFF; border: 1.5px solid #E2E8F0;
-          border-radius: 14px; padding: 18px 20px;
-          font-size: 15px; color: #334155; line-height: 1.65;
-          margin-bottom: 24px;
-        }
+        .td-desc { background:#F8FAFF; border:1.5px solid #E2E8F0; border-radius:14px; padding:18px 20px; font-size:15px; color:#334155; line-height:1.65; margin-bottom:24px; }
 
-        /* Voice note */
-        .td-voice {
-          background: linear-gradient(135deg, #F5F3FF 0%, #EEF2FF 100%);
-          border: 1.5px solid #C7D2FE; border-radius: 18px;
-          padding: 20px; margin-bottom: 24px;
-        }
-        .td-voice h3 { font-size: 14px; font-weight: 700; color: #3730A3; margin: 0 0 12px; }
-        .td-voice audio { width: 100%; accent-color: #6366F1; border-radius: 8px; }
-        .td-voice a {
-          display: inline-flex; align-items: center; gap: 5px;
-          margin-top: 10px; font-size: 12px; font-weight: 600;
-          color: #6366F1; text-decoration: none;
-        }
-        .td-voice a:hover { text-decoration: underline; }
+        /* VOICE NOTE */
+        .td-voice { background:linear-gradient(135deg,#F5F3FF 0%,#EEF2FF 100%); border:1.5px solid #C7D2FE; border-radius:18px; padding:20px; margin-bottom:24px; }
+        .td-voice h3 { font-size:14px; font-weight:700; color:#3730A3; margin:0 0 12px; }
+        .td-voice audio { width:100%; accent-color:#6366F1; border-radius:8px; }
+        .td-voice a { display:inline-flex; align-items:center; gap:5px; margin-top:10px; font-size:12px; font-weight:600; color:#6366F1; text-decoration:none; }
+        .td-voice a:hover { text-decoration:underline; }
 
-        /* Meta info grid */
-        .td-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-        @media (max-width: 560px) { .td-meta { grid-template-columns: 1fr; } }
-        .td-meta-item {
-          background: #F8FAFF; border: 1.5px solid #E2E8F0;
-          border-radius: 12px; padding: 14px 16px;
-        }
-        .td-meta-item .label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94A3B8; margin-bottom: 5px; }
-        .td-meta-item .value { font-size: 14px; font-weight: 600; color: #0F172A; }
+        /* META */
+        .td-meta { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
+        @media (max-width:560px) { .td-meta { grid-template-columns:1fr; } }
+        .td-meta-item { background:#F8FAFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:14px 16px; }
+        .td-meta-item .label { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#94A3B8; margin-bottom:5px; }
+        .td-meta-item .value { font-size:14px; font-weight:600; color:#0F172A; }
 
-        /* Section label */
-        .td-section-label {
-          font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-          text-transform: uppercase; color: #94A3B8;
-          margin-bottom: 16px; padding-bottom: 10px;
-          border-bottom: 1px solid #F1F5F9;
+        .td-section-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#94A3B8; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #F1F5F9; }
+
+        /* ACTION BUTTONS */
+        .td-actions { display:flex; gap:10px; flex-wrap:nowrap; padding-top:24px; border-top:1px solid #F1F5F9; }
+        .td-btn-inprogress { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#FFFBEB; color:#92400E; border:1.5px solid #FDE68A; border-radius:12px; padding:11px 10px; font-size:13px; font-weight:700; cursor:pointer; transition:background .18s; font-family:'Inter',sans-serif; }
+        .td-btn-inprogress:hover:not(:disabled) { background:#FEF3C7; }
+        .td-btn-done   { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#F0FDF4; color:#065F46; border:1.5px solid #A7F3D0; border-radius:12px; padding:11px 10px; font-size:13px; font-weight:700; cursor:pointer; transition:background .18s; font-family:'Inter',sans-serif; }
+        .td-btn-done:hover:not(:disabled)   { background:#D1FAE5; }
+        .td-btn-delete { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#FEF2F2; color:#B91C1C; border:1.5px solid #FECACA; border-radius:12px; padding:11px 10px; font-size:13px; font-weight:700; cursor:pointer; transition:background .18s; font-family:'Inter',sans-serif; }
+        .td-btn-delete:hover:not(:disabled) { background:#FEE2E2; }
+        .td-btn-disabled { opacity:.5; cursor:not-allowed !important; }
+
+        @media (max-width:640px) {
+          .td-actions { gap:8px; }
+          .td-btn-inprogress, .td-btn-done, .td-btn-delete { font-size:12px; padding:10px 6px; white-space:nowrap; }
         }
 
-        /* Action buttons */
-        .td-actions { display: flex; gap: 10px; flex-wrap: nowrap; padding-top: 24px; border-top: 1px solid #F1F5F9; }
-        .td-btn-inprogress {
-          flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-          background: #FFFBEB; color: #92400E; border: 1.5px solid #FDE68A;
-          border-radius: 12px; padding: 11px 10px; font-size: 13px; font-weight: 700;
-          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
-        }
-        .td-btn-inprogress:hover:not(:disabled) { background: #FEF3C7; }
-        .td-btn-done {
-          flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-          background: #F0FDF4; color: #065F46; border: 1.5px solid #A7F3D0;
-          border-radius: 12px; padding: 11px 10px; font-size: 13px; font-weight: 700;
-          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
-        }
-        .td-btn-done:hover:not(:disabled) { background: #D1FAE5; }
-        .td-btn-delete {
-          flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-          background: #FEF2F2; color: #B91C1C; border: 1.5px solid #FECACA;
-          border-radius: 12px; padding: 11px 10px; font-size: 13px; font-weight: 700;
-          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
-        }
-        .td-btn-delete:hover:not(:disabled) { background: #FEE2E2; }
-        .td-btn-disabled { opacity: 0.5; cursor: not-allowed !important; }
+        /* LOADING OVERLAY */
+        .td-overlay { position:fixed; inset:0; background:rgba(15,23,42,.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:50; }
+        .td-overlay-card { background:#fff; border-radius:20px; padding:36px 48px; text-align:center; box-shadow:0 24px 64px rgba(15,23,42,.2); }
+        .td-overlay-spinner { width:40px; height:40px; border:3px solid #E2E8F0; border-top-color:#6366F1; border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 16px; }
+        .td-overlay-card p    { font-size:16px; font-weight:700; color:#0F172A; margin:0 0 4px; }
+        .td-overlay-card span { font-size:13px; color:#94A3B8; }
 
-        /* FIX 2 — Mobile action buttons: tighter sizing, no text wrap */
-        @media (max-width: 640px) {
-          .td-actions {
-            gap: 8px;
-          }
-          .td-btn-inprogress,
-          .td-btn-done,
-          .td-btn-delete {
-            font-size: 12px;
-            padding: 10px 6px;
-            white-space: nowrap;
-          }
-        }
+        /* BACKDROP */
+        .td-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.55); backdrop-filter:blur(3px); z-index:40; }
 
-        /* Overlay */
-        .td-overlay {
-          position: fixed; inset: 0; background: rgba(15,23,42,0.5);
-          backdrop-filter: blur(4px); display: flex; align-items: center;
-          justify-content: center; z-index: 50;
-        }
-        .td-overlay-card { background: #fff; border-radius: 20px; padding: 36px 48px; text-align: center; box-shadow: 0 24px 64px rgba(15,23,42,0.2); }
-        .td-overlay-spinner { width: 40px; height: 40px; border: 3px solid #E2E8F0; border-top-color: #6366F1; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
-        .td-overlay-card p { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0 0 4px; }
-        .td-overlay-card span { font-size: 13px; color: #94A3B8; }
-
-        /* ── DRAWER ── */
-        .td-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); backdrop-filter: blur(4px); z-index: 40; }
-
+        /* =============================================
+           DRAWER  —  THE KEY FIX
+           Desktop: centered modal capped at 700px tall
+           Mobile:  pinned with inset so browser chrome
+                    (address bar + nav bar) never clips it
+           ============================================= */
         .td-drawer {
           position: fixed;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 95vw;
-          max-width: 950px;
-          height: 85vh;
+          width: 90vw;
+          max-width: 860px;
+          height: min(80vh, 700px);
           background: #fff;
-          border-radius: 24px;
+          border-radius: 20px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
           z-index: 50;
-          box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+          box-shadow: 0 30px 80px rgba(0,0,0,.25);
         }
 
         @media (max-width: 640px) {
           .td-drawer {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 96vw;
-            height: 88vh;
-            border-radius: 18px;
+            /* Inset approach: browser chrome eats ~120-160px on mobile.
+               top:60px clears the address bar; bottom:72px clears the nav bar.
+               This always fits regardless of which browser bars are visible. */
+            top: 60px;
+            bottom: 72px;
+            left: 10px;
+            right: 10px;
+            transform: none;
+            width: auto;
+            height: auto;
             max-width: none;
-          }
-          .td-btn-clear {
-            padding: 6px 10px;
-            font-size: 11px;
-          }
-          .td-btn-close {
-            width: 32px;
-            height: 32px;
-          }
-          .td-btn-send,
-          .td-btn-mic {
-            width: 42px;
-            height: 42px;
+            border-radius: 16px;
           }
         }
 
-        .td-drawer-header {
-          background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
-          padding: 14px 16px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-shrink: 0;
-        }
+        /* DRAWER HEADER */
+        .td-drawer-header { background:linear-gradient(135deg,#6366F1 0%,#818CF8 100%); padding:14px 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+        .td-drawer-header-left h2 { font-size:16px; font-weight:700; color:#fff; margin:0 0 2px; }
+        .td-drawer-status { font-size:11px; font-weight:600; color:rgba(255,255,255,.8); animation:pulse-soft 1.4s ease-in-out infinite; }
+        .td-drawer-header-right { display:flex; align-items:center; gap:8px; }
 
-        /* FIX 3 — Drawer header title */
-        .td-drawer-header-left h2 {
-          font-size: 16px;
-          font-weight: 700;
-          color: #fff;
-          margin: 0 0 2px;
-        }
+        .td-btn-clear { background:rgba(255,255,255,.15); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:12px; font-weight:600; cursor:pointer; transition:background .18s; font-family:'Inter',sans-serif; }
+        .td-btn-clear:hover { background:rgba(255,255,255,.25); }
+        @media (max-width:640px) { .td-btn-clear { padding:6px 10px; font-size:11px; } }
 
-        .td-drawer-status { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75); animation: pulse-soft 1.4s ease-in-out infinite; }
-        .td-drawer-header-right { display: flex; align-items: center; gap: 8px; }
-        .td-btn-clear {
-          background: rgba(255,255,255,0.15); color: #fff; border: none;
-          border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600;
-          cursor: pointer; transition: background 0.18s; font-family: 'Inter', sans-serif;
-        }
-        .td-btn-clear:hover { background: rgba(255,255,255,0.25); }
-        .td-btn-close {
-          width: 34px; height: 34px; border-radius: 8px; border: none;
-          background: rgba(255,255,255,0.15); color: #fff; font-size: 16px;
-          cursor: pointer; display: flex; align-items: center; justify-content: center;
-          transition: background 0.18s; font-family: 'Inter', sans-serif;
-        }
-        .td-btn-close:hover { background: rgba(255,255,255,0.25); }
+        .td-btn-close { width:34px; height:34px; border-radius:8px; border:none; background:rgba(255,255,255,.15); color:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .18s; font-family:'Inter',sans-serif; }
+        .td-btn-close:hover { background:rgba(255,255,255,.25); }
+        @media (max-width:640px) { .td-btn-close { width:32px; height:32px; } }
 
-        .td-messages {
-          flex: 1;
-          overflow-y: auto;
-          background: #F8FAFF;
-          padding: 16px;
-        }
+        /* MESSAGES — min-height:0 is critical so flex child can shrink and scroll */
+        .td-messages { flex:1; min-height:0; overflow-y:auto; background:#F8FAFF; padding:16px; }
+        @media (max-width:640px) { .td-messages { padding:12px; } }
 
-        @media (max-width: 640px) {
-          .td-messages {
-            padding: 12px;
-          }
-        }
+        .td-empty { text-align:center; color:#94A3B8; margin-top:40px; font-size:14px; line-height:1.6; }
 
-        .td-empty { text-align: center; color: #94A3B8; margin-top: 60px; font-size: 14px; line-height: 1.6; }
-        .td-msg-row { display: flex; }
-        .td-msg-row.mine { justify-content: flex-end; }
-        .td-msg-row.theirs { justify-content: flex-start; }
+        .td-msg-row { display:flex; }
+        .td-msg-row.mine   { justify-content:flex-end; }
+        .td-msg-row.theirs { justify-content:flex-start; }
 
-        /* FIX 4 — Bubble padding + border-radius */
-        .td-bubble {
-          max-width: 80%;
-          padding: 12px 14px;
-          border-radius: 16px;
-          margin-bottom: 10px;
-        }
+        .td-bubble { max-width:75%; padding:10px 13px; border-radius:16px; margin-bottom:10px; }
+        @media (max-width:640px) { .td-bubble { max-width:85%; } }
 
-        @media (max-width: 640px) {
-          .td-bubble {
-            max-width: 88%;
-          }
-        }
+        .td-bubble.mine   { background:linear-gradient(135deg,#6366F1,#818CF8); color:#fff; border-bottom-right-radius:4px; }
+        .td-bubble.theirs { background:#fff; color:#0F172A; border:1.5px solid #E2E8F0; border-bottom-left-radius:4px; }
+        .td-bubble-sender { font-size:11px; font-weight:600; margin-bottom:3px; opacity:.75; }
+        .td-bubble-text   { font-size:14px; line-height:1.45; word-break:break-word; }
+        .td-bubble-time   { font-size:10px; opacity:.6; margin-top:4px; text-align:right; }
+        .td-bubble audio  { width:100%; max-width:220px; border-radius:8px; accent-color:#6366F1; }
 
-        .td-bubble.mine { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; border-bottom-right-radius: 4px; }
-        .td-bubble.theirs { background: #fff; color: #0F172A; border: 1.5px solid #E2E8F0; border-bottom-left-radius: 4px; }
-        .td-bubble-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; opacity: 0.75; }
-        .td-bubble-text { font-size: 14px; line-height: 1.45; word-break: break-word; }
-        .td-bubble-time { font-size: 10px; opacity: 0.6; margin-top: 4px; text-align: right; }
-        .td-bubble audio { width: 200px; border-radius: 8px; accent-color: #6366F1; }
-
+        /* INPUT AREA — flex-shrink:0 keeps it always visible at bottom */
         .td-input-area {
-          border-top: 1.5px solid #E2E8F0; background: #fff;
-          padding: 12px 14px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
-          shrink: 0;
+          border-top:1.5px solid #E2E8F0;
+          background:#fff;
+          padding:10px 12px;
+          padding-bottom: max(10px, env(safe-area-inset-bottom));
+          flex-shrink:0;
         }
-        .td-input-row { display: flex; align-items: center; gap: 10px; }
-        .td-btn-mic {
-          width: 44px; height: 44px; border-radius: 50%; border: none;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 18px; cursor: pointer; transition: background 0.18s, transform 0.1s;
-          shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .td-btn-mic.idle { background: #EF4444; }
-        .td-btn-mic.idle:hover { background: #DC2626; transform: scale(1.05); }
-        .td-btn-mic.recording { background: #0F172A; animation: pulse-soft 1s ease-in-out infinite; }
+        .td-input-row { display:flex; align-items:center; gap:8px; }
+
+        .td-btn-mic { flex-shrink:0; width:42px; height:42px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; transition:background .18s,transform .1s; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+        .td-btn-mic.idle      { background:#EF4444; }
+        .td-btn-mic.idle:hover{ background:#DC2626; transform:scale(1.05); }
+        .td-btn-mic.recording { background:#0F172A; animation:pulse-soft 1s ease-in-out infinite; }
+
         .td-msg-input {
-          flex: 1; border: 1.5px solid #E2E8F0; border-radius: 24px;
-          padding: 11px 18px; font-size: 14px; resize: none;
-          outline: none; background: #F8FAFF; transition: border-color 0.18s;
-          font-family: 'Inter', sans-serif; color: #0F172A;
+          flex:1; border:1.5px solid #E2E8F0; border-radius:24px;
+          padding:10px 16px;
+          /* 16px prevents iOS auto-zoom on focus */
+          font-size:16px;
+          resize:none; outline:none; background:#F8FAFF;
+          transition:border-color .18s;
+          font-family:'Inter',sans-serif; color:#0F172A;
         }
-        .td-msg-input:focus { border-color: #6366F1; background: #fff; }
-        .td-msg-input::placeholder { color: #CBD5E1; }
-        .td-btn-send {
-          width: 44px; height: 44px; border-radius: 50%; border: none;
-          background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
-          font-size: 18px; cursor: pointer; display: flex; align-items: center;
-          justify-content: center; box-shadow: 0 4px 12px rgba(99,102,241,0.4);
-          transition: opacity 0.18s, transform 0.1s; shrink: 0;
-        }
-        .td-btn-send:hover { opacity: 0.9; transform: scale(1.05); }
+        .td-msg-input:focus { border-color:#6366F1; background:#fff; }
+        .td-msg-input::placeholder { color:#CBD5E1; }
+
+        .td-btn-send { flex-shrink:0; width:42px; height:42px; border-radius:50%; border:none; background:linear-gradient(135deg,#6366F1,#818CF8); color:#fff; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(99,102,241,.4); transition:opacity .18s,transform .1s; }
+        .td-btn-send:hover { opacity:.9; transform:scale(1.05); }
       `}</style>
 
       <div className="td-root">
-        {/* Header */}
         <div className="td-header">
           <div>
             <h1 className="td-title">{task.title}</h1>
             <p className="td-subtitle">Task #{id.slice(-8).toUpperCase()}</p>
           </div>
-          <button
-            className="td-btn-discussion"
-            onClick={() => setShowChatSidebar(true)}
-          >
+          <button className="td-btn-discussion" onClick={() => setShowChatSidebar(true)}>
             💬 Discussion
           </button>
         </div>
 
-        {/* Status & Priority pills */}
         <div className="td-stats">
-          <span
-            className="td-pill"
-            style={{
-              color: pc.color,
-              background: pc.bg,
-              borderColor: pc.border,
-            }}
-          >
+          <span className="td-pill" style={{ color:pc.color, background:pc.bg, borderColor:pc.border }}>
             {pc.emoji} {task.priority} Priority
           </span>
-          <span
-            className="td-pill"
-            style={{
-              color: sc.color,
-              background: sc.bg,
-              borderColor: sc.border,
-            }}
-          >
+          <span className="td-pill" style={{ color:sc.color, background:sc.bg, borderColor:sc.border }}>
             {sc.emoji} {task.status}
           </span>
         </div>
 
-        {/* Main card */}
         <div className="td-card">
           <div className="td-section-label">Description</div>
           <div className="td-desc">{task.description}</div>
 
-          {/* Voice Note */}
           {task.audio_url && (
             <>
               <div className="td-section-label">Voice Note</div>
               <div className="td-voice">
                 <h3>🎤 Attached Voice Note</h3>
                 <audio controls src={task.audio_url} />
-                <a
-                  href={task.audio_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ↗ Open in new tab
-                </a>
+                <a href={task.audio_url} target="_blank" rel="noopener noreferrer">↗ Open in new tab</a>
               </div>
             </>
           )}
 
-          {/* Meta grid */}
-          <div className="td-section-label" style={{ marginTop: 4 }}>
-            Task Info
-          </div>
+          <div className="td-section-label" style={{ marginTop:4 }}>Task Info</div>
           <div className="td-meta">
             <div className="td-meta-item">
               <div className="label">Assigned By</div>
@@ -719,54 +480,26 @@ function TaskDetails() {
               <div className="label">Assigned To</div>
               <div className="value">👤 {getUserName(task.assigned_to)}</div>
             </div>
-            <div className="td-meta-item" style={{ gridColumn: "1 / -1" }}>
+            <div className="td-meta-item" style={{ gridColumn:"1 / -1" }}>
               <div className="label">Due Date</div>
               <div className="value">
                 📅{" "}
-                {new Date(
-                  new Date(task.due_date).getTime() + 5.5 * 60 * 60 * 1000
-                ).toLocaleString("en-IN", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
+                {new Date(new Date(task.due_date).getTime() + 5.5 * 60 * 60 * 1000).toLocaleString("en-IN", {
+                  day:"numeric", month:"long", year:"numeric", hour:"numeric", minute:"2-digit", hour12:true,
                 })}
               </div>
             </div>
           </div>
 
-          {/* Actions */}
           <div className="td-section-label">Update Status</div>
           <div className="td-actions">
-            <button
-              className={`td-btn-inprogress ${
-                loadingAction ? "td-btn-disabled" : ""
-              }`}
-              disabled={!!loadingAction}
-              onClick={() => updateStatus("In Progress")}
-            >
-              {loadingAction === "In Progress"
-                ? "⏳ Updating…"
-                : "🔄 In Progress"}
+            <button className={`td-btn-inprogress ${loadingAction ? "td-btn-disabled" : ""}`} disabled={!!loadingAction} onClick={() => updateStatus("In Progress")}>
+              {loadingAction === "In Progress" ? "⏳ Updating…" : "🔄 In Progress"}
             </button>
-            <button
-              className={`td-btn-done ${
-                loadingAction ? "td-btn-disabled" : ""
-              }`}
-              disabled={!!loadingAction}
-              onClick={() => updateStatus("Done")}
-            >
+            <button className={`td-btn-done ${loadingAction ? "td-btn-disabled" : ""}`} disabled={!!loadingAction} onClick={() => updateStatus("Done")}>
               {loadingAction === "Done" ? "⏳ Updating…" : "✅ Mark Done"}
             </button>
-            <button
-              className={`td-btn-delete ${
-                loadingAction ? "td-btn-disabled" : ""
-              }`}
-              disabled={!!loadingAction}
-              onClick={deleteTask}
-            >
+            <button className={`td-btn-delete ${loadingAction ? "td-btn-disabled" : ""}`} disabled={!!loadingAction} onClick={deleteTask}>
               {loadingAction === "delete" ? "⏳ Deleting…" : "🗑 Delete"}
             </button>
           </div>
@@ -775,7 +508,6 @@ function TaskDetails() {
         <ActivityTimeline taskId={id} />
       </div>
 
-      {/* Loading overlay */}
       {loadingAction && (
         <div className="td-overlay">
           <div className="td-overlay-card">
@@ -786,80 +518,38 @@ function TaskDetails() {
         </div>
       )}
 
-      {/* Discussion Drawer */}
       {showChatSidebar && (
         <>
-          <div
-            className="td-backdrop"
-            onClick={() => setShowChatSidebar(false)}
-          />
+          <div className="td-backdrop" onClick={() => setShowChatSidebar(false)} />
           <div className="td-drawer">
-            {/* Drawer header */}
+
             <div className="td-drawer-header">
               <div className="td-drawer-header-left">
                 <h2>💬 Discussion</h2>
-                {isRecording && (
-                  <div className="td-drawer-status">🔴 Recording…</div>
-                )}
-                {!isRecording &&
-                  recordingUsers.some((u) => u !== currentUser) && (
-                    <div className="td-drawer-status">
-                      🎙️ Someone is recording…
-                    </div>
-                  )}
-                {!isRecording &&
-                  !recordingUsers.some((u) => u !== currentUser) &&
-                  typingUsers.some((u) => u !== currentUser) && (
-                    <div className="td-drawer-status">✍️ Typing…</div>
-                  )}
+                {isRecording && <div className="td-drawer-status">🔴 Recording…</div>}
+                {!isRecording && recordingUsers.some((u) => u !== currentUser) && <div className="td-drawer-status">🎙️ Someone is recording…</div>}
+                {!isRecording && !recordingUsers.some((u) => u !== currentUser) && typingUsers.some((u) => u !== currentUser) && <div className="td-drawer-status">✍️ Typing…</div>}
               </div>
               <div className="td-drawer-header-right">
-                <button className="td-btn-clear" onClick={clearDiscussion}>
-                  🗑 Clear
-                </button>
-                <button
-                  className="td-btn-close"
-                  onClick={() => setShowChatSidebar(false)}
-                >
-                  ✕
-                </button>
+                <button className="td-btn-clear" onClick={clearDiscussion}>🗑 Clear</button>
+                <button className="td-btn-close" onClick={() => setShowChatSidebar(false)}>✕</button>
               </div>
             </div>
 
-            {/* Messages */}
-            <div
-              className="td-messages"
-              ref={messagesContainerRef}
-              onScroll={handleScroll}
-            >
+            <div className="td-messages" ref={messagesContainerRef} onScroll={handleScroll}>
               {messages.length === 0 ? (
-                <div className="td-empty">
-                  No messages yet.
-                  <br />
-                  Be the first to say something! 👋
-                </div>
+                <div className="td-empty">No messages yet.<br />Be the first to say something! 👋</div>
               ) : (
                 messages.map((msg) => {
                   const isMine = msg.sender_id === currentUser;
                   return (
-                    <div
-                      key={msg._id}
-                      className={`td-msg-row ${isMine ? "mine" : "theirs"}`}
-                    >
-                      <div
-                        className={`td-bubble ${isMine ? "mine" : "theirs"}`}
-                      >
-                        <div className="td-bubble-sender">
-                          {isMine ? "You" : getUserName(msg.sender_id)}
-                        </div>
-                        {msg.message_type === "audio" ? (
-                          <audio controls src={msg.audio_url} />
-                        ) : (
-                          <div className="td-bubble-text">{msg.message}</div>
-                        )}
-                        <div className="td-bubble-time">
-                          {formatTime(msg.created_at)}
-                        </div>
+                    <div key={msg._id} className={`td-msg-row ${isMine ? "mine" : "theirs"}`}>
+                      <div className={`td-bubble ${isMine ? "mine" : "theirs"}`}>
+                        <div className="td-bubble-sender">{isMine ? "You" : getUserName(msg.sender_id)}</div>
+                        {msg.message_type === "audio"
+                          ? <audio controls src={msg.audio_url} />
+                          : <div className="td-bubble-text">{msg.message}</div>}
+                        <div className="td-bubble-time">{formatTime(msg.created_at)}</div>
                       </div>
                     </div>
                   );
@@ -868,16 +558,9 @@ function TaskDetails() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
             <div className="td-input-area">
               <div className="td-input-row">
-                <button
-                  className={`td-btn-mic ${isRecording ? "recording" : "idle"}`}
-                  onClick={() => {
-                    if (!isRecording) startRecording();
-                    else stopRecording();
-                  }}
-                >
+                <button className={`td-btn-mic ${isRecording ? "recording" : "idle"}`} onClick={() => { if (!isRecording) startRecording(); else stopRecording(); }}>
                   {isRecording ? "⏹" : "🎤"}
                 </button>
                 <textarea
@@ -887,17 +570,14 @@ function TaskDetails() {
                   placeholder="Type a message…"
                   onChange={async (e) => {
                     setQuestion(e.target.value);
-                    await api.post(`/discussion/${id}/typing`, {
-                      is_typing: true,
-                    });
+                    await api.post(`/discussion/${id}/typing`, { is_typing: true });
                   }}
                   onKeyDown={handleEnter}
                 />
-                <button className="td-btn-send" onClick={sendMessage}>
-                  📤
-                </button>
+                <button className="td-btn-send" onClick={sendMessage}>📤</button>
               </div>
             </div>
+
           </div>
         </>
       )}
