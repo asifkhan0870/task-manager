@@ -7,6 +7,8 @@ from app.core.database import tasks_collection
 from app.services.email_service import send_email
 from app.core.database import notifications_collection
 
+WEBSITE_URL = "https://task-manager-entire.onrender.com"
+
 
 def format_date(date_value):
 
@@ -63,11 +65,13 @@ async def notify_task_created(task):
         body = f"""
 Hello {assignee['name']},
 
-A new task has been assigned to you.
+🎉 A new task has been assigned to you.
 
-====================================
+━━━━━━━━━━━━━━━━━━━━━━
 
-Task Title:
+📌 TASK DETAILS
+
+Title:
 {task['title']}
 
 Description:
@@ -76,7 +80,7 @@ Description:
 Priority:
 {task['priority']}
 
-Current Status:
+Status:
 {task['status']}
 
 Due Date:
@@ -85,15 +89,15 @@ Due Date:
 Assigned By:
 {assigner['name']}
 
-Assigned By Email:
-{assigner['email']}
+━━━━━━━━━━━━━━━━━━━━━━
 
-====================================
+🚀 Open Task Manager
 
-Please login to the Task Manager system
-and update the task status regularly.
+{WEBSITE_URL}
 
-Regards,
+━━━━━━━━━━━━━━━━━━━━━━
+
+Please review the task and update its status regularly.
 
 Task Manager Notification System
 """
@@ -169,17 +173,19 @@ async def notify_status_change(
         body = f"""
 Hello {assigner['name']},
 
-A task assigned by you has been updated.
+🔄 A task status has been updated.
 
-====================================
+━━━━━━━━━━━━━━━━━━━━━━
 
-Task Title:
+📌 TASK DETAILS
+
+Title:
 {task['title']}
 
 Assigned To:
 {assignee['name']}
 
-Assigned To Email:
+Assigned Email:
 {assignee['email']}
 
 New Status:
@@ -188,11 +194,15 @@ New Status:
 Updated At:
 {format_date(datetime.utcnow())}
 
-====================================
+━━━━━━━━━━━━━━━━━━━━━━
 
-The assignee has updated the task status.
+🚀 View Task Manager
 
-Regards,
+{WEBSITE_URL}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+The assignee has updated this task.
 
 Task Manager Notification System
 """
@@ -267,26 +277,31 @@ async def create_message_notification(
         email_body = f"""
 Hello {receiver['name']},
 
-You have received a new message
-on the following task.
+💬 You have received a new discussion message.
 
-====================================
+━━━━━━━━━━━━━━━━━━━━━━
 
-Task:
+📌 TASK
+
 {task['title']}
 
-Sender:
+👤 Sender
+
 {sender_name}
 
-Message:
-{message_text if message_text else 'Audio Message'}
+📝 Message
 
-====================================
+{message_text if message_text else '🎤 Audio Message'}
 
-Please login to Task Manager
-to continue the discussion.
+━━━━━━━━━━━━━━━━━━━━━━
 
-Regards,
+🚀 Continue Discussion
+
+{WEBSITE_URL}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+Open Task Manager to reply to this message.
 
 Task Manager Notification System
 """
