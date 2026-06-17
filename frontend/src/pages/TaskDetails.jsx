@@ -341,8 +341,49 @@ function TaskDetails() {
         @keyframes slideIn { from{transform:translateX(100%)}to{transform:translateX(0)} }
 
         /* Header */
-        .td-header { margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-        .td-title { font-size: 28px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; margin: 0 0 6px; }
+.td-header {
+  margin-top: 60px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+   
+@media (max-width: 640px) {
+  .td-header {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .td-header > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .td-title {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .td-btn-discussion {
+    padding: 8px 10px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+}
+
+  .td-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.5px;
+  margin: 0 0 6px;
+}
         .td-subtitle { font-size: 13px; color: #94A3B8; margin: 0; }
 
         /* FIX 1 — Restore old header layout on mobile: button stays on the right */
@@ -633,7 +674,7 @@ function TaskDetails() {
         .td-btn-send:hover { opacity: 0.9; transform: scale(1.05); }
       `}</style>
 
-      <div className="td-root">
+<div className="td-root">
         {/* Header */}
         <div className="td-header">
           <div>

@@ -196,7 +196,9 @@ function Navbar({
           "
         >
           <KeyRound size={18}/>
-          Password
+<span className="hidden sm:inline">
+  Password
+</span>
         </button>
 
         {/* Logout */}
@@ -217,8 +219,10 @@ function Navbar({
           transition
           "
         >
-          <LogOut size={18}/>
-          Logout
+         <LogOut size={18}/>
+<span className="hidden sm:inline">
+  Logout
+</span>
         </button>
 
       </div>
