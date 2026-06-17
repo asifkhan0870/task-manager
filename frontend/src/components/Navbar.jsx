@@ -65,23 +65,26 @@ function Navbar({
 
     <>
 
-    <header
-      className="
-      sticky
-      top-0
-      z-30
-      h-20
-      bg-white
-      border-b
-      border-slate-200
-      shadow-sm
-      flex
-      justify-between
-      items-center
-      px-4
-      md:px-8
-      "
-    >
+<header
+  className="
+  fixed
+  top-0
+  left-0
+  right-0
+  md:left-72
+  z-30
+  h-20
+  bg-white
+  border-b
+  border-slate-200
+  shadow-sm
+  flex
+  justify-between
+  items-center
+  px-4
+  md:px-8
+  "
+>
 
       <div
         className="
