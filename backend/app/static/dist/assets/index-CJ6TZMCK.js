@@ -542,19 +542,19 @@ to {
           py-2
           rounded-lg
           transition
-          `,children:[(0,I.jsx)(Ai,{size:18}),(0,I.jsx)(`span`,{className:`hidden sm:inline`,children:`Password`})]}),(0,I.jsxs)(`button`,{onClick:()=>{localStorage.removeItem(`token`),window.location.href=`/`},className:`
-          flex
-          items-center
-          gap-2
-          bg-red-500
-          hover:bg-red-600
-          text-white
-          px-4
-          md:px-5
-          py-2
-          rounded-lg
-          transition
-          `,children:[(0,I.jsx)(Pi,{size:18}),(0,I.jsx)(`span`,{className:`hidden sm:inline`,children:`Logout`})]})]})]}),(0,I.jsx)(Ks,{open:i,onClose:()=>a(!1),refreshCount:o})]})}function Js({children:e}){let[t,n]=(0,w.useState)(!1);return(0,I.jsxs)(`div`,{className:`
+          `,children:[(0,I.jsx)(Ai,{size:18}),(0,I.jsx)(`span`,{className:`hidden md:inline`,children:`Password`})]}),(0,I.jsxs)(`button`,{onClick:()=>{localStorage.removeItem(`token`),window.location.href=`/`},className:`
+flex
+items-center
+justify-center
+bg-red-500
+hover:bg-red-600
+text-white
+px-2
+md:px-5
+py-2
+rounded-lg
+transition
+`,children:[(0,I.jsx)(Pi,{size:18}),(0,I.jsx)(`span`,{className:`hidden md:inline`,children:`Logout`})]})]})]}),(0,I.jsx)(Ks,{open:i,onClose:()=>a(!1),refreshCount:o})]})}function Js({children:e}){let[t,n]=(0,w.useState)(!1);return(0,I.jsxs)(`div`,{className:`
       flex
       min-h-screen
       bg-slate-100

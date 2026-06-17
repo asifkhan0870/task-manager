@@ -196,7 +196,7 @@ function Navbar({
           "
         >
           <KeyRound size={18}/>
-<span className="hidden sm:inline">
+<span className="hidden md:inline">
   Password
 </span>
         </button>
@@ -206,21 +206,21 @@ function Navbar({
         <button
           onClick={logout}
           className="
-          flex
-          items-center
-          gap-2
-          bg-red-500
-          hover:bg-red-600
-          text-white
-          px-4
-          md:px-5
-          py-2
-          rounded-lg
-          transition
-          "
+flex
+items-center
+justify-center
+bg-red-500
+hover:bg-red-600
+text-white
+px-2
+md:px-5
+py-2
+rounded-lg
+transition
+"
         >
          <LogOut size={18}/>
-<span className="hidden sm:inline">
+<span className="hidden md:inline">
   Logout
 </span>
         </button>
